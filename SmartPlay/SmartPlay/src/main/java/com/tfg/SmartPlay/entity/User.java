@@ -27,6 +27,9 @@ public class User {
     private String nombre;
 
     @Column(nullable = false)
+    private Integer edad;
+
+    @Column(nullable = false)
     private String email;
 
     @Column(nullable = false)
