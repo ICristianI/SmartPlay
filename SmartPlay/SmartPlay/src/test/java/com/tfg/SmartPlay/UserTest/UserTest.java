@@ -9,13 +9,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.tfg.SmartPlay.entity.User;
 import com.tfg.SmartPlay.entity.User.Rol;
-import com.tfg.SmartPlay.controller.UserService;
+import com.tfg.SmartPlay.controller.UserController;
 
 @SpringBootTest
 public class UserTest {
 
     @Autowired
-    private UserService userService;
+    private UserController userService;
 
     @Test
     void testAgregarUsuario() {

@@ -41,4 +41,7 @@ public class User {
     public enum Rol {
         ALUMNO, PROFESOR
     }
+
+    @Column
+    private String photo;
 }

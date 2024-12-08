@@ -1,7 +1,7 @@
 package com.tfg.SmartPlay.restController;
 
 import com.tfg.SmartPlay.entity.User;
-import com.tfg.SmartPlay.controller.UserService;
+import com.tfg.SmartPlay.controller.UserController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +12,7 @@ import java.util.List;
 public class UserRestController {
 
     @Autowired
-    private UserService userService;
+    private UserController userService;
 
     // Endpoint para crear un nuevo usuario
     @PostMapping
