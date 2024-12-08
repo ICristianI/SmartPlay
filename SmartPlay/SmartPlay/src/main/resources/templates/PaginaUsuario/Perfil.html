@@ -1,10 +1,19 @@
 {{> header}}
 
 <div class="container mt-5">
-    <h1>Bienvenido, {{user.nombre}}!</h1>
-    <p>Tu correo: {{user.email}}</p>
-    <p>Tu rol: {{user.rol}}</p>
-    <p>Tu edad: {{user.edad}}</p>
+    <div class="row align-items-center">
+        <!-- Columna para los datos -->
+        <div class="col-md-8">
+            <h1>Bienvenido, {{user.nombre}}!</h1>
+            <p><strong>Correo:</strong> {{user.email}}</p>
+            <p><strong>Rol:</strong> {{user.rol}}</p>
+            <p><strong>Edad:</strong> {{user.edad}}</p>
+        </div>
+        <!-- Columna para la imagen -->
+        <div class="col-md-4 text-center">
+            <img src="{{user.photo}}" alt="Foto de perfil" class="img-thumbnail rounded-circle" style="width: 200px; height: 200px; object-fit: cover;">
+        </div>
+    </div>
 </div>
 
 {{> footer}}
