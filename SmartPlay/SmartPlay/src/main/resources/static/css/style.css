@@ -1,8 +1,13 @@
 :root {
     --bg-color-light: #eeeaea; /* Fondo más claro */
     --bg-color-dark: #0f0e0e; /* Fondo más oscuro */
+    --bg-navbar: linear-gradient(to right, #5729e1, #9622d5); /* Azul a Morado por defecto */
+    --bg-dropdown-hover: linear-gradient(to right, #4b1cba, #7f1d9f); /* Azul a Morado hover */
+    --bg-dropdown-item-hover: linear-gradient(to right, #4b1cba, #7f1d9f); /* Azul a Morado hover item */
+    --line-color-light: #0f0e0e; /* Negro para el modo claro */
+    --line-color-dark: #eeeaea; /* Blanco para el modo oscuro */
   }
-  
+
   body {
     background-color: var(--bg-color-light); /* Fondo para modo claro */
   }
@@ -11,6 +16,15 @@
     color: white !important;
     background-color: var(--bg-color-dark); /* Fondo para modo oscuro */
   }
+
+  .lineas {
+    border: 1px solid var(--line-color-light); /* Color del borde para modo claro */
+  }
+  
+  body.dark-mode .lineas {
+    border: 1px solid var(--line-color-dark); /* Color del borde para modo oscuro */
+  }
+
 
 
 .card {
@@ -22,24 +36,74 @@
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
 }
 
+/*Para el navbar*/
 .navbar-custom .dropdown-menu .dropdown-item{
     color: white;
   }
 
   .navbar-custom .dropdown-menu .dropdown-item:hover {
-    background: linear-gradient(to right, #4b1cba, #7f1d9f);
+    background: var(--bg-dropdown-item-hover);
     color: white;
   }
 
 .navbar-custom {
-  background: linear-gradient(to right, #5729e1, #9622d5);
+  background: var(--bg-navbar);
   color: white;
 }
 
 .navbar-custom .navbar:hover {
-  background: linear-gradient(to right, #4b1cba, #7f1d9f); 
+  background: var(--bg-dropdown-hover); 
   color: white;
 }
+
+/*Para los colores seleccionables del navbar*/
+
+/* Estilo general para los botones */
+.colorbtn {
+  width: 50px !important;
+  height: 50px !important;
+  border: none !important;
+  border-radius: 50% !important;
+  cursor: default !important;
+  transition: transform 0.3s ease !important;
+}
+
+.colorbtn:hover {
+  transform: scale(1.1) !important;
+}
+
+
+.bluepurple {
+  background: linear-gradient(to right, #5729e1, #9622d5) !important;
+  color: white;
+}
+
+.bluepurple:hover {
+  background: linear-gradient(to right, #4b1cba, #7f1d9f) !important; 
+  color: white;
+}
+
+.redyellow {
+  background: linear-gradient(to right, #f0381f, #f8b500) !important;
+  color: white;
+}
+
+.redyellow:hover {
+  background: linear-gradient(to right, #c02e18, #c69300) !important;
+  color: white;
+
+}
+
+.greenTurquoise {
+  background: linear-gradient(to right, #20c997, #007bff) !important;
+  color: white;
+}
+.greenTurquoise:hover {
+  background: linear-gradient(to right, #199874, #0056b3) !important;
+  color: white;
+}
+
+/*Para que el footer siempre esté abajo*/
 
 html,
 body {
@@ -58,6 +122,8 @@ body {
 footer {
   margin-top: auto;
 }
+
+/*Para el icono de modo oscuro*/
 
 #toggle-mode i {
     transition: opacity 0.3s ease;
