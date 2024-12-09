@@ -8,6 +8,7 @@
   }
   
   body.dark-mode {
+    color: white !important;
     background-color: var(--bg-color-dark); /* Fondo para modo oscuro */
   }
 
@@ -26,15 +27,18 @@
   }
 
   .navbar-custom .dropdown-menu .dropdown-item:hover {
-    background: linear-gradient(to right, #4b1cba, #7f1d9f); /* Gradiente menos brillante */
+    background: linear-gradient(to right, #4b1cba, #7f1d9f);
     color: white;
   }
 
 .navbar-custom {
   background: linear-gradient(to right, #5729e1, #9622d5);
   color: white;
+}
 
-
+.navbar-custom .navbar:hover {
+  background: linear-gradient(to right, #4b1cba, #7f1d9f); 
+  color: white;
 }
 
 html,

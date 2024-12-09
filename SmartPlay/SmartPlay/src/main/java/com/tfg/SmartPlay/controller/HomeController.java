@@ -31,4 +31,9 @@ public class HomeController {
         return "RegistrarIniciarSesion/IniciarSesion";
     }
 
+    @GetMapping("/config")
+    public String config(Model model) {
+        return "Configuracion/configuration";    
+    }
+
 }
