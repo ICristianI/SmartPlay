@@ -11,9 +11,27 @@
         </div>
         <!-- Columna para la imagen -->
         <div class="col-md-4 text-center">
-            <img src="{{user.photo}}" alt="Foto de perfil" class="img-thumbnail rounded-circle" style="width: 200px; height: 200px; object-fit: cover;">
+            <form id="profilePhotoForm" action="/users/{{user.id}}/upload" method="post" enctype="multipart/form-data">
+                <img 
+                    src="{{user.photo}}" 
+                    alt="Foto de perfil" 
+                    class="img-thumbnail rounded-circle" 
+                    style="width: 200px; height: 200px; object-fit: cover; cursor: pointer;"
+                    onclick="document.getElementById('imageInput').click();"
+                />
+                <input 
+                    type="file" 
+                    id="imageInput" 
+                    name="image" 
+                    accept="image/*" 
+                    style="display: none;" 
+                />
+                <button type="submit" style="display: none;">Submit</button>
+            </form>
+            
         </div>
     </div>
 </div>
+<script src="/js/PerfilCheck.js"></script>
 
 {{> footer}}
