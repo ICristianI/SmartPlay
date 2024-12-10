@@ -31,9 +31,15 @@ public class HomeController {
         return "RegistrarIniciarSesion/IniciarSesion";
     }
 
+    //lleva a pagina de configuracion
     @GetMapping("/config")
     public String config(Model model) {
         return "Configuracion/configuration";    
+    }
+
+    @GetMapping("/games")
+    public String games(Model model) {
+        return "Fichas/Juegos";    
     }
 
 }

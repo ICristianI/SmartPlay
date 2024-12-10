@@ -1,0 +1,17 @@
+{
+    "es": {
+      "config-title": "Configuración",
+      "config-subtitle": "Configuración de colores",
+      "language": "Idioma",
+      "language-spanish": "Español",
+      "language-english": "Inglés"
+    },
+    "en": {
+      "config-title": "Settings",
+      "config-subtitle": "Color settings",
+      "language": "Language",
+      "language-spanish": "Spanish",
+      "language-english": "English"
+    }
+  }
+  
