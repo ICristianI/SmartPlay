@@ -26,7 +26,27 @@ async function updateLanguage() {
     document.getElementById('language').textContent = translations['language'];
     document.getElementById('language-spanish').textContent = translations['language-spanish'];
     document.getElementById('language-english').textContent = translations['language-english'];
+    document.getElementById('files').textContent = translations['files'];
+    document.getElementById('start').textContent = translations['start'];
+    document.getElementById('statistics').textContent = translations['statistics'];
+    document.getElementById('register').textContent = translations['register'];
+    document.getElementById('login').textContent = translations['login'];
+    document.getElementById('log-out').textContent = translations['log-out'];
+    document.getElementById('all-rights').textContent = translations['all-rights'];
+    document.getElementById('email').textContent = translations['email'];
+    document.getElementById('password').textContent = translations['password'];
+    document.getElementById('no-account').textContent = translations['no-account'];
+    document.getElementById('register-here').textContent = translations['register-here'];
+    document.getElementById('name').textContent = translations['name'];
+    document.getElementById('age').textContent = translations['age'];
+    document.getElementById('role').textContent = translations['role'];
+    document.getElementById('select-role').textContent = translations['select-role'];
+    document.getElementById('student').textContent = translations['student'];
+    document.getElementById('teacher').textContent = translations['teacher'];
+    document.getElementById('yes-account').textContent = translations['yes-account'];
+    document.getElementById('login2').textContent = translations['login2'];
 }
+
 
 // Función para aplicar el color en el navbar
 function applyGradient(gradientType) {

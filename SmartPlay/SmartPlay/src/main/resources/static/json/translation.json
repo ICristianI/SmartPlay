@@ -4,14 +4,54 @@
       "config-subtitle": "Configuración de colores",
       "language": "Idioma",
       "language-spanish": "Español",
-      "language-english": "Inglés"
+      "language-english": "Inglés",
+      "files": "Fichas",
+      "start": "Inicio",
+      "statistics": "Estadísticas",
+      "register": "Registrarse",
+      "login": "Iniciar sesión",
+      "log-out": "Cerrar sesión",
+      "all-rights": "© 2024 SmartPlay. Derechos reservados.",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "no-account": "¿No tienes cuenta?",
+      "register-here": "Regístrate aquí",
+      "name": "Nombre",
+      "age": "Edad",
+      "role": "Rol",
+      "select-role": "Selecciona un rol",
+      "student": "Alumno",
+      "teacher": "Profesor",
+      "yes-account": "¿Ya tienes cuenta?",
+      "login2": "Inicia sesión"
+
     },
     "en": {
       "config-title": "Settings",
       "config-subtitle": "Color settings",
       "language": "Language",
       "language-spanish": "Spanish",
-      "language-english": "English"
+      "language-english": "English",
+      "files": "Files",
+      "start": "Start",
+      "statistics": "Statistics",
+      "register": "Register",
+      "login": "Login",
+      "log-out": "Log out",
+      "all-rights": "© 2024 SmartPlay. All rights reserved.",
+      "email": "Email",
+      "password": "password",
+      "no-account": "Don't have an account?",
+      "register-here": "Register here",
+      "name": "Name",
+      "age": "Age",
+      "role": "Role",
+      "select-role": "Select a rol",
+      "student": "Student",
+      "teacher": "Teacher",
+      "yes-account": "Do you have an account?",
+      "login2": "Log in"
+
     }
   }
   

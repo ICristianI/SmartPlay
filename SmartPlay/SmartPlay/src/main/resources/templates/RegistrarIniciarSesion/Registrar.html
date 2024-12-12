@@ -3,7 +3,7 @@
   <div class="container mt-5">
     <div class="row justify-content-center">
       <div class="col-md-6">
-        <h2 class="text-center mb-4">Registrarse</h2>
+        <h2 class="text-center mb-4" id="register">Registrarse</h2>
 
         <!-- Mostrar error si existe -->
         {{#error}}
@@ -19,40 +19,40 @@
 
           <!-- Nombre -->
           <div class="mb-3">
-            <label for="nombre" class="form-label">Nombre</label>
+            <label for="nombre" class="form-label" id="name">Nombre</label>
             <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Tu nombre" required>
           </div>
           <!-- Edad -->
           <div class="mb-3">
-            <label for="edad" class="form-label">Edad</label>
+            <label for="edad" class="form-label" id="age">Edad</label>
             <input type="number" class="form-control" id="edad" name="edad" placeholder="Tu edad" required>
           </div>
           <!-- Email -->
           <div class="mb-3">
-            <label for="email" class="form-label">Correo electrónico</label>
+            <label for="email" class="form-label" id="email">Correo electrónico</label>
             <input type="email" class="form-control" id="email" name="email" placeholder="ejemplo@gmail.com" required>
           </div>
           <!-- Contraseña -->
           <div class="mb-3">
-            <label for="password" class="form-label">Contraseña</label>
+            <label for="password" class="form-label" id="password">Contraseña</label>
             <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña" required>
           </div>
           <!-- Selección de rol -->
           <div class="mb-3">
-            <label for="rol" class="form-label">Rol</label>
+            <label for="rol" class="form-label" id="role">Rol</label>
             <select class="form-select" id="rol" name="rol" required>
-              <option value="">Selecciona un rol</option>
-              <option value="ALUMNO">Alumno</option>
-              <option value="PROFESOR">Profesor</option>
+              <option value="" id="select-role">Selecciona un rol</option>
+              <option value="ALUMNO" id="student">Alumno</option>
+              <option value="PROFESOR" id="teacher">Profesor</option>
             </select>
           </div>
           <!-- Botón de registro -->
           <div class="d-grid">
-            <button type="submit" class="btn btn-primary navbar-custom">Registrarse</button>
+            <button type="submit" class="btn btn-primary navbar-custom" id="register">Registrarse</button>
           </div>
         </form>
-        <p class="text-center mt-3">
-          ¿Ya tienes cuenta? <a href="/signin">Inicia sesión</a>
+        <p class="text-center mt-3" id="yes-account">
+          ¿Ya tienes cuenta? <a href="/signin" id="login2">Inicia sesión</a>
         </p>
       </div>
     </div>
