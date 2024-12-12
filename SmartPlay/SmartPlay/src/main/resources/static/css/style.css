@@ -138,5 +138,30 @@ footer {
     opacity: 1;
   }
 
+/*Para las fichas */
+
+#word-container .word-slot {
+  display: inline-block;
+  width: 30px;
+  height: 40px;
+  border-bottom: 2px solid #000;
+  margin: 0 5px;
+}
+
+.letter {
+  display: inline-block;
+  margin: 10px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+/* Para limitar tamaño de las imágenes de home */
+.limited-img {
+  max-height: 500px; /* Ajusta según tu necesidad */
+  object-fit: cover; /* Para mantener la proporción y centrado */
+}
+
+
+
   
   

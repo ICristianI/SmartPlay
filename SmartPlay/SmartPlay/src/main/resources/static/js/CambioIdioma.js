@@ -19,33 +19,51 @@ async function loadTranslations() {
 // Función para actualizar el contenido según el idioma
 async function updateLanguage() {
     const translations = await loadTranslations();
-    
-    // Cambiar el texto de las etiquetas según las traducciones
-    document.getElementById('config-title').textContent = translations['config-title'];
-    document.getElementById('config-subtitle').textContent = translations['config-subtitle'];
-    document.getElementById('language').textContent = translations['language'];
-    document.getElementById('language-spanish').textContent = translations['language-spanish'];
-    document.getElementById('language-english').textContent = translations['language-english'];
-    document.getElementById('files').textContent = translations['files'];
-    document.getElementById('start').textContent = translations['start'];
-    document.getElementById('statistics').textContent = translations['statistics'];
-    document.getElementById('register').textContent = translations['register'];
-    document.getElementById('login').textContent = translations['login'];
-    document.getElementById('log-out').textContent = translations['log-out'];
-    document.getElementById('all-rights').textContent = translations['all-rights'];
-    document.getElementById('email').textContent = translations['email'];
-    document.getElementById('password').textContent = translations['password'];
-    document.getElementById('no-account').textContent = translations['no-account'];
-    document.getElementById('register-here').textContent = translations['register-here'];
-    document.getElementById('name').textContent = translations['name'];
-    document.getElementById('age').textContent = translations['age'];
-    document.getElementById('role').textContent = translations['role'];
-    document.getElementById('select-role').textContent = translations['select-role'];
-    document.getElementById('student').textContent = translations['student'];
-    document.getElementById('teacher').textContent = translations['teacher'];
-    document.getElementById('yes-account').textContent = translations['yes-account'];
-    document.getElementById('login2').textContent = translations['login2'];
+
+    // Cambiar el texto de las etiquetas si existen en el DOM
+    const elements = [
+        { id: 'config-title', key: 'config-title' },
+        { id: 'config-menu', key: 'config-menu' },
+        { id: 'config-subtitle', key: 'config-subtitle' },
+        { id: 'language', key: 'language' },
+        { id: 'language-spanish', key: 'language-spanish' },
+        { id: 'language-english', key: 'language-english' },
+        { id: 'files', key: 'files' },
+        { id: 'files-menu', key: 'files-menu' },
+        { id: 'start', key: 'start' },
+        { id: 'start-menu', key: 'start-menu' },
+        { id: 'statistics', key: 'statistics' },
+        { id: 'statistics-menu', key: 'statistics-menu' },
+        { id: 'register', key: 'register' },
+        { id: 'register-menu', key: 'register-menu' },
+        { id: 'register-page', key: 'register-page' },
+        { id: 'login', key: 'login' },
+        { id: 'login-menu', key: 'login-menu' },
+        { id: 'login-page', key: 'login-page' },
+        { id: 'log-out', key: 'log-out' },
+        { id: 'all-rights', key: 'all-rights' },
+        { id: 'email', key: 'email' },
+        { id: 'password', key: 'password' },
+        { id: 'no-account', key: 'no-account' },
+        { id: 'register-here', key: 'register-here' },
+        { id: 'name', key: 'name' },
+        { id: 'age', key: 'age' },
+        { id: 'role', key: 'role' },
+        { id: 'select-role', key: 'select-role' },
+        { id: 'student', key: 'student' },
+        { id: 'teacher', key: 'teacher' },
+        { id: 'yes-account', key: 'yes-account' },
+        { id: 'login2', key: 'login2' },
+    ];
+
+    elements.forEach(({ id, key }) => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.textContent = translations[key];
+        }
+    });
 }
+
 
 
 // Función para aplicar el color en el navbar
