@@ -3,6 +3,9 @@ package com.tfg.SmartPlay.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+
+import com.tfg.SmartPlay.entity.User;
 
 @Controller
 public class HomeController {
@@ -30,16 +33,28 @@ public class HomeController {
     public String signin(Model model) {
         return "RegistrarIniciarSesion/IniciarSesion";
     }
-
+    
     //lleva a pagina de configuracion
     @GetMapping("/config")
     public String config(Model model) {
         return "Configuracion/configuration";    
     }
 
-    @GetMapping("/games")
+    @GetMapping("/fames")
+    public String fames(Model model) {
+        return "Fichas/FichasJuegos";    
+    }
+
+    
+    @GetMapping("/juegos")
     public String games(Model model) {
         return "Fichas/Juegos";    
+    }
+
+    
+    @GetMapping("/fichas")
+    public String fichas(Model model) {
+        return "Fichas/Fichas";    
     }
 
 }

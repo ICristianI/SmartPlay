@@ -1,9 +1,15 @@
 package com.tfg.SmartPlay.controller;
 
+import com.tfg.SmartPlay.config.AuthService;
 import com.tfg.SmartPlay.entity.User;
 import com.tfg.SmartPlay.repository.UserRepository;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,61 +29,128 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Controller
 @RequestMapping("/users")
 public class UserController {
 
+    
+
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+
     @Autowired
     private UserRepository userRepository;
 
+/* 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+*/
+    // Registro de usuario
+       // Registro de usuario
     @PostMapping("/register")
     public String register(@ModelAttribute User user, Model model) {
-
         if (userRepository.existsByEmail(user.getEmail())) {
             model.addAttribute("error", "El correo electrónico ya está en uso.");
-            return "RegistrarIniciarSesion/Registrar"; // Vuelve al formulario con el mensaje de error
+            return "RegistrarIniciarSesion/Registrar"; // Redirigir al formulario de registro si el correo ya existe
         }
         if (userRepository.existsByNombre(user.getNombre())) {
             model.addAttribute("error", "El nombre de usuario ya está en uso.");
-            return "RegistrarIniciarSesion/Registrar"; // Vuelve al formulario con el mensaje de error
+            return "RegistrarIniciarSesion/Registrar"; // Redirigir al formulario de registro si el nombre de usuario ya existe
         }
 
-        User savedUser = userRepository.save(user);
+        // Encriptar la contraseña antes de guardar
+        //user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(user.getPassword());
+        userRepository.save(user);
 
-        return "redirect:/users/" + savedUser.getId();
-
+        return "redirect:/users/perfil/" + user.getId(); // Redirigir al perfil del usuario tras el registro exitoso
     }
+/* 
+    @PostMapping("/login")
+    public String login(@RequestParam("email") String email,
+                        @RequestParam("password") String password,
+                        HttpServletResponse response,
+                        Model model) {
+        User user = userRepository.findByEmail(email);
+    
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+            String token = jwtUtil.generateToken(user.getEmail());
+    
+            Cookie authCookie = new Cookie("authToken", token);
+            authCookie.setHttpOnly(true);
+            authCookie.setPath("/");
+            response.addCookie(authCookie);
+    
+            return "redirect:/users/perfil/" + user.getId();
+        } else {
+            model.addAttribute("error", "Credenciales inválidas");
+            return "RegistrarIniciarSesion/IniciarSesion";
+        }
+    }
+    
+
 
     @PostMapping("/login")
-    public String processLogin(@RequestParam("email") String email,
-            @RequestParam("password") String password,
-            Model model) {
-        User user = userRepository.findByEmail(email);
+    public String login(@RequestParam("email") String email,
+                    @RequestParam("password") String password,
+                    HttpServletResponse response, 
+                    Model model) {
+    User user = userRepository.findByEmail(email);
 
+    if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+        String token = authService.authenticateUser(user.getEmail());
+
+        Cookie authCookie = new Cookie("authToken", token);
+        authCookie.setHttpOnly(true);
+        authCookie.setPath("/");
+        response.addCookie(authCookie);
+
+        return "redirect:/users/" + user.getId() + "?loggedIn=true";
+    } else {
+        model.addAttribute("error", "Credenciales inválidas");
+        return "RegistrarIniciarSesion/IniciarSesion";
+    }
+}
+    */
+    @GetMapping("/login")
+    public String loginPage(@RequestParam("email") String email,
+                            @RequestParam("password") String password,
+                            HttpServletResponse response,
+                            Model model) {
+        User user = userRepository.findByEmail(email);
+    
         if (user != null && user.getPassword().equals(password)) {
-            model.addAttribute("nombre", user.getNombre());
-            return "redirect:/users/" + user.getId();
-        } else if (user == null) {
-            model.addAttribute("error", "Correo incorrecto");
-            return "login";
+            // Redirigir al perfil del usuario si las credenciales son válidas
+            return "redirect:/users/perfil/" + user.getId();
         } else {
-            model.addAttribute("error", "Contraseña incorrecta");
-            return "login";
+            // Mostrar un mensaje de error si las credenciales no son válidas
+            model.addAttribute("error", "Credenciales inválidas");
+            return "RegistrarIniciarSesion/IniciarSesion";
         }
     }
 
-    @GetMapping("/{id}")
+
+
+    @GetMapping("/perfil/{id}")
     public String userDashboard(@PathVariable Long id, Model model) {
-        // Buscar el usuario por ID
+        /*
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User authenticatedUser = (User) authentication.getPrincipal();
+    
+        if (!authenticatedUser.getId().equals(id)) {
+            throw new AccessDeniedException("No tienes acceso a este perfil.");
+        }
+        */
+    
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
-
-        // Añadir el usuario al modelo para usarlo en la plantilla
         model.addAttribute("user", user);
-
-        // Mostrar la página personalizada
+    
         return "PaginaUsuario/Perfil";
     }
+    
 
     @PostMapping("/{id}/upload")
     public String uploadProfilePhoto(@PathVariable Long id, @RequestParam("image") MultipartFile image) {
@@ -105,17 +178,15 @@ public class UserController {
             
         }
 
-        return "redirect:/users/" + id;
+        return "redirect:/users/perfil/" + id;
     }
 
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public String handleMaxSizeException(@PathVariable Long id,MaxUploadSizeExceededException exc, Model model) {
         model.addAttribute("error", "El archivo excede el tamaño máximo permitido.");
-        return "redirect:/users/" + id; // Redirige a una página de error o muestra el mensaje en la misma página
+        return "redirect:/users/perfil/" + id; // Redirige a una página de error o muestra el mensaje en la misma página
     }
-
-
 
     public User crearUsuario(User user) {
         return userRepository.save(user);

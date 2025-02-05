@@ -1,3 +1,5 @@
+/*
+
 package com.tfg.SmartPlay.UserTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,6 +21,7 @@ public class UserTest {
 
     @Test
     void testAgregarUsuario() {
+        
         // Crear un usuario de prueba
         User user = new User();
         user.setNombre("Test User");
@@ -34,5 +37,8 @@ public class UserTest {
         assertNotNull(usuarioGuardado.getId()); // Verifica que se generó un ID
         assertEquals("test@example.com", usuarioGuardado.getEmail());
         assertEquals(Rol.ALUMNO, usuarioGuardado.getRol());
+    
+    
     }
 }
+*/

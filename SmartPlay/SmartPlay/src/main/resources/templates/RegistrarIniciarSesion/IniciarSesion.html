@@ -12,16 +12,16 @@
       </div>
       {{/error}}
 
-      <form action="/users/login" method="post">
+      <form action="/users/login" method="get" autocomplete="on">
         <!-- Email -->
         <div class="mb-3">
           <label for="email" class="form-label" id="email">Correo electrónico</label>
-          <input type="email" class="form-control" id="email" name="email" placeholder="ejemplo@gmail.com" required>
+          <input type="email" class="form-control" id="email" name="email" placeholder="ejemplo@gmail.com" required autocomplete="email">
         </div>
         <!-- Contraseña -->
         <div class="mb-3">
           <label for="password" class="form-label" id="password">Contraseña</label>
-          <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña" required>
+          <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña" required autocomplete="current-password">
         </div>
         <!-- Botón de inicio de sesión -->
         <div class="d-grid navba">
