@@ -45,6 +45,10 @@ public class HomeController {
         return "Fichas/FichasJuegos";    
     }
 
+    @GetMapping("/ImagenPrueba")
+    public String IM(Model model) {
+        return "ImagenPrueba";    
+    }
     
     @GetMapping("/juegos")
     public String games(Model model) {
@@ -55,6 +59,11 @@ public class HomeController {
     @GetMapping("/fichas")
     public String fichas(Model model) {
         return "Fichas/Fichas";    
+    }
+
+    @GetMapping("/crearFichas")
+    public String crearfichas(Model model) {
+        return "Fichas/crearFichas";    
     }
 
 }

@@ -8,8 +8,14 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Mapea /uploads/** a un directorio externo
-        registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:uploads/");
+        // Handler para las imágenes de fondos
+        registry.addResourceHandler("/uploads/fondos/**")
+                .addResourceLocations("file:uploads/fondos/");
+
+        // Handler para las imágenes de usuarios
+        registry.addResourceHandler("/uploads/usuarios/**")
+                .addResourceLocations("file:uploads/usuarios/");
     }
 }
+
+

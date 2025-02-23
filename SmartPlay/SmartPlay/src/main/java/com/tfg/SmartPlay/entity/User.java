@@ -52,7 +52,7 @@ public class User {
     private String photo;
 
     @OneToMany(mappedBy = "usuario")
-    private List<FichaInteractiva> fichas;
+    private List<Ficha> fichas;
 
 
 
