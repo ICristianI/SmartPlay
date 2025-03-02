@@ -6,23 +6,24 @@
         <div class="col-md-8">
             <h1>Bienvenido, {{user.nombre}}!</h1>
             <p><strong>Correo:</strong> {{user.email}}</p>
-            <p><strong>Rol:</strong> {{user.rol}}</p>
+            <p><strong>Rol:</strong> {{user.roles}}</p>
             <p><strong>Edad:</strong> {{user.edad}}</p>
         </div>
         <!-- Columna para la imagen -->
         <div class="col-md-4 text-center">
-            <form id="profilePhotoForm" action="/users/{{user.id}}/upload" method="post" enctype="multipart/form-data">
+            <form id="profilePhotoForm" action="/users/upload" method="post" enctype="multipart/form-data">
                 <img 
-                    src="{{user.photo}}" 
+                    src="/users/image" 
                     alt="Foto de perfil" 
                     class="img-thumbnail rounded-circle" 
                     style="width: 200px; height: 200px; object-fit: cover; cursor: pointer;"
-                    onclick="document.getElementById('imageInput').click();"
+                    onclick="document.getElementById('photo').click();"
                 />
+
                 <input 
                     type="file" 
-                    id="imageInput" 
-                    name="image" 
+                    id="photo" 
+                    name="photo" 
                     accept="image/*" 
                     style="display: none;" 
                 />
@@ -32,6 +33,12 @@
         </div>
     </div>
 </div>
+<script>
+    document.getElementById('photo').addEventListener('change', function() {
+        document.getElementById('profilePhotoForm').submit();
+    });
+</script>
+
 <script src="/js/PerfilCheck.js"></script>
 
 {{> footer}}

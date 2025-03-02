@@ -14,9 +14,6 @@
         
         <form action="/users/register" method="post">
 
-          <!--Imagen oculta por defecto-->
-          <input type="hidden" name="photo" value="/images/userImages/Default.png">
-
           <!-- Nombre -->
           <div class="mb-3">
             <label for="nombre" class="form-label" id="name">Nombre</label>
@@ -46,10 +43,12 @@
               <option value="PROFESOR" id="teacher">Profesor</option>
             </select>
           </div>
+          
           <!-- Botón de registro -->
           <div class="d-grid">
             <button type="submit" class="btn btn-primary navbar-custom" id="register">Registrarse</button>
           </div>
+
         </form>
         <p class="text-center mt-3" id="yes-account">
           ¿Ya tienes cuenta? <a href="/signin" id="login2">Inicia sesión</a>

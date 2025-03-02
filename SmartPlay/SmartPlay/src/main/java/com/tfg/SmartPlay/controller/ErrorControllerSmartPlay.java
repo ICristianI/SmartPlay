@@ -1,6 +1,5 @@
 package com.tfg.SmartPlay.controller;
 
-
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -22,7 +21,7 @@ public class ErrorControllerSmartPlay implements ErrorController {
                 return "error404Template";
             } else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
                 return "error500Template";
-            } else if (statusCode == HttpStatus.BAD_REQUEST.value()){
+            } else if (statusCode == HttpStatus.BAD_REQUEST.value()) {
                 return "error400Template";
             }
         }

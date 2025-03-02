@@ -1,17 +1,19 @@
 package com.tfg.SmartPlay.entity;
 
+import java.sql.Blob;
 import java.util.Collection;
 import java.util.List;
 
-
-
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -29,31 +31,26 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false, unique = true)
     private String nombre;
 
-    @Column(nullable = false,unique = false)
+    @Column(nullable = false, unique = false)
     private Integer edad;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false,unique = false)
+    @Column(nullable = false, unique = false)
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private Rol rol;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles;
 
-    public enum Rol {
-        ALUMNO, PROFESOR
-    }
-
-    @Column
-    private String photo;
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private Blob photo;
 
     @OneToMany(mappedBy = "usuario")
     private List<Ficha> fichas;
-
-
 
 }

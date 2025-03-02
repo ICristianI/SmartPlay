@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const fileInput = document.getElementById('imageInput');
+    const fileInput = document.getElementById('photo');
     if (!fileInput) {
         console.error("No se encontró el input con ID 'imageInput'.");
         return;

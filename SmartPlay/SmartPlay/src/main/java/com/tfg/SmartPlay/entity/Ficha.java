@@ -44,13 +44,12 @@ public class Ficha {
     @Size(max = 255, message = "La descripción no puede exceder los 255 caracteres")
     private String descripcion;
 
-
     @Lob
     @Column(columnDefinition = "LONGBLOB")
     private Blob imagen;
 
     @Column(columnDefinition = "TEXT")
-    private String elementosSuperpuestos; 
+    private String elementosSuperpuestos;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")

@@ -11,8 +11,8 @@
           {{error}}
       </div>
       {{/error}}
+      <form action="/login" method="post" autocomplete="on">
 
-      <form action="/users/login" method="get" autocomplete="on">
         <!-- Email -->
         <div class="mb-3">
           <label for="email" class="form-label" id="email">Correo electrónico</label>
@@ -23,10 +23,12 @@
           <label for="password" class="form-label" id="password">Contraseña</label>
           <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña" required autocomplete="current-password">
         </div>
+        
         <!-- Botón de inicio de sesión -->
         <div class="d-grid navba">
           <button type="submit" class="btn btn-primary navbar-custom" id="login">Iniciar Sesión</button>
         </div>
+
       </form>
 
       <p class="text-center mt-3" id="no-account">
