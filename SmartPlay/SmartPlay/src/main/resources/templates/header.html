@@ -22,74 +22,79 @@
   <body class="d-flex flex-column min-vh-100">
     
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg bg-dark navbar-dark navbar-custom">
-      <a href="/" class="d-flex align-items-center">
-        <img
-          class="navbar-toggler-icon"
-          src="/images/generalImages/SMARTPLAY.png"
-          alt="SmartPlay Icon"
-        />
-        <a class="navbar-brand" href="/" style="margin-left: 1vmin; border-right: 2px solid white; padding-right: 10px;">SmartPlay</a>
-      </a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <a class="nav-link btn" href="/regin" style="margin-right: 15px;" id="start">Inicio</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link btn" href="/fames" style="margin-right: 15px;" id="files">Fichas</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link btn" href="/m/list" id="statistics">Estadísticas</a>
-          </li>
-        </ul>
-        <ul class="navbar-nav ml-auto" style="margin-right: 50px;">
-          <!-- Verificar si está logueado -->
-          {{#isLogged}}
-          <li class="nav-item" style="border-right: 2px solid white;">
-            <a class="nav-link" href="#" id="toggle-mode">
-              <i class="fas fa-moon"></i>
-            </a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <img src="/images/userImages/Default.png" alt="Perfil" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 8px;">
-              {{currentUserName}}
-            </a>
-            <div class="dropdown-menu navbar-custom" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item navbar-hover" href="/config" id="config-title">Configuración</a>
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark navbar-custom">
+  <a href="/" class="d-flex align-items-center">
+    <img
+      class="navbar-toggler-icon"
+      src="/images/generalImages/SMARTPLAY.png"
+      alt="SmartPlay Icon"
+    />
+    <a class="navbar-brand" href="/" style="margin-left: 1vmin; border-right: 2px solid white; padding-right: 10px;">SmartPlay</a>
+  </a>
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNav"
+    aria-controls="navbarNav"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav mr-auto">
+      <!-- Mostrar "Inicio" solo si no está logueado -->
+      {{^isLogged}}
+      <li class="nav-item">
+        <a class="nav-link btn" href="/regin" style="margin-right: 15px;" id="start">Inicio</a>
+      </li>
+      {{/isLogged}}
 
-              <a class="dropdown-item navbar-hover" href="/users/perfil" id="perfil">Mi perfil</a>
-              <a class="dropdown-item navbar-hover" href="/logout" id="log-out">Cerrar sesión</a>
-            </div>
-          </li>
-          {{/isLogged}}
+      <li class="nav-item">
+        <a class="nav-link btn" href="/fames" style="margin-right: 15px;" id="files">Fichas</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link btn" href="/m/list" id="statistics">Estadísticas</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto" style="margin-right: 50px;">
+      <!-- Verificar si está logueado -->
+      {{#isLogged}}
+      <li class="nav-item" style="border-right: 2px solid white;">
+        <a class="nav-link" href="#" id="toggle-mode">
+          <i class="fas fa-moon"></i>
+        </a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <img src="/images/userImages/Default.png" alt="Perfil" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 8px;">
+          {{currentUserName}}
+        </a>
+        <div class="dropdown-menu navbar-custom" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item navbar-hover" href="/config" id="config-title">Configuración</a>
+          <a class="dropdown-item navbar-hover" href="/users/perfil" id="perfil">Mi perfil</a>
+          <a class="dropdown-item navbar-hover" href="/logout" id="log-out">Cerrar sesión</a>
+        </div>
+      </li>
+      {{/isLogged}}
 
-          <!-- Si no está logueado -->
-          {{^isLogged}}
-          <li class="nav-item" style="border-right: 2px solid white;">
-            <a class="nav-link" href="/login" id="login">
-              <i class="fas fa-sign-in-alt"></i> Iniciar sesión
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/signup" id="signup">
-              <i class="fas fa-user-plus"></i> Registrarse
-            </a>
-          </li>
-          {{/isLogged}}
-        </ul>
-      </div>
-    </nav>
+      <!-- Si no está logueado -->
+      {{^isLogged}}
+      <li class="nav-item" style="border-right: 2px solid white;">
+        <a class="nav-link" href="/login" id="login">
+          <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/signup" id="signup">
+          <i class="fas fa-user-plus"></i> Registrarse
+        </a>
+      </li>
+      {{/isLogged}}
+    </ul>
+  </div>
+</nav>
+
 

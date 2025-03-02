@@ -7,17 +7,20 @@
 
         <!-- Mostrar error si existe -->
         {{#error}}
-        <div class="alert alert-danger">
-            {{error}}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <p>{{error}}</p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">Cerrar</button>
         </div>
         {{/error}}
+        
+      
         
         <form action="/users/register" method="post">
 
           <!-- Nombre -->
           <div class="mb-3">
             <label for="nombre" class="form-label" id="name">Nombre</label>
-            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Tu nombre" required>
+            <input type="text" class="form-control" id="nombre" name="nombre" maxlength="15" placeholder="Tu nombre" required>
           </div>
           <!-- Edad -->
           <div class="mb-3">
@@ -37,7 +40,7 @@
           <!-- Selección de rol -->
           <div class="mb-3">
             <label for="rol" class="form-label" id="role">Rol</label>
-            <select class="form-select" id="rol" name="rol" required>
+            <select class="form-control" id="rol" name="rol" required>
               <option value="" id="select-role">Selecciona un rol</option>
               <option value="ALUMNO" id="student">Alumno</option>
               <option value="PROFESOR" id="teacher">Profesor</option>
