@@ -161,4 +161,8 @@ footer {
   object-fit: cover; /* Para mantener la proporción y centrado */
 }
 
+.iniciar-sesion {
+  border-right: 2px solid white;
+}
+
 

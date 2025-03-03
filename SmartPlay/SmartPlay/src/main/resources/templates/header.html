@@ -60,13 +60,14 @@
       </li>
     </ul>
     <ul class="navbar-nav ml-auto" style="margin-right: 50px;">
-      <!-- Verificar si está logueado -->
-      {{#isLogged}}
-      <li class="nav-item" style="border-right: 2px solid white;">
+            <li class="nav-item" style="border-right: 2px solid white;">
         <a class="nav-link" href="#" id="toggle-mode">
           <i class="fas fa-moon"></i>
         </a>
       </li>
+      <!-- Verificar si está logueado -->
+      {{#isLogged}}
+
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <img src="/images/userImages/Default.png" alt="Perfil" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 8px;">
@@ -82,7 +83,7 @@
 
       <!-- Si no está logueado -->
       {{^isLogged}}
-      <li class="nav-item" style="border-right: 2px solid white;">
+      <li class="nav-item iniciar-sesion">
         <a class="nav-link" href="/login" id="login">
           <i class="fas fa-sign-in-alt"></i> Iniciar sesión
         </a>

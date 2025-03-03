@@ -4,6 +4,7 @@ import java.sql.Blob;
 import java.util.Collection;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -15,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -43,6 +45,9 @@ public class User {
     @Column(nullable = false, unique = false)
     private String password;
 
+    @Column(nullable = false, unique = false)
+    private boolean enabled = false;
+
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
 
@@ -52,5 +57,8 @@ public class User {
 
     @OneToMany(mappedBy = "usuario")
     private List<Ficha> fichas;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private VerificationToken verificationToken;
 
 }

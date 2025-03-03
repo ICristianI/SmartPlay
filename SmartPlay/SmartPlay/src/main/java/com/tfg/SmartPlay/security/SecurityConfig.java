@@ -10,17 +10,22 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.tfg.SmartPlay.config.VerificationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final VerificationFilter verificationFilter;
     private final RepositoryUserDetailsService userDetailService;
     private final PasswordEncoder passwordEncoder;
 
-    public SecurityConfig(RepositoryUserDetailsService userDetailService) {
+    public SecurityConfig(RepositoryUserDetailsService userDetailService, VerificationFilter verificationFilter) {
         this.userDetailService = userDetailService;
         this.passwordEncoder = new BCryptPasswordEncoder();
+        this.verificationFilter = verificationFilter;
     }
 
     @Bean
@@ -47,9 +52,11 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable()) // Deshabilita CSRF
                 .authenticationProvider(authenticationProvider());
 
-        http.authorizeHttpRequests(authorize -> authorize
+                http.addFilterBefore(verificationFilter, UsernamePasswordAuthenticationFilter.class)
+
+                .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/", "/error", "/login", "/signup", "/css/**", "/js/**", "/images/**",
-                        "/users/register", "/config")
+                        "/users/register", "/json/**", "/config", "/msj", "/regin", "/verify", "/users/verificar", "/users/verificar/**", "/users/resend")
                 .permitAll()
                 .requestMatchers("/fames", "/juegos", "/fichas", "/crearFichas", "/users/**", "/f/*")
                 .hasAnyRole("ALUMNO", "PROFESOR"))

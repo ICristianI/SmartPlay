@@ -1,9 +1,16 @@
 package com.tfg.SmartPlay.controller;
 
 import com.tfg.SmartPlay.entity.User;
+import com.tfg.SmartPlay.entity.VerificationToken;
 import com.tfg.SmartPlay.repository.UserRepository;
+import com.tfg.SmartPlay.repository.VerificationTokenRepository;
 import com.tfg.SmartPlay.service.ImagenService;
 import com.tfg.SmartPlay.service.UserComponent;
+import com.tfg.SmartPlay.service.UserService;
+import com.tfg.SmartPlay.service.VerificationTokenService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,15 +24,20 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -47,20 +59,26 @@ public class UserController {
     @Autowired
     private ImagenService imagenService;
 
+    @Autowired
+    private UserService userService;
+    
+    @Autowired
+    private VerificationTokenService tokenService;
+
+    @Autowired
+    private VerificationTokenRepository tokenRepository;
+
+
+
     // Maneja el formulario de registro
 
     @PostMapping("/register")
-    public String register(@ModelAttribute User user, @RequestParam String rol, Model model) {
-        if (userRepository.existsByEmail(user.getEmail())) {
-            model.addAttribute("error", "El correo electrónico ya está en uso.");
-            return "RegistrarIniciarSesion/Registrar"; // Redirigir al formulario de registro si el correo ya existe
-        }
-        if (userRepository.existsByNombre(user.getNombre())) {
-            model.addAttribute("error", "El nombre de usuario ya está en uso.");
-            return "RegistrarIniciarSesion/Registrar"; // Redirigir al formulario de registro si el nombre de usuario ya existe
-                                                       
-        }
+    public String register(@ModelAttribute User user, @RequestParam String rol, Model model, RedirectAttributes redirectAttributes) {
 
+        if (!userService.validarUsuarioYCorreo(user, model, false)) {
+            redirectAttributes.addFlashAttribute("error", "El nombre o correo electrónico ya está en uso.");
+            return "redirect:/signup";
+        }
         // Si no se especifica un rol, se establece como ALUMNO
         if (rol == null || rol.isEmpty()) {
             user.setRoles(List.of("ALUMNO"));
@@ -81,9 +99,46 @@ public class UserController {
         user.setPhoto(photo);
         userRepository.save(user);
 
-        return "redirect:/login";
+        tokenService.sendVerificationEmail(user);
+
+        return "redirect:/verify";
 
     }
+
+    @PostMapping("/edit")
+    public String editarPerfil(@ModelAttribute User user, Model model, RedirectAttributes redirectAttributes) {
+        Optional<User> usuarioOptional = userRepository.findById(userComponent.getUser().get().getId());
+
+        if (usuarioOptional.isEmpty()) {
+            return "redirect:/users/perfil";
+        }
+
+        User usuario = usuarioOptional.get();
+
+        // Validar correo y nombre de usuario usando el servicio
+        if (!userService.validarUsuarioYCorreo(user, model, true)) {
+            redirectAttributes.addFlashAttribute("error", "El nombre ya está en uso.");
+            return "redirect:/users/perfil";
+        }
+
+        usuario.setNombre(user.getNombre());
+        usuario.setEdad(user.getEdad());
+
+        userRepository.save(usuario);
+        return "redirect:/users/perfil";
+    }
+
+    // Elimina un usuario
+    @PostMapping("/delete")
+    public String borrarUsuario(Model model, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            userService.deleteUser(userComponent.getUser().get().getId(), request, response);
+            model.addAttribute("message", "Usuario eliminado correctamente.");
+        } catch (Exception e) {
+            model.addAttribute("message", "Error al eliminar el usuario.");
+        }
+        return "redirect:/";
+    }  
 
     // Muestra el perfil del usuario
 
@@ -107,15 +162,58 @@ public class UserController {
         binder.setDisallowedFields("photo");
     }
 
-    // Maneja el cambio de la imagen de perfil del usuario
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public String guardarFotoUser(@RequestParam("photo") MultipartFile photo, Model model) throws Exception {
+    public String guardarFotoUser(@RequestParam("photo") MultipartFile photo, Model model, RedirectAttributes redirectAttributes) throws Exception {
+        // Verificar si la imagen excede el tamaño máximo de 1 MB
+        long maxSize = 1 * 1024 * 1024; // 1 MB
+        if (photo.getSize() > maxSize) {
+            // Si es mayor a 1 MB, mostrar un mensaje de error
+            redirectAttributes.addFlashAttribute("error", "La imagen no puede ser mayor a 1 MB.");
+
+            return "redirect:/users/perfil"; // Redirigir de vuelta al perfil sin cambios
+        }
+    
+        // Guardar la imagen si el tamaño es adecuado
         Blob photoBlob = imagenService.saveImage(photo);
         User user = userComponent.getUser().get();
         user.setPhoto(photoBlob);
         userRepository.save(user);
+    
         return "redirect:/users/perfil";
     }
+
+    
+ @GetMapping("/verificar")
+public String mostrarFormularioVerificacion(
+        @RequestParam("token") String token, 
+        @RequestParam(value = "message", required = false) String message, 
+        Model model) {
+    
+    tokenService.verifyToken(token);
+
+    if (message == null) {
+        message = "Verificación exitosa";
+    }
+
+    return "redirect:/verify?message=" + URLEncoder.encode(message, StandardCharsets.UTF_8);
+}
+
+
+    @GetMapping("/resend")
+    public String resend(@RequestParam String email, Model model) {
+        Optional<User> user = userRepository.findByEmail(email);
+        
+        if (user.isPresent() && !user.get().isEnabled()) {
+            tokenService.sendVerificationEmail(user.get());
+            model.addAttribute("message", "Correo de verificación reenviado.");
+        } else if (user.isPresent() && user.get().isEnabled()) {
+            model.addAttribute("error", "El usuario ya está verificado.");
+        } else {
+            model.addAttribute("error", "Usuario no encontrado.");
+        }
+        return "redirect:/RegistrarIniciarSesion/Verificar";
+    }
+    
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public String handleMaxSizeException(@PathVariable Long id, MaxUploadSizeExceededException exc, Model model) {
