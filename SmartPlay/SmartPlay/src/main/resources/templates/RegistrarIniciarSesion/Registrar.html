@@ -25,17 +25,17 @@
           <!-- Edad -->
           <div class="mb-3">
             <label for="edad" class="form-label" id="age">Edad</label>
-            <input type="number" class="form-control" id="edad" name="edad" placeholder="Tu edad" required>
+            <input type="number" class="form-control" id="edad" name="edad" min="1" max="120" placeholder="Tu edad" required>
           </div>
           <!-- Email -->
           <div class="mb-3">
             <label for="email" class="form-label" id="email">Correo electrónico</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="ejemplo@gmail.com" required>
+            <input type="email" class="form-control" id="email" name="email" maxlength="30" placeholder="ejemplo@gmail.com" required>
           </div>
           <!-- Contraseña -->
           <div class="mb-3">
             <label for="password" class="form-label" id="password">Contraseña</label>
-            <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña" required>
+            <input type="password" class="form-control" id="password" name="password" maxlength="15" placeholder="Contraseña" required>
           </div>
           <!-- Selección de rol -->
           <div class="mb-3">
@@ -60,4 +60,6 @@
       </div>
     </div>
   </div>
+
+  
   {{>footer}}

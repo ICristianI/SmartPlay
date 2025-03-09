@@ -1,0 +1,89 @@
+{{> header}}
+
+<div class="container mt-5">
+    <div class="row align-items-center">
+        <!-- Columna para los datos de la ficha -->
+        <div class="col-md-8">
+            <h1>{{ficha.nombre}}</h1>
+            <p><strong>Idioma:</strong> {{ficha.idioma}}</p>
+            <p><strong>Asignatura:</strong> {{ficha.asignatura}}</p>
+            <p><strong>Descripción:</strong> {{ficha.descripcion}}</p>
+            <p><strong>Contenido:</strong> {{ficha.contenido}}</p>
+
+            <!-- Mostrar error si existe -->
+            {{#error}}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <p>{{error}}</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">Cerrar</button>
+            </div>
+            {{/error}}
+
+            <!-- Mostrar mensaje si existe -->
+            {{#mensaje}}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <p>{{mensaje}}</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">Cerrar</button>
+            </div>
+            {{/mensaje}}
+
+            <!-- Botón para abrir el formulario de edición (si quieres incluirlo) -->
+            <button class="btn btn-primary navbar-custom mt-3" onclick="toggleEditForm()">Editar Ficha</button>
+
+            <!-- Formulario para editar los datos de la ficha (oculto por defecto) -->
+            <form id="editForm" action="/f/editar/{{ficha.id}}" method="post" style="display: none;">
+                <div class="mt-3">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" maxlength="100" value="{{ficha.nombre}}" required>
+                </div>
+                <div class="mt-3">
+                    <label for="idioma" class="form-label">Idioma</label>
+                    <input type="text" class="form-control" id="idioma" name="idioma" maxlength="50" value="{{ficha.idioma}}" required>
+                </div>
+                <div class="mt-3">
+                    <label for="asignatura" class="form-label">Asignatura</label>
+                    <input type="text" class="form-control" id="asignatura" name="asignatura" maxlength="50" value="{{ficha.asignatura}}" required>
+                </div>
+                <div class="mt-3">
+                    <label for="contenido" class="form-label">Contenido</label>
+                    <textarea class="form-control" id="contenido" name="contenido" maxlength="1000" required>{{ficha.contenido}}</textarea>
+                </div>
+                <div class="mt-3">
+                    <label for="descripcion" class="form-label">Descripción</label>
+                    <textarea class="form-control" id="descripcion" name="descripcion" maxlength="255" required>{{ficha.descripcion}}</textarea>
+                </div>
+                <button type="submit" class="btn btn-success  mt-3">Guardar Cambios</button>
+            </form>
+
+            <!-- Botón para eliminar la ficha -->
+            <form action="/f/eliminar/{{ficha.id}}" method="post" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta ficha? Esta acción no se puede deshacer.');">
+                <button type="submit" class="btn btn-danger mt-3">Eliminar Ficha</button>
+            </form>
+          
+            <form action="/f/listarFichas" method="get">
+                <button type="submit" class="btn btn-secondary mt-3">Volver</button>
+            </form>
+ 
+        </div>
+
+        <!-- Columna para la imagen de la ficha (ahora más grande) -->
+        <div class="col-md-4 text-center">
+            {{#ficha.imagen}}
+            <img 
+                src="/f/ficha/image/{{ficha.id}}" 
+                alt="Imagen de la ficha" 
+                class="img-fluid" 
+                style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 10px; object-fit: cover;"
+            />
+            {{/ficha.imagen}}
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleEditForm() {
+        var form = document.getElementById('editForm');
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+</script>
+
+{{> footer}}

@@ -165,4 +165,13 @@ footer {
   border-right: 2px solid white;
 }
 
+/* Ajuste de tamaños automático para H1*/
+
+h1 {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%; /* Evita que el texto sobresalga */
+  white-space: normal; /* Permite saltos de línea */
+}
+
 

@@ -1,0 +1,50 @@
+{{> header}}
+
+<div class="container mt-5">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h1>Mis Cuadernos</h1>
+            
+            <!-- Mostrar error si existe -->
+            {{#error}}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <p>{{error}}</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {{/error}}
+
+            <!-- Botón para abrir el formulario de nuevo cuaderno -->
+            <button class="btn btn-primary mt-3" onclick="toggleNewCuadernoForm()">Agregar Cuaderno</button>
+            
+            <!-- Formulario para agregar un nuevo cuaderno -->
+            <form id="newCuadernoForm" action="/cuadernos/add" method="post" style="display: none;" class="mt-3">
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre del Cuaderno</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" required>
+                </div>
+                <button type="submit" class="btn btn-success">Crear Cuaderno</button>
+            </form>
+            
+            <!-- Lista de cuadernos -->
+            <ul class="list-group mt-4">
+                {{#cuadernos}}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>{{nombre}}</span>
+                    <div>
+                        <button class="btn btn-sm btn-warning" onclick="toggleEditCuadernoForm('{{id}}')">Editar</button>
+                        <form action="/cuadernos/delete" method="post" class="d-inline" onsubmit="return confirm('¿Eliminar este cuaderno?');">
+                            <input type="hidden" name="id" value="{{id}}">
+                            <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                        </form>
+                    </div>
+                </li>
+                <!-- Formulario para editar cuaderno -->
+                <form id="editCuadernoForm{{id}}" action="/cuadernos/edit" method="post" style="display: none;" class="mt-2">
+                    <input type="hidden" name="id" value="{{id}}">
+                    <input type="text" class="form-control mb-2" name="nombre" value="{{nombre}}" required>
+                    <button type="submit" class="btn btn-success btn-sm">Guardar</button>
+                </form>
+                {{/cuadernos}}
+            </ul>
+        </div>
+    </div>

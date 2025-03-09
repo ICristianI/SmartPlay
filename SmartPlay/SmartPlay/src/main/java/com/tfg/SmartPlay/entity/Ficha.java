@@ -1,6 +1,7 @@
 package com.tfg.SmartPlay.entity;
 
 import java.sql.Blob;
+import java.util.List;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -54,4 +55,10 @@ public class Ficha {
     @ManyToOne
     @JoinColumn(name = "usuario_id")
     private User usuario;
+
+    @OneToMany(mappedBy = "fichas", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Cuaderno> cuadernos;
+
+
+
 }

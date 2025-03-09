@@ -2,6 +2,11 @@
 
 <!-- Main Content -->
 <div class="container mt-4 flex-grow-1">
+  <!-- Volver Button -->
+  <div class="d-flex justify-content-start mb-4">
+    <button class="btn btn-secondary" onclick="window.history.back();">Volver</button>
+  </div>
+
   <!-- Categories -->
   <div class="card-deck">
     <!-- Card 1: Crear Fichas -->
@@ -12,13 +17,11 @@
         <a href="/crearFichas" class="stretched-link"></a>
       </div>
     </div>
-
-    <!-- Card 2: Crear Cuaderno de Fichas -->
     <div class="card mb-3 shadow-sm">
-      <img src="/images/generalImages/CREARCUADERNO.png" class="card-img-top" alt="Crear Cuaderno de Fichas" />
+      <img src="/images/generalImages/CREARFICHA.png" class="card-img-top" alt="Ver Fichas" />
       <div class="card-body navbar-custom">
-        <h5 class="card-title" id="">Crear Cuaderno de Fichas</h5>
-        <a href="/crearCuaderno" class="stretched-link"></a>
+        <h5 class="card-title" id="">Ver Fichas</h5>
+        <a href="/f/listarFichas" class="stretched-link"></a>
       </div>
     </div>
   </div>
