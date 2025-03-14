@@ -30,14 +30,14 @@
             <button class="btn btn-primary navbar-custom mt-3" onclick="toggleEditForm()">Editar Ficha</button>
 
             <!-- Formulario para editar los datos de la ficha (oculto por defecto) -->
-            <form id="editForm" action="/f/editar/{{ficha.id}}" method="post" style="display: none;">
+            <form id="editForm" action="/f/editar" method="post" style="display: none;">
                 <div class="mt-3">
                     <label for="nombre" class="form-label">Nombre</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" maxlength="100" value="{{ficha.nombre}}" required>
+                    <input type="text" class="form-control" id="nombre" name="nombre" maxlength="40" value="{{ficha.nombre}}" required>
                 </div>
                 <div class="mt-3">
                     <label for="idioma" class="form-label">Idioma</label>
-                    <input type="text" class="form-control" id="idioma" name="idioma" maxlength="50" value="{{ficha.idioma}}" required>
+                    <input type="text" class="form-control" id="idioma" name="idioma" maxlength="30" value="{{ficha.idioma}}" required>
                 </div>
                 <div class="mt-3">
                     <label for="asignatura" class="form-label">Asignatura</label>
@@ -45,17 +45,20 @@
                 </div>
                 <div class="mt-3">
                     <label for="contenido" class="form-label">Contenido</label>
-                    <textarea class="form-control" id="contenido" name="contenido" maxlength="1000" required>{{ficha.contenido}}</textarea>
+                    <textarea class="form-control" id="contenido" name="contenido" maxlength="500" required>{{ficha.contenido}}</textarea>
                 </div>
                 <div class="mt-3">
                     <label for="descripcion" class="form-label">Descripción</label>
-                    <textarea class="form-control" id="descripcion" name="descripcion" maxlength="255" required>{{ficha.descripcion}}</textarea>
+                    <textarea class="form-control" id="descripcion" name="descripcion" maxlength="150" required>{{ficha.descripcion}}</textarea>
                 </div>
+                <input type="hidden" name="fichaId" value="{{ficha.id}}">
+
                 <button type="submit" class="btn btn-success  mt-3">Guardar Cambios</button>
             </form>
 
             <!-- Botón para eliminar la ficha -->
-            <form action="/f/eliminar/{{ficha.id}}" method="post" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta ficha? Esta acción no se puede deshacer.');">
+            <form action="/f/eliminar" method="post" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta ficha? Esta acción no se puede deshacer.');">
+                <input type="hidden" name="fichaId" value="{{ficha.id}}">
                 <button type="submit" class="btn btn-danger mt-3">Eliminar Ficha</button>
             </form>
           

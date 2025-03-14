@@ -93,9 +93,15 @@ public class HomeController {
     }
 
     @GetMapping("/Cuadernos")
-    public String crearCuadernos(Model model) {
+    public String Cuadernos(Model model) {
         return "Cuadernos/Cuadernos";
     }
+    
+    @GetMapping("/crearCuadernos")
+    public String crearCuadernos(Model model) {
+        return "Cuadernos/crearCuadernos";
+    }
+
     
 
 }

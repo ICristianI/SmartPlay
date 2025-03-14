@@ -1,0 +1,34 @@
+{{> header}}
+<div class="container mt-4">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h1 class="text-center mt-5">Mis Cuadernos</h1>
+        <div class="text-center mt-4">
+            <a href="/Cuadernos" class="btn btn-secondary">Volver</a>
+        </div>
+    </div>
+    <div class="row">
+        {{#cuadernos}}
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm"> <!-- Agregado mb-4 -->
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{nombre}}</h5>
+                    <p class="card-text text-muted">{{numeroFichas}} fichas</p>
+                    <form action="/cuadernos/ver" method="post">
+                        <input type="hidden" name="cuadernoId" value="{{id}}">
+                        <button type="submit" class="btn btn-primary navbar-custom">Ver Cuaderno</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {{/cuadernos}}
+    </div>
+
+    {{^cuadernos}}
+    <div class="text-center mt-5">
+        <p class="text-muted">Aún no has creado ningún cuaderno.</p>
+        <a href="/cuadernos/crear" class="btn btn-success">Crear un cuaderno</a>
+    </div>
+    {{/cuadernos}}
+</div>
+
+{{> footer}}

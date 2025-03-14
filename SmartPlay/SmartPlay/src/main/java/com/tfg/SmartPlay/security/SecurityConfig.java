@@ -58,7 +58,7 @@ public class SecurityConfig {
                 .requestMatchers("/", "/error", "/login", "/signup", "/css/**", "/js/**", "/images/**",
                         "/users/register", "/json/**", "/config", "/msj", "/regin", "/verify", "/users/verificar", "/users/verificar/**", "/users/resend")
                 .permitAll()
-                .requestMatchers("/f/**", "/fames", "/juegos", "/fichas", "/crearFichas", "/verFichas","/f/listarFichas", "/f/ficha/image/**","/Fichas/verFichas","/Cuadernos", "/users/**", "/c/*")
+                .requestMatchers("/f/**", "/fames", "/juegos", "/fichas", "/crearFichas", "/verFichas","/crearCuadernos","/f/listarFichas", "/f/ficha/image/**","/Fichas/verFichas","/Cuadernos", "/users/**", "/cuadernos/**")
                 .hasAnyRole("ALUMNO", "PROFESOR"))
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")

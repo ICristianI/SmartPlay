@@ -20,6 +20,9 @@ public class Cuaderno {
     @Column(nullable = false, unique = false)
     private String nombre;
 
+    @Column(nullable = false, unique = false)
+    private Integer numeroFichas;
+
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private User usuario;

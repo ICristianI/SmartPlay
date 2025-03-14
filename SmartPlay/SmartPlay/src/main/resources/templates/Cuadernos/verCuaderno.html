@@ -1,0 +1,141 @@
+{{> header}}
+
+<div class="container mt-4">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h1 class="text-center mt-5">Cuaderno: {{cuaderno.nombre}}</h1>
+        <div class="text-center mt-4">
+            <a href="/cuadernos" class="btn btn-secondary">Volver</a>
+        </div>
+    </div>
+
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <p><strong>Propietario:</strong> {{cuaderno.usuario.nombre}}</p>
+            <p><strong>Número de fichas:</strong> {{cuaderno.numeroFichas}}</p>
+
+            <!-- Mensajes de error y éxito -->
+            {{#error}}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <p>{{error}}</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">Cerrar</button>
+            </div>
+            {{/error}}
+
+            {{#mensaje}}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <p>{{mensaje}}</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">Cerrar</button>
+            </div>
+            {{/mensaje}}
+
+            <!-- Botón para eliminar el cuaderno -->
+            <form action="/cuadernos/eliminar" method="post" onsubmit="return confirmarEliminacion();">
+                <input type="hidden" name="cuadernoId" value="{{cuaderno.id}}">
+                <button type="submit" class="btn btn-danger mt-3">Eliminar Cuaderno</button>
+            </form>
+
+            <!-- Botón para abrir el formulario de edición -->
+            <button class="btn btn-primary navbar-custom mt-3" onclick="toggleEditForm()">Editar Cuaderno</button>
+
+            <!-- Formulario para editar los datos del cuaderno -->
+            <form id="editForm" action="/cuadernos/editar" method="post" style="display: none;">
+                <div class="mt-4">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" maxlength="100" value="{{cuaderno.nombre}}" required>
+                </div>
+                <input type="hidden" name="cuadernoId" value="{{cuaderno.id}}">
+
+                <!-- Botón para abrir el modal con más espacio -->
+                <div class="mb-4 mt-4">
+                    <label class="form-label">Seleccionar Fichas</label>
+                    <button type="button" class="btn btn-primary navbar-custom" data-bs-toggle="modal" data-bs-target="#fichaModal">
+                        Elegir Fichas
+                    </button>
+                </div>
+
+                <!-- Contenedor de nuevas fichas seleccionadas -->
+                <div class="mb-3">
+                    <label class="form-label">Fichas para añadir</label>
+                    <ul id="listaFichas" class="list-group"></ul>
+                </div>
+
+                <!-- Input oculto para enviar IDs de fichas seleccionadas -->
+                <input type="hidden" name="fichasSeleccionadas" id="fichasSeleccionadas" />
+
+                <button type="submit" class="btn btn-success mt-3">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Fichas agregadas al cuaderno -->
+    <div class="row">
+        {{#cuaderno.fichas}}
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">{{nombre}}</h5>
+                    <p class="card-text"><strong>Idioma:</strong> {{idioma}}</p>
+                    <p class="card-text"><strong>Asignatura:</strong> {{asignatura}}</p>
+                    
+                    <!-- Botón para ver la ficha -->
+                    <form action="/f/seleccionarFicha" method="post" class="mb-2">
+                        <input type="hidden" name="fichaId" value="{{id}}">
+                        <button type="submit" class="btn btn-primary navbar-custom w-100">Ver Ficha</button>
+                    </form>
+
+                    <!-- Botón para eliminar la ficha del cuaderno -->
+                    <form action="/cuadernos/eliminarFicha" method="post">
+                        <input type="hidden" name="cuadernoId" value="{{cuaderno.id}}">
+                        <input type="hidden" name="fichaId" value="{{id}}">
+                        <button type="submit" class="btn btn-danger w-100">Eliminar del Cuaderno</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {{/cuaderno.fichas}}
+    </div>
+
+    <!-- Modal para seleccionar fichas -->
+    <div class="modal fade" id="fichaModal" tabindex="-1" aria-labelledby="fichaModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fichaModalLabel">Seleccionar Fichas</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        {{#fichasNoAgregadas}}
+                        <div class="col-md-4 mb-4">
+                            <div class="card ficha-item h-100 shadow-sm" data-id="{{id}}" data-nombre="{{nombre}}" onclick="agregarFicha('{{id}}', '{{nombre}}')">
+                                <img src="/f/ficha/image/{{id}}" class="card-img-top" alt="Imagen de {{nombre}}" style="height: 150px; object-fit: cover;" />
+                                <div class="card-body text-center">
+                                    <p class="card-text">{{nombre}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {{/fichasNoAgregadas}}
+
+                        {{^fichasNoAgregadas}}
+                        <div class="alert alert-warning text-center">
+                            No hay más fichas disponibles para agregar.
+                        </div>
+                        {{/fichasNoAgregadas}}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="/js/cuadernoEditar.js"></script>
+
+<script src="/js/cuaderno.js"></script>
+
+{{> footer}}
