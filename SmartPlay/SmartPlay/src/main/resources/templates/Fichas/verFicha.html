@@ -2,15 +2,21 @@
 
 <div class="container mt-5">
     <div class="row align-items-center">
-        <!-- Columna para los datos de la ficha -->
         <div class="col-md-8">
             <h1>{{ficha.nombre}}</h1>
-            <p><strong>Idioma:</strong> {{ficha.idioma}}</p>
-            <p><strong>Asignatura:</strong> {{ficha.asignatura}}</p>
-            <p><strong>Descripción:</strong> {{ficha.descripcion}}</p>
-            <p><strong>Contenido:</strong> {{ficha.contenido}}</p>
+            <p class="text-break"><strong>Idioma:</strong> {{ficha.idioma}}</p>
+            <p class="text-break"><strong>Asignatura:</strong> {{ficha.asignatura}}</p>
+            <p class="text-break"><strong>Descripción:</strong></p>
+            <div class="p-3 border rounded bg-light" style="word-wrap: break-word; overflow-wrap: break-word;">
+                {{ficha.descripcion}}
+            </div>
+            <p class="mt-3"><strong>Contenido:</strong></p>
+            <div class="p-3 border rounded bg-light" style="word-wrap: break-word; overflow-wrap: break-word;">
+                {{ficha.contenido}}
+            </div>
 
-            <!-- Mostrar error si existe -->
+
+            <!-- Mensajes -->
             {{#error}}
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <p>{{error}}</p>
@@ -18,7 +24,6 @@
             </div>
             {{/error}}
 
-            <!-- Mostrar mensaje si existe -->
             {{#mensaje}}
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <p>{{mensaje}}</p>
@@ -26,10 +31,10 @@
             </div>
             {{/mensaje}}
 
-            <!-- Botón para abrir el formulario de edición (si quieres incluirlo) -->
+            <!-- Botón para abrir el formulario de edición -->
             <button class="btn btn-primary navbar-custom mt-3" onclick="toggleEditForm()">Editar Ficha</button>
 
-            <!-- Formulario para editar los datos de la ficha (oculto por defecto) -->
+            <!-- Formulario para editar los datos de la ficha -->
             <form id="editForm" action="/f/editar" method="post" style="display: none;">
                 <div class="mt-3">
                     <label for="nombre" class="form-label">Nombre</label>
@@ -53,7 +58,7 @@
                 </div>
                 <input type="hidden" name="fichaId" value="{{ficha.id}}">
 
-                <button type="submit" class="btn btn-success  mt-3">Guardar Cambios</button>
+                <button type="submit" class="btn btn-success mt-3">Guardar Cambios</button>
             </form>
 
             <!-- Botón para eliminar la ficha -->
@@ -61,14 +66,13 @@
                 <input type="hidden" name="fichaId" value="{{ficha.id}}">
                 <button type="submit" class="btn btn-danger mt-3">Eliminar Ficha</button>
             </form>
-          
+
             <form action="/f/listarFichas" method="get">
                 <button type="submit" class="btn btn-secondary mt-3">Volver</button>
             </form>
- 
         </div>
 
-        <!-- Columna para la imagen de la ficha (ahora más grande) -->
+        <!-- Columna para la imagen de la ficha -->
         <div class="col-md-4 text-center">
             {{#ficha.imagen}}
             <img 
@@ -80,6 +84,40 @@
             {{/ficha.imagen}}
         </div>
     </div>
+
+    <hr>
+
+    <!-- Mostrar los cuadernos en los que está la ficha -->
+    <h3 class="mt-5 mb-4">Esta ficha pertenece a los siguientes cuadernos:</h3>
+
+    <div class="row">
+        {{#cuadernos}}
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">{{nombre}}</h5>
+                    <p class="card-text"><strong>Propietario:</strong> {{usuario.nombre}}</p>
+                    <p class="card-text"><strong>Número de fichas:</strong> {{numeroFichas}}</p>
+
+                    <!-- Botón para ver el cuaderno -->
+                    <form action="/cuadernos/ver" method="post">
+                        <input type="hidden" name="cuadernoId" value="{{id}}">
+                        <button type="submit" class="btn btn-primary navbar-custom w-100">Ver Cuaderno</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {{/cuadernos}}
+    </div>
+
+    <!-- Si no tiene cuadernos, mostrar un mensaje -->
+    {{^cuadernos}}
+    <div class="alert alert-warning text-center mt-4">
+        <p>Esta ficha no pertenece a ningún cuaderno.</p>
+        <a href="/cuadernos/crear" class="btn btn-primary navbar-custom">Crear un Cuaderno</a>
+    </div>
+    {{/cuadernos}}
+
 </div>
 
 <script>

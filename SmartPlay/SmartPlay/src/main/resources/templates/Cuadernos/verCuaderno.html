@@ -41,7 +41,8 @@
             <form id="editForm" action="/cuadernos/editar" method="post" style="display: none;">
                 <div class="mt-4">
                     <label for="nombre" class="form-label">Nombre</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" maxlength="100" value="{{cuaderno.nombre}}" required>
+                    <input type="text" class="form-control" id="nombre" name="nombre" maxlength="30"
+                    value="{{cuaderno.nombre}}" required>
                 </div>
                 <input type="hidden" name="cuadernoId" value="{{cuaderno.id}}">
 

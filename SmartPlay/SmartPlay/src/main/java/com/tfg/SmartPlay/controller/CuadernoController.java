@@ -77,7 +77,7 @@ public class CuadernoController {
             List<Ficha> fichasNoAgregadas = cuadernoService.obtenerFichasNoAgregadas(cuadernoId, userDetails.getUsername());
 
             model.addAttribute("cuaderno", cuaderno.get());
-            model.addAttribute("fichas", fichaService.obtenerFichasPorUsuario(userComponent.getUser().get()));
+            model.addAttribute("fichas", fichaService.obtenerFichasPorUsuario(userDetails.getUsername()));
             model.addAttribute("fichasNoAgregadas", fichasNoAgregadas); // Pasamos las fichas disponibles
 
 
@@ -95,7 +95,7 @@ public class CuadernoController {
     public String mostrarFormularioCreacion(Model model) {
         User usuario = userComponent.getUser().get();
         model.addAttribute("cuaderno", new Cuaderno());
-        model.addAttribute("fichas", fichaService.obtenerFichasPorUsuario(usuario));
+        model.addAttribute("fichas", fichaService.obtenerFichasPorUsuario(usuario.getEmail()));
         return "Cuadernos/crearCuadernos";
     }
 

@@ -154,4 +154,9 @@ public class CuadernoService {
         return false;
     }
 
+
+    public List<Cuaderno> obtenerCuadernosConFicha(Ficha ficha) {
+        return cuadernoRepository.findByFichasContaining(ficha);
+    }
+    
 }

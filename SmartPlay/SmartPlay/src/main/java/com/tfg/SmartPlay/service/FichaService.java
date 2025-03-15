@@ -27,9 +27,6 @@ public class FichaService {
     @Autowired
     private ImagenService imagenService;
 
-    @Autowired
-    private UserComponent userComponent;
-
     public List<Ficha> listarFichas(String email) {
         User usuario = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -44,12 +41,15 @@ public class FichaService {
     }
 
     public void editarFicha(Long fichaId, Ficha fichaEditada, String email) {
-        Ficha ficha = obtenerFicha(fichaId, email).orElseThrow(() -> new RuntimeException("Ficha no encontrada o sin permisos"));
+        Ficha ficha = obtenerFicha(fichaId, email)
+                .orElseThrow(() -> new RuntimeException("Ficha no encontrada o sin permisos"));
+
         ficha.setNombre(fichaEditada.getNombre());
         ficha.setIdioma(fichaEditada.getIdioma());
         ficha.setAsignatura(fichaEditada.getAsignatura());
         ficha.setContenido(fichaEditada.getContenido());
         ficha.setDescripcion(fichaEditada.getDescripcion());
+
         fichaRepository.save(ficha);
     }
 
@@ -65,30 +65,36 @@ public class FichaService {
         return ResponseEntity.notFound().build();
     }
 
-    public void guardarFicha(Ficha ficha, MultipartFile imagenFondo) throws Exception {
+    public void guardarFicha(Ficha ficha, MultipartFile imagenFondo, String email) throws Exception {
+        User usuario = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        ficha.setUsuario(usuario);
+
         if (!imagenFondo.isEmpty()) {
             Blob imagen = imagenService.saveImage(imagenFondo);
             ficha.setImagen(imagen);
         }
-        ficha.setUsuario(userComponent.getUser().orElse(null));
+
         fichaRepository.save(ficha);
     }
 
     public void eliminarFicha(Long fichaId, String email) {
-        Ficha ficha = obtenerFicha(fichaId, email).orElseThrow(() -> new RuntimeException("Ficha no encontrada o sin permisos"));
+        Ficha ficha = obtenerFicha(fichaId, email)
+                .orElseThrow(() -> new RuntimeException("Ficha no encontrada o sin permisos"));
+
         fichaRepository.deleteById(fichaId);
     }
 
-    public List<Ficha> obtenerFichasPorUsuario(User usuario) {
+    public List<Ficha> obtenerFichasPorUsuario(String email) {
+        User usuario = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         return fichaRepository.findByUsuario(usuario);
-    }
-
-    public List<Ficha> obtenerFichasPorIds(List<Long> ids) {
-        return fichaRepository.findAllById(ids);
     }
 
     public Optional<Ficha> obtenerFichaPorId(Long fichaId) {
         return fichaRepository.findById(fichaId);
     }
+    
     
 }

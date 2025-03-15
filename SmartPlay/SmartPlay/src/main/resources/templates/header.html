@@ -54,19 +54,29 @@
       <li class="nav-item">
         <a class="nav-link btn" href="/fames" style="margin-right: 15px;" id="files">Fichas</a>
       </li>
+      
+      {{#isLogged}}
+      <li class="nav-item">
+        <a class="nav-link btn" href="/cuadernos" style="margin-right: 15px;" id="cuadernos">Cuadernos</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link btn" href="/juegos" style="margin-right: 15px;" id="juegos">Juegos</a>
+      </li>
+      {{/isLogged}}
+
       <li class="nav-item">
         <a class="nav-link btn" href="/m/list" id="statistics">Estadísticas</a>
       </li>
     </ul>
     <ul class="navbar-nav ml-auto" style="margin-right: 50px;">
-            <li class="nav-item" style="border-right: 2px solid white;">
+      <li class="nav-item" style="border-right: 2px solid white;">
         <a class="nav-link" href="#" id="toggle-mode">
           <i class="fas fa-moon"></i>
         </a>
       </li>
+
       <!-- Verificar si está logueado -->
       {{#isLogged}}
-
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <img src="/users/image" alt="Perfil" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 8px;">
@@ -96,5 +106,3 @@
     </ul>
   </div>
 </nav>
-
-
