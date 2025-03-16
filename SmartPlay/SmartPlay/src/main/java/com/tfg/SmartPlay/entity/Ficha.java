@@ -56,7 +56,7 @@ public class Ficha {
     @JoinColumn(name = "usuario_id")
     private User usuario;
 
-    @OneToMany(mappedBy = "fichas", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany(mappedBy = "fichas")
     private List<Cuaderno> cuadernos;
 
 

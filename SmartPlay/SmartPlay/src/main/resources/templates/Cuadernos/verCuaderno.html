@@ -13,7 +13,6 @@
             <p><strong>Propietario:</strong> {{cuaderno.usuario.nombre}}</p>
             <p><strong>Número de fichas:</strong> {{cuaderno.numeroFichas}}</p>
 
-            <!-- Mensajes de error y éxito -->
             {{#error}}
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <p>{{error}}</p>
@@ -28,16 +27,13 @@
             </div>
             {{/mensaje}}
 
-            <!-- Botón para eliminar el cuaderno -->
             <form action="/cuadernos/eliminar" method="post" onsubmit="return confirmarEliminacion();">
                 <input type="hidden" name="cuadernoId" value="{{cuaderno.id}}">
                 <button type="submit" class="btn btn-danger mt-3">Eliminar Cuaderno</button>
             </form>
 
-            <!-- Botón para abrir el formulario de edición -->
             <button class="btn btn-primary navbar-custom mt-3" onclick="toggleEditForm()">Editar Cuaderno</button>
 
-            <!-- Formulario para editar los datos del cuaderno -->
             <form id="editForm" action="/cuadernos/editar" method="post" style="display: none;">
                 <div class="mt-4">
                     <label for="nombre" class="form-label">Nombre</label>
@@ -46,7 +42,6 @@
                 </div>
                 <input type="hidden" name="cuadernoId" value="{{cuaderno.id}}">
 
-                <!-- Botón para abrir el modal con más espacio -->
                 <div class="mb-4 mt-4">
                     <label class="form-label">Seleccionar Fichas</label>
                     <button type="button" class="btn btn-primary navbar-custom" data-bs-toggle="modal" data-bs-target="#fichaModal">
@@ -54,13 +49,11 @@
                     </button>
                 </div>
 
-                <!-- Contenedor de nuevas fichas seleccionadas -->
                 <div class="mb-3">
                     <label class="form-label">Fichas para añadir</label>
                     <ul id="listaFichas" class="list-group"></ul>
                 </div>
 
-                <!-- Input oculto para enviar IDs de fichas seleccionadas -->
                 <input type="hidden" name="fichasSeleccionadas" id="fichasSeleccionadas" />
 
                 <button type="submit" class="btn btn-success mt-3">Guardar Cambios</button>
@@ -71,8 +64,8 @@
     <hr>
 
     <!-- Fichas agregadas al cuaderno -->
-    <div class="row">
-        {{#cuaderno.fichas}}
+    <div class="row" id="contenedorFichas">
+        {{#fichasPage}}
         <div class="col-md-4">
             <div class="card mb-4">
                 <div class="card-body">
@@ -80,13 +73,11 @@
                     <p class="card-text"><strong>Idioma:</strong> {{idioma}}</p>
                     <p class="card-text"><strong>Asignatura:</strong> {{asignatura}}</p>
                     
-                    <!-- Botón para ver la ficha -->
                     <form action="/f/seleccionarFicha" method="post" class="mb-2">
                         <input type="hidden" name="fichaId" value="{{id}}">
                         <button type="submit" class="btn btn-primary navbar-custom w-100">Ver Ficha</button>
                     </form>
 
-                    <!-- Botón para eliminar la ficha del cuaderno -->
                     <form action="/cuadernos/eliminarFicha" method="post">
                         <input type="hidden" name="cuadernoId" value="{{cuaderno.id}}">
                         <input type="hidden" name="fichaId" value="{{id}}">
@@ -95,8 +86,39 @@
                 </div>
             </div>
         </div>
-        {{/cuaderno.fichas}}
+        {{/fichasPage}}
+
+        {{^fichasPage}}
+        <div class="col-12">
+            <div class="alert alert-warning text-center">
+                Aún no tienes fichas en este cuaderno.
+            </div>
+        </div>
+        {{/fichasPage}}
     </div>
+
+    <!-- PAGINACIÓN -->
+<nav aria-label="Paginación" id="navPaginacion">
+    <input type="hidden" id="pageSize" value="3">
+
+    <p class="text-center mt-2">Página {{currentPage}} de {{totalPages}}</p>
+
+    <ul class="pagination justify-content-center mt-3">
+        {{#hasPrev}}
+        <li class="page-item">
+            <button class="page-link" data-page="{{prevPage}}" onclick="cargarPagina(this)">Anterior</button>
+        </li>
+        {{/hasPrev}}
+
+        {{#hasNext}}
+        <li class="page-item">
+            <button class="page-link" data-page="{{nextPage}}" onclick="cargarPagina(this)">Siguiente</button>
+        </li>
+        {{/hasNext}}
+    </ul>
+</nav>
+
+    
 
     <!-- Modal para seleccionar fichas -->
     <div class="modal fade" id="fichaModal" tabindex="-1" aria-labelledby="fichaModalLabel" aria-hidden="true">
@@ -120,9 +142,12 @@
                         {{/fichasNoAgregadas}}
 
                         {{^fichasNoAgregadas}}
-                        <div class="alert alert-warning text-center">
-                            No hay más fichas disponibles para agregar.
-                        </div>
+                        <div class="col-12">
+                            <div class="alert alert-warning text-center d-flex justify-content-center align-items-center">
+                                No hay más fichas disponibles para agregar.
+                            </div>
+                        </div>                        
+                        
                         {{/fichasNoAgregadas}}
                     </div>
                 </div>
@@ -135,8 +160,9 @@
 
 </div>
 
-<script src="/js/cuadernoEditar.js"></script>
-
 <script src="/js/cuaderno.js"></script>
+<script src="/js/cuadernoEditar.js"></script>
+<script src="/js/PaginacionAJAX.js"></script>
+
 
 {{> footer}}

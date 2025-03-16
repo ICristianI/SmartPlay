@@ -5,6 +5,9 @@ import com.tfg.SmartPlay.entity.User;
 import com.tfg.SmartPlay.repository.FichaRepository;
 import com.tfg.SmartPlay.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -95,6 +98,31 @@ public class FichaService {
     public Optional<Ficha> obtenerFichaPorId(Long fichaId) {
         return fichaRepository.findById(fichaId);
     }
+
+    public Page<Ficha> obtenerFichasPaginadas(Long cuadernoId, int page, int size) {
+
+        Page<Ficha> fichas = fichaRepository.obtenerFichasPorCuaderno(cuadernoId, PageRequest.of(page, size));
+
+        System.out.println("Fichas recuperadas para el cuaderno " + cuadernoId + ": " + fichas.getContent().size());
+
+        return fichas;
+
+    }
+
+    public Page<Ficha> obtenerFichasPaginadasNoAgregadas(Long cuadernoId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return fichaRepository.findFichasNoAgregadas(cuadernoId, pageable);
+    }
+
+    public Page<Ficha> obtenerFichasPaginadasPorUsuario(String email, int page, int size) {
+        User usuario = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    
+        Pageable pageable = PageRequest.of(page, size);
+        return fichaRepository.findByUsuario(usuario, pageable);
+    }
+
     
     
+
 }

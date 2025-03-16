@@ -27,10 +27,6 @@ function agregarFicha(id, nombre) {
     var itemExistente = document.querySelector("#listaFichas li[data-id='" + id + "']");
 
     if (!itemExistente) { // Evitar duplicados
-        var li = document.createElement("li");
-        li.className = "list-group-item d-flex justify-content-between align-items-center ficha-seleccionada";
-        li.setAttribute("data-id", id);
-        li.innerHTML = nombre + '<span class="eliminar-ficha ms-2" onclick="eliminarFicha(\'' + id + '\')">&times;</span>';
         lista.appendChild(li);
         actualizarFichasSeleccionadas();
     }

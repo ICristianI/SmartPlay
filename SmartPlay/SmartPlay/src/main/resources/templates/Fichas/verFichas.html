@@ -7,9 +7,10 @@
             <a href="/fichas" class="btn btn-secondary">Volver</a>
         </div>
     </div>
+
     <div class="row">
         {{#fichas}}
-        <div class="col-md-4 mb-4"> <!-- Agregado mb-4 aquí para separación vertical -->
+        <div class="col-md-4 mb-4">
             <div class="card h-100 shadow-sm">
                 <img src="/f/ficha/image/{{id}}" class="card-img-top" alt="Vista previa de la ficha" style="height: 150px; object-fit: cover;">
                 <div class="card-body text-center">
@@ -24,7 +25,6 @@
         </div>
         {{/fichas}}
     </div>
-    
 
     {{^fichas}}
     <div class="text-center mt-5">
@@ -32,6 +32,29 @@
         <a href="/f/crearFichas" class="btn btn-success">Crear una ficha</a>
     </div>
     {{/fichas}}
+
+    <!-- PAGINACIÓN -->
+    {{#totalPages}}
+    <nav aria-label="Paginación" id="navPaginacion">
+        <input type="hidden" id="pageSize" value="6">
+
+        <p class="text-center mt-2">Página {{currentPage}} de {{totalPages}}</p>
+
+        <ul class="pagination justify-content-center mt-3">
+            {{#hasPrev}}
+            <li class="page-item">
+                <a class="page-link" href="?page={{prevPage}}">Anterior</a>
+            </li>
+            {{/hasPrev}}
+
+            {{#hasNext}}
+            <li class="page-item">
+                <a class="page-link" href="?page={{nextPage}}">Siguiente</a>
+            </li>
+            {{/hasNext}}
+        </ul>
+    </nav>
+    {{/totalPages}}
 
 </div>
 

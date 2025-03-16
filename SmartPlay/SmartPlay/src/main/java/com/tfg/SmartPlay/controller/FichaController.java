@@ -14,8 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.data.domain.Page;
 
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -29,10 +29,29 @@ public class FichaController {
     private CuadernoService cuadernoService;
 
     @GetMapping("/listarFichas")
-    public String listarFichas(Model model, @AuthenticationPrincipal UserDetails userDetails, HttpSession session) {
-        List<Ficha> fichas = fichaService.listarFichas(userDetails.getUsername());
-        model.addAttribute("fichas", fichas);
-        session.removeAttribute("fichaId");
+    public String listarFichas(Model model,
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam(defaultValue = "0") int page) {
+
+        int size = 6; // Tamaño de la paginación
+
+        // Obtener fichas paginadas
+        Page<Ficha> fichasPage = fichaService.obtenerFichasPaginadasPorUsuario(userDetails.getUsername(), page, size);
+
+        int totalPages = fichasPage.getTotalPages();
+        boolean hasPrev = page > 0;
+        boolean hasNext = page < totalPages - 1;
+        int prevPage = hasPrev ? page - 1 : 0;
+        int nextPage = hasNext ? page + 1 : page;
+
+        model.addAttribute("fichas", fichasPage.getContent());
+        model.addAttribute("currentPage", page + 1);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("hasPrev", hasPrev);
+        model.addAttribute("hasNext", hasNext);
+        model.addAttribute("prevPage", prevPage);
+        model.addAttribute("nextPage", nextPage);
+
         return "/Fichas/verFichas";
     }
 
@@ -56,7 +75,9 @@ public class FichaController {
     public String verFichaDesdeSesion(HttpSession session,
             @AuthenticationPrincipal UserDetails userDetails,
             Model model,
+            @RequestParam(defaultValue = "0") int page, // Página actual
             RedirectAttributes redirectAttributes) {
+
         Long fichaId = (Long) session.getAttribute("fichaId");
 
         if (fichaId == null) {
@@ -69,9 +90,23 @@ public class FichaController {
         if (ficha.isPresent()) {
             model.addAttribute("ficha", ficha.get());
 
-            // Obtener cuadernos que contienen esta ficha
-            List<Cuaderno> cuadernos = cuadernoService.obtenerCuadernosConFicha(ficha.get());
-            model.addAttribute("cuadernos", cuadernos);
+            // Obtener cuadernos paginados que contienen esta ficha
+            int size = 3; // Tamaño de la paginación
+            Page<Cuaderno> cuadernosPage = cuadernoService.obtenerCuadernosConFichaPaginados(ficha.get(), page, size);
+
+            int totalPages = cuadernosPage.getTotalPages();
+            boolean hasPrev = page > 0;
+            boolean hasNext = page < totalPages - 1;
+            int prevPage = hasPrev ? page - 1 : 0;
+            int nextPage = hasNext ? page + 1 : page;
+
+            model.addAttribute("cuadernos", cuadernosPage.getContent());
+            model.addAttribute("currentPage", page + 1);
+            model.addAttribute("totalPages", totalPages);
+            model.addAttribute("hasPrev", hasPrev);
+            model.addAttribute("hasNext", hasNext);
+            model.addAttribute("prevPage", prevPage);
+            model.addAttribute("nextPage", nextPage);
 
             return "Fichas/verFicha";
         } else {

@@ -1,9 +1,7 @@
 package com.tfg.SmartPlay.controller;
 
 import com.tfg.SmartPlay.entity.User;
-import com.tfg.SmartPlay.entity.VerificationToken;
 import com.tfg.SmartPlay.repository.UserRepository;
-import com.tfg.SmartPlay.repository.VerificationTokenRepository;
 import com.tfg.SmartPlay.service.ImagenService;
 import com.tfg.SmartPlay.service.UserComponent;
 import com.tfg.SmartPlay.service.UserService;
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,11 +34,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Controller
 @RequestMapping("/users")
@@ -64,11 +57,6 @@ public class UserController {
     
     @Autowired
     private VerificationTokenService tokenService;
-
-    @Autowired
-    private VerificationTokenRepository tokenRepository;
-
-
 
     // Maneja el formulario de registro
 

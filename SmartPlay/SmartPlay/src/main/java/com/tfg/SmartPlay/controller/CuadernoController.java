@@ -8,6 +8,7 @@ import com.tfg.SmartPlay.service.FichaService;
 import com.tfg.SmartPlay.service.UserComponent;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -35,15 +36,31 @@ public class CuadernoController {
      */
     @GetMapping
     public String listarCuadernos(Model model,
-            HttpSession session,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        // Eliminar cuadernoId de la sesión solo al listar todos los cuadernos
-        session.removeAttribute("cuadernoId");
-
-        List<Cuaderno> cuadernos = cuadernoService.listarCuadernos(userDetails.getUsername());
-        model.addAttribute("cuadernos", cuadernos);
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam(defaultValue = "0") int page) {
+    
+        int size = 6; // Tamaño de la paginación
+    
+        // Obtener cuadernos paginados
+        Page<Cuaderno> cuadernosPage = cuadernoService.listarCuadernosPaginados(userDetails.getUsername(), page, size);
+    
+        int totalPages = cuadernosPage.getTotalPages();
+        boolean hasPrev = page > 0;
+        boolean hasNext = page < totalPages - 1;
+        int prevPage = hasPrev ? page - 1 : 0;
+        int nextPage = hasNext ? page + 1 : page;
+    
+        model.addAttribute("cuadernos", cuadernosPage.getContent());
+        model.addAttribute("currentPage", page + 1);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("hasPrev", hasPrev);
+        model.addAttribute("hasNext", hasNext);
+        model.addAttribute("prevPage", prevPage);
+        model.addAttribute("nextPage", nextPage);
+    
         return "Cuadernos/verCuadernos";
     }
+    
 
     /**
      * POST: Guarda el cuadernoId en sesión y redirige a GET /ver.
@@ -61,7 +78,10 @@ public class CuadernoController {
     public String verCuadernoGet(Model model,
             HttpSession session,
             @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam(defaultValue = "0") int page, // Página actual
+            @RequestParam(defaultValue = "3") int size,
             RedirectAttributes redirectAttributes) {
+
         Long cuadernoId = (Long) session.getAttribute("cuadernoId");
 
         if (cuadernoId == null) {
@@ -73,13 +93,34 @@ public class CuadernoController {
                 userDetails.getUsername());
 
         if (cuaderno.isPresent()) {
+            Cuaderno cuadernoObj = cuaderno.get();
 
-            List<Ficha> fichasNoAgregadas = cuadernoService.obtenerFichasNoAgregadas(cuadernoId, userDetails.getUsername());
+            // Obtener fichas no agregadas para el modal
+            List<Ficha> fichasNoAgregadas = cuadernoService.obtenerFichasNoAgregadas(cuadernoId,
+                    userDetails.getUsername());
 
-            model.addAttribute("cuaderno", cuaderno.get());
-            model.addAttribute("fichas", fichaService.obtenerFichasPorUsuario(userDetails.getUsername()));
-            model.addAttribute("fichasNoAgregadas", fichasNoAgregadas); // Pasamos las fichas disponibles
+            // Obtener fichas paginadas
+            Page<Ficha> fichasPage = fichaService.obtenerFichasPaginadas(cuadernoId, page, size);
 
+            int totalPages = fichasPage.getTotalPages();
+            boolean hasPrev = page > 0;
+            boolean hasNext = page < totalPages - 1;
+    
+            int prevPage = hasPrev ? page - 1 : 0;
+            int nextPage = hasNext ? page + 1 : page;
+
+            model.addAttribute("prevPage", prevPage);
+            model.addAttribute("nextPage", nextPage);
+            model.addAttribute("hasPrev", hasPrev);
+            model.addAttribute("hasNext", hasNext);
+            model.addAttribute("currentPage", page+1);
+            model.addAttribute("totalPages", totalPages);
+            model.addAttribute("size", size);
+
+            model.addAttribute("cuaderno", cuadernoObj);
+            model.addAttribute("fichasPage", fichasPage.getContent());
+            model.addAttribute("totalPages", fichasPage.getTotalPages());
+            model.addAttribute("fichasNoAgregadas", fichasNoAgregadas);
 
             return "Cuadernos/verCuaderno";
         } else {

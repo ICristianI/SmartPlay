@@ -6,6 +6,9 @@ import com.tfg.SmartPlay.entity.User;
 import com.tfg.SmartPlay.repository.CuadernoRepository;
 import com.tfg.SmartPlay.repository.FichaRepository;
 import com.tfg.SmartPlay.repository.UserRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,12 +34,11 @@ public class CuadernoService {
     @Autowired
     private UserRepository userRepository;
 
+public Page<Cuaderno> listarCuadernosPaginados(String usuarioEmail, int page, int size) {
+    Pageable pageable = PageRequest.of(page, size);
+    return cuadernoRepository.findByUsuarioEmail(usuarioEmail, pageable);
+}
 
-    public List<Cuaderno> listarCuadernos(String email) {
-        User usuario = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        return cuadernoRepository.findByUsuario(usuario);
-    }
 
     public Optional<Cuaderno> obtenerCuadernoPorIdYUsuario(Long cuadernoId, String email) {
         User usuario = userRepository.findByEmail(email)
@@ -158,5 +160,11 @@ public class CuadernoService {
     public List<Cuaderno> obtenerCuadernosConFicha(Ficha ficha) {
         return cuadernoRepository.findByFichasContaining(ficha);
     }
+
+    public Page<Cuaderno> obtenerCuadernosConFichaPaginados(Ficha ficha, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return cuadernoRepository.findByFichasContaining(ficha, pageable);
+    }
+    
     
 }
