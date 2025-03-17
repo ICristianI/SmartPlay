@@ -10,6 +10,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+// Configuración para el manejo de CSRF
+
 @Configuration
 public class CSRFHandlerConfiguration implements WebMvcConfigurer {
 

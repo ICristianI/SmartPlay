@@ -75,12 +75,6 @@ public class HomeController {
     }
 
     // lleva a pagina de crear fichas
-    @GetMapping("/crearFichas")
-    public String crearfichas(Model model) {
-        return "Fichas/crearFichas";
-    }
-
-    // lleva a pagina de crear fichas
     @GetMapping("/verFichas")
     public String verFichas(Model model) {
         return "Fichas/verFichas";

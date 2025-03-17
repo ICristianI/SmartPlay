@@ -12,6 +12,8 @@ import org.springframework.ui.Model;
 
 import java.util.Optional;
 
+// Servicio para gestionar los usuarios
+
 @Service
 public class UserService {
 
@@ -21,9 +23,11 @@ public class UserService {
     @Autowired
     private UserComponent userComponent;
 
-    /**
-     * Valida si un correo o nombre de usuario ya están en uso.
-     */
+    @Autowired
+    private VerificationTokenService tokenService;
+
+    // Valida que el usuario y el correo no estén en uso
+
     public boolean validarUsuarioYCorreo(User user, Model model, boolean isEditing) {
         Optional<User> usuarioExistente = userRepository.findByEmail(user.getEmail());
         Optional<User> nombreExistente = userRepository.findByNombre(user.getNombre());
@@ -39,6 +43,8 @@ public class UserService {
         return true;
     }
 
+    // Elimina un usuario
+
     public void deleteUser(Long id, HttpServletRequest request, HttpServletResponse response) throws Exception {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
@@ -48,13 +54,12 @@ public class UserService {
         }
     }
 
-    @Autowired
-    private VerificationTokenService tokenService;
+    // Para registrar al usuario hace falta que verifique su correo
 
     public void registerUser(User user) {
-        user.setEnabled(false); // No activado hasta que verifique su correo
+        user.setEnabled(false);
         userRepository.save(user);
-        
+
         tokenService.sendVerificationEmail(user);
     }
 }

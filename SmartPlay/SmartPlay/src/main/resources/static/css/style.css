@@ -1,32 +1,49 @@
+/* Estilos generales */
+
 :root {
-    --bg-color-light: #eeeaea; /* Fondo más claro */
-    --bg-color-dark: #0f0e0e; /* Fondo más oscuro */
-    --bg-navbar: linear-gradient(to right, #5729e1, #9622d5); /* Azul a Morado por defecto */
-    --bg-dropdown-hover: linear-gradient(to right, #4b1cba, #7f1d9f); /* Azul a Morado hover */
-    --bg-dropdown-item-hover: linear-gradient(to right, #4b1cba, #7f1d9f); /* Azul a Morado hover item */
-    --line-color-light: #0f0e0e; /* Negro para el modo claro */
-    --line-color-dark: #eeeaea; /* Blanco para el modo oscuro */
-  }
+  --bg-color-light: #eeeaea;
+  --bg-color-dark: #0f0e0e;
+  --bg-navbar: linear-gradient(
+    to right,
+    #5729e1,
+    #9622d5
+  ); /* Azul a Morado por defecto */
+  --bg-dropdown-hover: linear-gradient(
+    to right,
+    #4b1cba,
+    #7f1d9f
+  ); /* Azul a Morado hover */
+  --bg-dropdown-item-hover: linear-gradient(
+    to right,
+    #4b1cba,
+    #7f1d9f
+  );
+  --line-color-light: #0f0e0e; 
+  --line-color-dark: #eeeaea; 
+}
 
-  body {
-    background-color: var(--bg-color-light); /* Fondo para modo claro */
-  }
-  
-  body.dark-mode {
-    color: white !important;
-    background-color: var(--bg-color-dark); /* Fondo para modo oscuro */
-  }
+/* Fondo para modo claro */
+body {
+  background-color: var(--bg-color-light); 
+}
 
-  .lineas {
-    border: 1px solid var(--line-color-light); /* Color del borde para modo claro */
-  }
-  
-  body.dark-mode .lineas {
-    border: 1px solid var(--line-color-dark); /* Color del borde para modo oscuro */
-  }
+/* Fondo para modo oscuro */
+body.dark-mode {
+  color: white !important;
+  background-color: var(--bg-color-dark); 
+}
 
+ /* Color del borde de la barra de navegacion para modo claro */
+.lineas {
+  border: 1px solid var(--line-color-light);
+}
 
+ /* Color del borde de la barra de navegacion para modo oscuro */
+body.dark-mode .lineas {
+  border: 1px solid var(--line-color-dark);
+}
 
+/*Para las tarjetas*/
 .card {
   min-height: 250px;
   max-height: 550px;
@@ -39,12 +56,11 @@
   object-fit: cover;
 }
 
-.cardVertical{
+.cardVertical {
   width: 100%;
   height: 480px;
   object-fit: cover;
 }
-
 
 .card:hover {
   transform: scale(1.05) !important;
@@ -52,14 +68,14 @@
 }
 
 /*Para el navbar*/
-.navbar-custom .dropdown-menu .dropdown-item{
-    color: white;
-  }
+.navbar-custom .dropdown-menu .dropdown-item {
+  color: white;
+}
 
-  .navbar-custom .dropdown-menu .dropdown-item:hover {
-    background: var(--bg-dropdown-item-hover) ;
-    color: white;
-  }
+.navbar-custom .dropdown-menu .dropdown-item:hover {
+  background: var(--bg-dropdown-item-hover);
+  color: white;
+}
 
 .navbar-custom {
   background: var(--bg-navbar);
@@ -67,11 +83,9 @@
 }
 
 .navbar-custom .navbar:hover {
-  background: var(--bg-dropdown-hover) !important; 
+  background: var(--bg-dropdown-hover) !important;
   color: white;
 }
-
-/*Para los colores seleccionables del navbar*/
 
 /* Estilo general para los botones */
 .colorbtn {
@@ -88,13 +102,15 @@
 }
 
 
+/*Para los colores seleccionables del navbar*/
+
 .bluepurple {
   background: linear-gradient(to right, #5729e1, #9622d5) !important;
   color: white;
 }
 
 .bluepurple:hover {
-  background: linear-gradient(to right, #4b1cba, #7f1d9f) !important; 
+  background: linear-gradient(to right, #4b1cba, #7f1d9f) !important;
   color: white;
 }
 
@@ -106,7 +122,6 @@
 .redyellow:hover {
   background: linear-gradient(to right, #c02e18, #c69300) !important;
   color: white;
-
 }
 
 .greenTurquoise {
@@ -141,17 +156,17 @@ footer {
 /*Para el icono de modo oscuro*/
 
 #toggle-mode i {
-    transition: opacity 0.3s ease;
-  }
-  
-  #toggle-mode:hover i {
-    opacity: 0.7;
-  }
-  
-  #toggle-mode i {
-    margin-right: 15px;
-    opacity: 1;
-  }
+  transition: opacity 0.3s ease;
+}
+
+#toggle-mode:hover i {
+  opacity: 0.7;
+}
+
+#toggle-mode i {
+  margin-right: 15px;
+  opacity: 1;
+}
 
 /*Para las fichas */
 
@@ -172,8 +187,8 @@ footer {
 
 /* Para limitar tamaño de las imágenes de home */
 .limited-img {
-  max-height: 500px; /* Ajusta según tu necesidad */
-  object-fit: cover; /* Para mantener la proporción y centrado */
+  max-height: 500px;
+  object-fit: cover;
 }
 
 .iniciar-sesion {
@@ -185,9 +200,11 @@ footer {
 h1 {
   word-wrap: break-word;
   overflow-wrap: break-word;
-  max-width: 100%; /* Evita que el texto sobresalga */
-  white-space: normal; /* Permite saltos de línea */
+  max-width: 100%;
+  white-space: normal;
 }
+
+/* Ajustes para fichas y juegos seleccionados */
 
 .ficha-seleccionada,
 .juego-seleccionado {
@@ -207,7 +224,3 @@ h1 {
 .eliminar-ficha:hover {
   color: #343a40; /* Gris más oscuro al pasar el ratón */
 }
-
-
-
-

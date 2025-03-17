@@ -16,10 +16,14 @@ import com.tfg.SmartPlay.repository.UserRepository;
 
 import org.springframework.stereotype.Component;
 
+// Filtro que verifica si el usuario está verificado
+// Si no lo está, se redirige a la página de verificación
+
 @Component
 public class VerificationFilter extends OncePerRequestFilter {
 
     private final UserRepository userRepository;
+    @SuppressWarnings("unused")
     private final UserDetailsService userDetailsService;
 
     public VerificationFilter(UserDetailsService userDetailsService, UserRepository userRepository) {
@@ -33,7 +37,6 @@ public class VerificationFilter extends OncePerRequestFilter {
 
         String rq = request.getRequestURI();
 
-        // Si la URI es una de las excluidas, no se hace la verificación
         if (rq.equals("/signup") || rq.equals("/users/register") || rq.equals("/") || rq.equals("/users/delete")
                 || rq.equals("/users/update") || rq.equals("/users/verificar") || rq.equals("/users/verificar/**")
                 || rq.equals("/users/resend") || rq.equals("/send") || rq.equals("/error") || rq.equals("/css/**")

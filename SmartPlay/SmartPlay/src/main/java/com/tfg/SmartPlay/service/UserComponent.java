@@ -15,16 +15,19 @@ import com.tfg.SmartPlay.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+// Componente para gestionar los usuarios
 @Component
 public class UserComponent {
 
     @Autowired
     UserRepository userRepository;
 
+    // Devuelve si el usuario está logueado
     public boolean isLoggedUser() {
         return getUser().isPresent();
     }
 
+    // Cierra la sesión
     public void logout(HttpServletRequest request, HttpServletResponse response) {
         if (!isAdmin()) {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -32,6 +35,7 @@ public class UserComponent {
         }
     }
 
+    // Devuelve el usuario logueado
     public Optional<User> getUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username;
@@ -43,6 +47,7 @@ public class UserComponent {
         return userRepository.findByEmail(username);
     }
 
+    // Devuelve si el usuario es administrador(Aun no implementado)
     public boolean isAdmin() {
         Optional<User> opUser = getUser();
         if (opUser.isEmpty()) {

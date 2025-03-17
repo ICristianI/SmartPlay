@@ -18,6 +18,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+// Servicio para gestionar las fichas de un usuario.
+
 @Service
 public class FichaService {
 
@@ -30,11 +32,15 @@ public class FichaService {
     @Autowired
     private ImagenService imagenService;
 
+    // Devuelve todas las fichas de un usuario.
+
     public List<Ficha> listarFichas(String email) {
         User usuario = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         return fichaRepository.findByUsuario(usuario);
     }
+
+    // Devuelve una ficha por id y usuario.
 
     public Optional<Ficha> obtenerFicha(Long fichaId, String email) {
         User usuario = userRepository.findByEmail(email)
@@ -43,30 +49,7 @@ public class FichaService {
         return ficha.filter(f -> f.getUsuario().getId().equals(usuario.getId()));
     }
 
-    public void editarFicha(Long fichaId, Ficha fichaEditada, String email) {
-        Ficha ficha = obtenerFicha(fichaId, email)
-                .orElseThrow(() -> new RuntimeException("Ficha no encontrada o sin permisos"));
-
-        ficha.setNombre(fichaEditada.getNombre());
-        ficha.setIdioma(fichaEditada.getIdioma());
-        ficha.setAsignatura(fichaEditada.getAsignatura());
-        ficha.setContenido(fichaEditada.getContenido());
-        ficha.setDescripcion(fichaEditada.getDescripcion());
-
-        fichaRepository.save(ficha);
-    }
-
-    public ResponseEntity<Object> obtenerImagenFicha(Long id) {
-        Optional<Ficha> ficha = fichaRepository.findById(id);
-        if (ficha.isPresent() && ficha.get().getImagen() != null) {
-            try {
-                return imagenService.getImageResponse(ficha.get().getImagen());
-            } catch (SQLException e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving image");
-            }
-        }
-        return ResponseEntity.notFound().build();
-    }
+    // Guarda una ficha.
 
     public void guardarFicha(Ficha ficha, MultipartFile imagenFondo, String email) throws Exception {
         User usuario = userRepository.findByEmail(email)
@@ -82,6 +65,23 @@ public class FichaService {
         fichaRepository.save(ficha);
     }
 
+    // Edita una ficha.
+
+    public void editarFicha(Long fichaId, Ficha fichaEditada, String email) {
+        Ficha ficha = obtenerFicha(fichaId, email)
+                .orElseThrow(() -> new RuntimeException("Ficha no encontrada o sin permisos"));
+
+        ficha.setNombre(fichaEditada.getNombre());
+        ficha.setIdioma(fichaEditada.getIdioma());
+        ficha.setAsignatura(fichaEditada.getAsignatura());
+        ficha.setContenido(fichaEditada.getContenido());
+        ficha.setDescripcion(fichaEditada.getDescripcion());
+
+        fichaRepository.save(ficha);
+    }
+
+    // Elimina una ficha.
+
     public void eliminarFicha(Long fichaId, String email) {
         Ficha ficha = obtenerFicha(fichaId, email)
                 .orElseThrow(() -> new RuntimeException("Ficha no encontrada o sin permisos"));
@@ -89,16 +89,35 @@ public class FichaService {
         fichaRepository.deleteById(fichaId);
     }
 
+    // Devuelve la imagen de una ficha.
+
+    public ResponseEntity<Object> obtenerImagenFicha(Long id) {
+        Optional<Ficha> ficha = fichaRepository.findById(id);
+        if (ficha.isPresent() && ficha.get().getImagen() != null) {
+            try {
+                return imagenService.getImageResponse(ficha.get().getImagen());
+            } catch (SQLException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving image");
+            }
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    // Devuelve las fichas de un usuario.
+
     public List<Ficha> obtenerFichasPorUsuario(String email) {
         User usuario = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         return fichaRepository.findByUsuario(usuario);
     }
 
+    // Devuelve una ficha por id.
+
     public Optional<Ficha> obtenerFichaPorId(Long fichaId) {
         return fichaRepository.findById(fichaId);
     }
 
+    // Devuelve las fichas de un cuaderno de forma paginada.
     public Page<Ficha> obtenerFichasPaginadas(Long cuadernoId, int page, int size) {
 
         Page<Ficha> fichas = fichaRepository.obtenerFichasPorCuaderno(cuadernoId, PageRequest.of(page, size));
@@ -109,6 +128,8 @@ public class FichaService {
 
     }
 
+    // Devuelve las fichas no agregadas a un cuaderno de forma paginada.
+
     public Page<Ficha> obtenerFichasPaginadasNoAgregadas(Long cuadernoId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return fichaRepository.findFichasNoAgregadas(cuadernoId, pageable);
@@ -117,12 +138,9 @@ public class FichaService {
     public Page<Ficha> obtenerFichasPaginadasPorUsuario(String email, int page, int size) {
         User usuario = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-    
+
         Pageable pageable = PageRequest.of(page, size);
         return fichaRepository.findByUsuario(usuario, pageable);
     }
-
-    
-    
 
 }

@@ -20,6 +20,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 import java.util.Optional;
 
+// Controlador de cuadernos
+
 @Controller
 @RequestMapping("/cuadernos")
 public class CuadernoController {
@@ -78,66 +80,70 @@ public class CuadernoController {
      * GET: Obtiene el cuaderno desde sesión y lo muestra.
      */
     @GetMapping("/ver")
-public String verCuadernoGet(Model model,
-        HttpSession session,
-        @AuthenticationPrincipal UserDetails userDetails,
-        @RequestParam(defaultValue = "0") int pageFichas,
-        @RequestParam(defaultValue = "0") int pageJuegos,
-        @RequestParam(defaultValue = "3") int size,
-        RedirectAttributes redirectAttributes) {
+    public String verCuadernoGet(Model model,
+            HttpSession session,
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam(defaultValue = "0") int pageFichas,
+            @RequestParam(defaultValue = "0") int pageJuegos,
+            @RequestParam(defaultValue = "3") int size,
+            RedirectAttributes redirectAttributes) {
 
-    Long cuadernoId = (Long) session.getAttribute("cuadernoId");
+        Long cuadernoId = (Long) session.getAttribute("cuadernoId");
 
-    if (cuadernoId == null) {
-        redirectAttributes.addFlashAttribute("error", "No se encontró el cuaderno.");
-        return "redirect:/cuadernos";
+        if (cuadernoId == null) {
+            redirectAttributes.addFlashAttribute("error", "No se encontró el cuaderno.");
+            return "redirect:/cuadernos";
+        }
+
+        Optional<Cuaderno> cuaderno = cuadernoService.obtenerCuadernoPorIdYUsuario(cuadernoId,
+                userDetails.getUsername());
+
+        if (cuaderno.isPresent()) {
+            Cuaderno cuadernoObj = cuaderno.get();
+
+            // Obtener fichas y juegos no agregados
+            List<Ficha> fichasNoAgregadas = cuadernoService.obtenerFichasNoAgregadas(cuadernoId,
+                    userDetails.getUsername());
+            List<Juego> juegosNoAgregados = cuadernoService.obtenerJuegosNoAgregados(cuadernoId,
+                    userDetails.getUsername());
+
+            // Obtener fichas y juegos paginados
+            Page<Ficha> fichasPage = fichaService.obtenerFichasPaginadas(cuadernoId, pageFichas, size);
+            Page<Juego> juegosPage = cuadernoService.obtenerJuegosPaginados(cuadernoId, pageJuegos, size);
+
+            // Datos de paginación independientes para fichas y juegos
+            model.addAttribute("cuaderno", cuadernoObj);
+
+            // Paginación de fichas
+            model.addAttribute("fichasPage", fichasPage.getContent());
+            model.addAttribute("currentPageFichas", pageFichas + 1);
+            model.addAttribute("totalPagesFichas", fichasPage.getTotalPages());
+            model.addAttribute("hasPrevFichas", pageFichas > 0);
+            model.addAttribute("hasNextFichas", pageFichas < fichasPage.getTotalPages() - 1);
+            model.addAttribute("prevPageFichas", pageFichas > 0 ? pageFichas - 1 : 0);
+            model.addAttribute("nextPageFichas",
+                    pageFichas < fichasPage.getTotalPages() - 1 ? pageFichas + 1 : pageFichas);
+
+            // Paginación de juegos
+            model.addAttribute("juegosPage", juegosPage.getContent());
+            model.addAttribute("currentPageJuegos", pageJuegos + 1);
+            model.addAttribute("totalPagesJuegos", juegosPage.getTotalPages());
+            model.addAttribute("hasPrevJuegos", pageJuegos > 0);
+            model.addAttribute("hasNextJuegos", pageJuegos < juegosPage.getTotalPages() - 1);
+            model.addAttribute("prevPageJuegos", pageJuegos > 0 ? pageJuegos - 1 : 0);
+            model.addAttribute("nextPageJuegos",
+                    pageJuegos < juegosPage.getTotalPages() - 1 ? pageJuegos + 1 : pageJuegos);
+
+            // Listas de fichas y juegos no agregados
+            model.addAttribute("fichasNoAgregadas", fichasNoAgregadas);
+            model.addAttribute("juegosNoAgregados", juegosNoAgregados);
+
+            return "Cuadernos/verCuaderno";
+        } else {
+            redirectAttributes.addFlashAttribute("error", "No tienes permiso para ver este cuaderno.");
+            return "redirect:/cuadernos";
+        }
     }
-
-    Optional<Cuaderno> cuaderno = cuadernoService.obtenerCuadernoPorIdYUsuario(cuadernoId, userDetails.getUsername());
-
-    if (cuaderno.isPresent()) {
-        Cuaderno cuadernoObj = cuaderno.get();
-
-        // Obtener fichas y juegos no agregados
-        List<Ficha> fichasNoAgregadas = cuadernoService.obtenerFichasNoAgregadas(cuadernoId, userDetails.getUsername());
-        List<Juego> juegosNoAgregados = cuadernoService.obtenerJuegosNoAgregados(cuadernoId, userDetails.getUsername());
-
-        // Obtener fichas y juegos paginados
-        Page<Ficha> fichasPage = fichaService.obtenerFichasPaginadas(cuadernoId, pageFichas, size);
-        Page<Juego> juegosPage = cuadernoService.obtenerJuegosPaginados(cuadernoId, pageJuegos, size);
-
-        // Datos de paginación independientes para fichas y juegos
-        model.addAttribute("cuaderno", cuadernoObj);
-
-        // Paginación de fichas
-        model.addAttribute("fichasPage", fichasPage.getContent());
-        model.addAttribute("currentPageFichas", pageFichas + 1);
-        model.addAttribute("totalPagesFichas", fichasPage.getTotalPages());
-        model.addAttribute("hasPrevFichas", pageFichas > 0);
-        model.addAttribute("hasNextFichas", pageFichas < fichasPage.getTotalPages() - 1);
-        model.addAttribute("prevPageFichas", pageFichas > 0 ? pageFichas - 1 : 0);
-        model.addAttribute("nextPageFichas", pageFichas < fichasPage.getTotalPages() - 1 ? pageFichas + 1 : pageFichas);
-
-        // Paginación de juegos
-        model.addAttribute("juegosPage", juegosPage.getContent());
-        model.addAttribute("currentPageJuegos", pageJuegos + 1);
-        model.addAttribute("totalPagesJuegos", juegosPage.getTotalPages());
-        model.addAttribute("hasPrevJuegos", pageJuegos > 0);
-        model.addAttribute("hasNextJuegos", pageJuegos < juegosPage.getTotalPages() - 1);
-        model.addAttribute("prevPageJuegos", pageJuegos > 0 ? pageJuegos - 1 : 0);
-        model.addAttribute("nextPageJuegos", pageJuegos < juegosPage.getTotalPages() - 1 ? pageJuegos + 1 : pageJuegos);
-
-        // Listas de fichas y juegos no agregados
-        model.addAttribute("fichasNoAgregadas", fichasNoAgregadas);
-        model.addAttribute("juegosNoAgregados", juegosNoAgregados);
-
-        return "Cuadernos/verCuaderno";
-    } else {
-        redirectAttributes.addFlashAttribute("error", "No tienes permiso para ver este cuaderno.");
-        return "redirect:/cuadernos";
-    }
-}
-
 
     /**
      * Muestra el formulario para crear un nuevo cuaderno.
@@ -165,12 +171,9 @@ public String verCuadernoGet(Model model,
         return "redirect:/cuadernos";
     }
 
-    @GetMapping("/fichasDisponibles")
-    @ResponseBody
-    public List<Ficha> obtenerFichasDisponibles(@RequestParam("cuadernoId") Long cuadernoId,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        return cuadernoService.obtenerFichasNoAgregadas(cuadernoId, userDetails.getUsername());
-    }
+    /**
+     * Editar un cuaderno.
+     */
 
     @PostMapping("/editar")
     public String editarCuaderno(@RequestParam("cuadernoId") Long cuadernoId,
@@ -218,6 +221,10 @@ public String verCuadernoGet(Model model,
 
         return "redirect:/cuadernos/ver";
     }
+
+    /**
+     * Elimina un juego del cuaderno sin exponer el ID en la URL.
+     */
 
     @PostMapping("/eliminarJuego")
     public String eliminarJuegoDeCuaderno(@RequestParam("juegoId") Long juegoId,

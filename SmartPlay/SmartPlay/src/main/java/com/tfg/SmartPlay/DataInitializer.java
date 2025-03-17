@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+// Clase para inicializar la base de datos con algunos datos de prueba (aun no está en uso)
 @Component
 public class DataInitializer implements CommandLineRunner {
 

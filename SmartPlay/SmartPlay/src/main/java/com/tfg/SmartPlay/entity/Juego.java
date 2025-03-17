@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "juegos")
-@Inheritance(strategy = InheritanceType.JOINED) // Cada subclase tendrá su propia tabla
+@Inheritance(strategy = InheritanceType.JOINED)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -53,10 +53,6 @@ public abstract class Juego {
     private User usuario;
 
     @ManyToMany
-    @JoinTable(
-        name = "cuaderno_juegos",
-        joinColumns = @JoinColumn(name = "juego_id"),
-        inverseJoinColumns = @JoinColumn(name = "cuaderno_id")
-    )
+    @JoinTable(name = "cuaderno_juegos", joinColumns = @JoinColumn(name = "juego_id"), inverseJoinColumns = @JoinColumn(name = "cuaderno_id"))
     private List<Cuaderno> cuadernos;
 }

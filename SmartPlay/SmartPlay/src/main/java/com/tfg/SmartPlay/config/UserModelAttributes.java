@@ -10,6 +10,7 @@ import com.tfg.SmartPlay.entity.User;
 import com.tfg.SmartPlay.service.UserComponent;
 
 //Tiene atributos de usuario que permiten gestionar las sesiones
+//Sirve para mostrar u ocultar elementos de la vista dependiendo de si el usuario está logueado o no
 
 @ControllerAdvice(basePackages = { "com.tfg.SmartPlay.entity", "com.tfg.SmartPlay.controller",
         "com.tfg.SmartPlay.repository", "com.tfg.SmartPlay.security" })

@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+// Servicio para gestionar los cuadernos de un usuario.
+
 @Service
 public class CuadernoService {
 
@@ -41,10 +43,14 @@ public class CuadernoService {
     @Autowired
     private JuegoService juegoService;
 
+    // Devuelve todos los cuadernos de un usuario Paginados.
+
     public Page<Cuaderno> listarCuadernosPaginados(String usuarioEmail, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return cuadernoRepository.findByUsuarioEmail(usuarioEmail, pageable);
     }
+
+    // Devuelve un cuaderno por usuario e id.
 
     public Optional<Cuaderno> obtenerCuadernoPorIdYUsuario(Long cuadernoId, String email) {
         User usuario = userRepository.findByEmail(email)
@@ -53,33 +59,14 @@ public class CuadernoService {
         return cuaderno.filter(c -> c.getUsuario().getId().equals(usuario.getId()));
     }
 
+    // Devuelve todos los cuadernos de un usuario.
     public List<Cuaderno> obtenerCuadernosPorUsuario(User usuario) {
         return cuadernoRepository.findByUsuario(usuario);
     }
 
+    // Devuelve un cuaderno por id.
     public Optional<Cuaderno> obtenerCuadernoPorId(Long id) {
         return cuadernoRepository.findById(id);
-    }
-
-    
-
-    /**
-     * Guarda un nuevo cuaderno con fichas y juegos seleccionados.
-     */
-    public Cuaderno guardarCuaderno(Cuaderno cuaderno, List<Long> fichasIds, List<Long> juegosIds) {
-        User usuario = userComponent.getUser().get();
-        cuaderno.setUsuario(usuario);
-    
-        List<Ficha> fichasSeleccionadas = fichaRepository.findAllById(fichasIds);
-        List<Juego> juegosSeleccionados = juegoRepository.findAllById(juegosIds);
-        
-        cuaderno.setFichas(fichasSeleccionadas);
-        cuaderno.setJuegos(juegosSeleccionados);
-
-        cuaderno.setNumeroFichas(fichasSeleccionadas.size());
-        cuaderno.setNumeroJuegos(juegosSeleccionados.size());
-    
-        return cuadernoRepository.save(cuaderno);
     }
 
     /**
@@ -103,11 +90,30 @@ public class CuadernoService {
                 .collect(Collectors.toList());
     }
 
-    
+    /**
+     * Guarda un nuevo cuaderno con fichas y juegos seleccionados.
+     */
+    public Cuaderno guardarCuaderno(Cuaderno cuaderno, List<Long> fichasIds, List<Long> juegosIds) {
+        User usuario = userComponent.getUser().get();
+        cuaderno.setUsuario(usuario);
+
+        List<Ficha> fichasSeleccionadas = fichaRepository.findAllById(fichasIds);
+        List<Juego> juegosSeleccionados = juegoRepository.findAllById(juegosIds);
+
+        cuaderno.setFichas(fichasSeleccionadas);
+        cuaderno.setJuegos(juegosSeleccionados);
+
+        cuaderno.setNumeroFichas(fichasSeleccionadas.size());
+        cuaderno.setNumeroJuegos(juegosSeleccionados.size());
+
+        return cuadernoRepository.save(cuaderno);
+    }
+
     /**
      * Edita un cuaderno permitiendo agregar fichas y juegos.
      */
-    public boolean editarCuaderno(Long cuadernoId, String nuevoNombre, List<Long> nuevasFichasIds, List<Long> nuevosJuegosIds, String email) {
+    public boolean editarCuaderno(Long cuadernoId, String nuevoNombre, List<Long> nuevasFichasIds,
+            List<Long> nuevosJuegosIds, String email) {
         Optional<User> usuarioOpt = userRepository.findByEmail(email);
         if (usuarioOpt.isEmpty()) {
             return false;
@@ -210,22 +216,25 @@ public class CuadernoService {
         return false;
     }
 
+    // Devuelve los cuadernos que contienen una ficha específica.
+
     public List<Cuaderno> obtenerCuadernosConFicha(Ficha ficha) {
         return cuadernoRepository.findByFichasContaining(ficha);
     }
+
+    // Devuelve los juegos que no han sido agregados a un cuaderno.
     public List<Juego> obtenerJuegosNoAgregados(Long cuadernoId, String email) {
         return juegoService.obtenerJuegosNoAgregados(cuadernoId, email);
     }
-    
+
+    // Devuelve los juegos de un cuaderno paginados.
     public Page<Juego> obtenerJuegosPaginados(Long cuadernoId, int page, int size) {
         return juegoService.obtenerJuegosPaginadosEnCuaderno(cuadernoId, page, size);
     }
-    
-    
+
+    // Devuelve los cuadernos que contienen una ficha específica paginados.
     public Page<Cuaderno> obtenerCuadernosConFichaPaginados(Ficha ficha, int page, int size) {
-    Pageable pageable = PageRequest.of(page, size);
-    return cuadernoRepository.findByFichasContaining(ficha, pageable);
+        Pageable pageable = PageRequest.of(page, size);
+        return cuadernoRepository.findByFichasContaining(ficha, pageable);
     }
 }
-
- 

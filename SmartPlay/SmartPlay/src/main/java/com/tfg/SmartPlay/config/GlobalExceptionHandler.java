@@ -5,6 +5,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
+// Manejador de excepciones globales
+// Se encarga de manejar las excepciones de tamaño de archivo
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
 

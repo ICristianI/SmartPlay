@@ -31,20 +31,11 @@ public class Cuaderno {
     private User usuario;
 
     @ManyToMany
-    @JoinTable(
-        name = "cuaderno_fichas",
-        joinColumns = @JoinColumn(name = "cuaderno_id"),
-        inverseJoinColumns = @JoinColumn(name = "ficha_id")
-    )
+    @JoinTable(name = "cuaderno_fichas", joinColumns = @JoinColumn(name = "cuaderno_id"), inverseJoinColumns = @JoinColumn(name = "ficha_id"))
     private List<Ficha> fichas;
 
     @ManyToMany
-    @JoinTable(
-        name = "cuaderno_juegos",
-        joinColumns = @JoinColumn(name = "cuaderno_id"),
-        inverseJoinColumns = @JoinColumn(name = "juego_id")
-    )
+    @JoinTable(name = "cuaderno_juegos", joinColumns = @JoinColumn(name = "cuaderno_id"), inverseJoinColumns = @JoinColumn(name = "juego_id"))
     private List<Juego> juegos;
 
 }
-

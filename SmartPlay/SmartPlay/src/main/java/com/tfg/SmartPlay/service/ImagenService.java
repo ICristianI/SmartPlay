@@ -16,8 +16,12 @@ import java.sql.SQLException;
 
 import javax.sql.rowset.serial.SerialBlob;
 
+// Servicio para gestionar las imágenes.
+
 @Service
 public class ImagenService {
+
+    // Guarda una imagen en la base de datos.
 
     public Blob saveImage(MultipartFile imageFile) throws IOException {
         if (!imageFile.isEmpty()) {
@@ -25,6 +29,8 @@ public class ImagenService {
         }
         return null;
     }
+
+    // Devuelve la imagen por defecto de un usuario.
 
     public Blob getDefaultProfileImage() throws Exception {
         InputStream inputStream = getClass().getResourceAsStream("/static/images/userImages/Default.png");
@@ -34,6 +40,8 @@ public class ImagenService {
         byte[] defaultImage = inputStream.readAllBytes();
         return new SerialBlob(defaultImage);
     }
+
+    // Devuelve la imagen de la base de datos.
 
     public ResponseEntity<Object> getImageResponse(Blob image) throws SQLException {
         if (image != null) {

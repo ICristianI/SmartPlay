@@ -10,26 +10,14 @@
     <!-- Nombre del cuaderno -->
     <div class="mb-3">
       <label for="nombre" class="form-label">Nombre del Cuaderno</label>
-      <input
-        type="text"
-        class="form-control"
-        id="nombre"
-        name="nombre"
-        placeholder="Escribe el nombre del cuaderno"
-        maxlength="30"
-        required
-      />
+      <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Escribe el nombre del cuaderno"
+        maxlength="30" required />
     </div>
 
     <!-- Botón para abrir el modal de fichas -->
     <div class="mb-3">
       <label class="form-label">Seleccionar Fichas</label>
-      <button
-        type="button"
-        class="btn btn-primary navbar-custom"
-        data-bs-toggle="modal"
-        data-bs-target="#fichaModal"
-      >
+      <button type="button" class="btn btn-primary navbar-custom" data-bs-toggle="modal" data-bs-target="#fichaModal">
         Elegir Fichas
       </button>
     </div>
@@ -56,12 +44,8 @@
               {{#fichas}}
               <div class="col-md-4 mb-4">
                 <div class="card ficha-item h-100 shadow-sm" data-id="{{id}}" data-nombre="{{nombre}}">
-                  <img
-                    src="/f/ficha/image/{{id}}"
-                    class="card-img-top"
-                    alt="Imagen de {{nombre}}"
-                    style="height: 150px; object-fit: cover;"
-                  />
+                  <img src="/f/ficha/image/{{id}}" class="card-img-top" alt="Imagen de {{nombre}}"
+                    style="height: 150px; object-fit: cover" />
                   <div class="card-body text-center">
                     <p class="card-text">{{nombre}}</p>
                   </div>
@@ -71,7 +55,9 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              Cerrar
+            </button>
           </div>
         </div>
       </div>
@@ -80,12 +66,7 @@
     <!-- Botón para abrir el modal de juegos -->
     <div class="mb-3">
       <label class="form-label">Seleccionar Juegos</label>
-      <button
-        type="button"
-        class="btn btn-primary navbar-custom"
-        data-bs-toggle="modal"
-        data-bs-target="#juegoModal"
-      >
+      <button type="button" class="btn btn-primary navbar-custom" data-bs-toggle="modal" data-bs-target="#juegoModal">
         Elegir Juegos
       </button>
     </div>
@@ -121,7 +102,9 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              Cerrar
+            </button>
           </div>
         </div>
       </div>
@@ -129,7 +112,9 @@
 
     <!-- Botón para guardar -->
     <div class="text-center">
-      <button type="submit" class="btn btn-primary navbar-custom">Guardar Cuaderno</button>
+      <button type="submit" class="btn btn-primary navbar-custom">
+        Guardar Cuaderno
+      </button>
     </div>
   </form>
 </div>

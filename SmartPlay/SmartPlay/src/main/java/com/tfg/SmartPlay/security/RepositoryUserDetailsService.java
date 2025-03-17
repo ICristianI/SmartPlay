@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import com.tfg.SmartPlay.entity.User;
 import com.tfg.SmartPlay.repository.UserRepository;
 
+// Servicio para cargar los datos de un usuario desde la base de datos
+
 @Service
 public class RepositoryUserDetailsService implements UserDetailsService {
 

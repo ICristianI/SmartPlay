@@ -14,6 +14,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.tfg.SmartPlay.config.VerificationFilter;
 
+// Configuración de seguridad   
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -28,16 +30,19 @@ public class SecurityConfig {
         this.verificationFilter = verificationFilter;
     }
 
+    // Codificador de contraseñas
     @Bean
     public PasswordEncoder passwordEncoder() {
         return passwordEncoder;
     }
 
+    // Gestor de autenticación
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
 
+    // Proveedor de autenticación
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -46,28 +51,31 @@ public class SecurityConfig {
         return authProvider;
     }
 
+    // Configuración de seguridad para web
     @Bean
     public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(csrf -> csrf.disable()) // Deshabilita CSRF
                 .authenticationProvider(authenticationProvider());
 
-                http.addFilterBefore(verificationFilter, UsernamePasswordAuthenticationFilter.class)
+        http.addFilterBefore(verificationFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/", "/error", "/login", "/signup", "/css/**", "/js/**", "/images/**",
-                        "/users/register", "/json/**", "/config", "/msj", "/regin", "/verify", "/users/verificar", "/users/verificar/**", "/users/resend")
-                .permitAll()
-                .requestMatchers("/f/**", "/fames", "/juegos", "/fichas", "/crearFichas", 
-                "/verFichas","/crearCuadernos","/f/listarFichas", "/f/ficha/image/**","/Fichas/verFichas",
-                "/juegos/ahorcado/**","/ahorcado","/Cuadernos", "/users/**", "/cuadernos/**")
-                .hasAnyRole("ALUMNO", "PROFESOR"))
+                        .requestMatchers("/", "/error", "/login", "/signup", "/css/**", "/js/**", "/images/**",
+                                "/users/register", "/json/**", "/config", "/msj", "/regin", "/verify",
+                                "/users/verificar", "/users/verificar/**", "/users/resend")
+                        .permitAll()
+                        .requestMatchers("/f/**", "/fames", "/juegos", "/fichas",
+                                "/verFichas", "/crearCuadernos", "/f/listarFichas", "/f/ficha/image/**",
+                                "/Fichas/verFichas",
+                                "/juegos/ahorcado/**", "/ahorcado", "/Cuadernos", "/users/**", "/cuadernos/**")
+                        .hasAnyRole("ALUMNO", "PROFESOR"))
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .usernameParameter("email")
                         .passwordParameter("password")
                         .failureUrl("/loginerror")
-                        .defaultSuccessUrl("/",true)
+                        .defaultSuccessUrl("/", true)
                         .permitAll())
                 .logout(logout -> logout
                         .logoutUrl("/logout")

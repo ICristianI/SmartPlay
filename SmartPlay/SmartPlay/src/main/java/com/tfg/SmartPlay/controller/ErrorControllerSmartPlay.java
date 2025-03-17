@@ -9,8 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 
+// Controlador de errores
+
 @Controller
 public class ErrorControllerSmartPlay implements ErrorController {
+
+    // Cualquier error contemplado tendrá su propia template para avisar al usuario
 
     @RequestMapping("/error")
     public String handleError(HttpServletRequest request, Model model) {

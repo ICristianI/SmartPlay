@@ -30,13 +30,13 @@ public interface FichaRepository extends JpaRepository<Ficha, Long> {
     Page<Ficha> obtenerFichasPorCuaderno(@Param("cuadernoId") Long cuadernoId, Pageable pageable);
 
     @Query("""
-        SELECT f FROM Ficha f
-        WHERE f.id NOT IN (
-            SELECT cf.id FROM Cuaderno c
-            JOIN c.fichas cf
-            WHERE c.id = :cuadernoId
-        )
-    """)
+                SELECT f FROM Ficha f
+                WHERE f.id NOT IN (
+                    SELECT cf.id FROM Cuaderno c
+                    JOIN c.fichas cf
+                    WHERE c.id = :cuadernoId
+                )
+            """)
     Page<Ficha> findFichasNoAgregadas(Long cuadernoId, Pageable pageable);
 
     @Query("SELECT f FROM Ficha f WHERE f.usuario = :usuario")

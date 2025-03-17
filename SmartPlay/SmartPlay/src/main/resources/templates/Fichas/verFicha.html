@@ -4,14 +4,17 @@
     <div class="row align-items-center">
         <div class="col-md-8">
             <h1>{{ficha.nombre}}</h1>
+            
             <p class="text-break"><strong>Idioma:</strong> {{ficha.idioma}}</p>
-            <p class="text-break"><strong>Asignatura:</strong> {{ficha.asignatura}}</p>
+            <p class="text-break">
+                <strong>Asignatura:</strong> {{ficha.asignatura}}
+            </p>
             <p class="text-break"><strong>Descripción:</strong></p>
-            <div class="p-3 border rounded bg-light" style="word-wrap: break-word; overflow-wrap: break-word;">
+            <div class="p-3 border rounded bg-light" style="word-wrap: break-word; overflow-wrap: break-word">
                 {{ficha.descripcion}}
             </div>
             <p class="mt-3"><strong>Contenido:</strong></p>
-            <div class="p-3 border rounded bg-light mb-3" style="word-wrap: break-word; overflow-wrap: break-word;">
+            <div class="p-3 border rounded bg-light mb-3" style="word-wrap: break-word; overflow-wrap: break-word">
                 {{ficha.contenido}}
             </div>
 
@@ -19,51 +22,65 @@
             {{#error}}
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <p>{{error}}</p>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">Cerrar</button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                    Cerrar
+                </button>
             </div>
-            {{/error}}
-
-            {{#mensaje}}
+            {{/error}} {{#mensaje}}
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <p>{{mensaje}}</p>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">Cerrar</button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                    Cerrar
+                </button>
             </div>
             {{/mensaje}}
 
             <!-- Botón para abrir el formulario de edición -->
-            <button class="btn btn-primary navbar-custom mt-3" onclick="toggleEditForm()">Editar Ficha</button>
+            <button class="btn btn-primary navbar-custom mt-3" onclick="toggleEditForm()">
+                Editar Ficha
+            </button>
 
             <!-- Formulario para editar los datos de la ficha -->
-            <form id="editForm" action="/f/editar" method="post" style="display: none;">
+            <form id="editForm" action="/f/editar" method="post" style="display: none">
                 <div class="mt-3">
                     <label for="nombre" class="form-label">Nombre</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" maxlength="40" value="{{ficha.nombre}}" required>
+                    <input type="text" class="form-control" id="nombre" name="nombre" maxlength="40"
+                        value="{{ficha.nombre}}" required />
                 </div>
                 <div class="mt-3">
                     <label for="idioma" class="form-label">Idioma</label>
-                    <input type="text" class="form-control" id="idioma" name="idioma" maxlength="30" value="{{ficha.idioma}}" required>
+                    <input type="text" class="form-control" id="idioma" name="idioma" maxlength="30"
+                        value="{{ficha.idioma}}" required />
                 </div>
                 <div class="mt-3">
                     <label for="asignatura" class="form-label">Asignatura</label>
-                    <input type="text" class="form-control" id="asignatura" name="asignatura" maxlength="50" value="{{ficha.asignatura}}" required>
+                    <input type="text" class="form-control" id="asignatura" name="asignatura" maxlength="50"
+                        value="{{ficha.asignatura}}" required />
                 </div>
                 <div class="mt-3">
                     <label for="contenido" class="form-label">Contenido</label>
-                    <textarea class="form-control" id="contenido" name="contenido" maxlength="500" required>{{ficha.contenido}}</textarea>
+                    <textarea class="form-control" id="contenido" name="contenido" maxlength="500" required>
+{{ficha.contenido}}</textarea>
                 </div>
                 <div class="mt-3">
                     <label for="descripcion" class="form-label">Descripción</label>
-                    <textarea class="form-control" id="descripcion" name="descripcion" maxlength="150" required>{{ficha.descripcion}}</textarea>
+                    <textarea class="form-control" id="descripcion" name="descripcion" maxlength="150" required>
+{{ficha.descripcion}}</textarea>
                 </div>
-                <input type="hidden" name="fichaId" value="{{ficha.id}}">
+                <input type="hidden" name="fichaId" value="{{ficha.id}}" />
 
-                <button type="submit" class="btn btn-success mt-3">Guardar Cambios</button>
+                <button type="submit" class="btn btn-success mt-3">
+                    Guardar Cambios
+                </button>
             </form>
 
             <!-- Botón para eliminar la ficha -->
-            <form action="/f/eliminar" method="post" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta ficha? Esta acción no se puede deshacer.');">
-                <input type="hidden" name="fichaId" value="{{ficha.id}}">
-                <button type="submit" class="btn btn-danger mt-3">Eliminar Ficha</button>
+            <form action="/f/eliminar" method="post"
+                onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta ficha? Esta acción no se puede deshacer.');">
+                <input type="hidden" name="fichaId" value="{{ficha.id}}" />
+                <button type="submit" class="btn btn-danger mt-3">
+                    Eliminar Ficha
+                </button>
             </form>
 
             <form action="/f/listarFichas" method="get">
@@ -74,17 +91,18 @@
         <!-- Columna para la imagen de la ficha -->
         <div class="col-md-4 text-center">
             {{#ficha.imagen}}
-            <img 
-                src="/f/ficha/image/{{ficha.id}}" 
-                alt="Imagen de la ficha" 
-                class="img-fluid" 
-                style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 10px; object-fit: cover;"
-            />
+            <img src="/f/ficha/image/{{ficha.id}}" alt="Imagen de la ficha" class="img-fluid" style="
+          max-width: 100%;
+          height: auto;
+          border: 1px solid #ddd;
+          padding: 10px;
+          object-fit: cover;
+        " />
             {{/ficha.imagen}}
         </div>
     </div>
 
-    <hr>
+    <hr />
 
     <!-- Mostrar los cuadernos en los que está la ficha -->
     <h3 class="mt-5 mb-4">Esta ficha pertenece a los siguientes cuadernos:</h3>
@@ -95,12 +113,18 @@
             <div class="card mb-4">
                 <div class="card-body">
                     <h5 class="card-title">{{nombre}}</h5>
-                    <p class="card-text"><strong>Propietario:</strong> {{usuario.nombre}}</p>
-                    <p class="card-text"><strong>Número de fichas:</strong> {{numeroFichas}}</p>
+                    <p class="card-text">
+                        <strong>Propietario:</strong> {{usuario.nombre}}
+                    </p>
+                    <p class="card-text">
+                        <strong>Número de fichas:</strong> {{numeroFichas}}
+                    </p>
 
                     <form action="/cuadernos/ver" method="post">
-                        <input type="hidden" name="cuadernoId" value="{{id}}">
-                        <button type="submit" class="btn btn-primary navbar-custom w-100">Ver Cuaderno</button>
+                        <input type="hidden" name="cuadernoId" value="{{id}}" />
+                        <button type="submit" class="btn btn-primary navbar-custom w-100">
+                            Ver Cuaderno
+                        </button>
                     </form>
                 </div>
             </div>
@@ -111,20 +135,22 @@
     <!-- PAGINACIÓN DE CUADERNOS -->
     {{#totalPages}}
     <nav aria-label="Paginación Cuadernos" id="navPaginacionCuadernos">
-        <input type="hidden" id="pageSizeCuadernos" value="3">
+        <input type="hidden" id="pageSizeCuadernos" value="3" />
 
         <p class="text-center mt-2">Página {{currentPage}} de {{totalPages}}</p>
 
         <ul class="pagination justify-content-center mt-3">
             {{#hasPrev}}
             <li class="page-item">
-                <button class="page-link" data-page="{{prevPage}}" onclick="cargarPagina(this, 'cuadernos')">Anterior</button>
+                <button class="page-link" data-page="{{prevPage}}" onclick="cargarPagina(this, 'cuadernos')">
+                    Anterior
+                </button>
             </li>
-            {{/hasPrev}}
-
-            {{#hasNext}}
+            {{/hasPrev}} {{#hasNext}}
             <li class="page-item">
-                <button class="page-link" data-page="{{nextPage}}" onclick="cargarPagina(this, 'cuadernos')">Siguiente</button>
+                <button class="page-link" data-page="{{nextPage}}" onclick="cargarPagina(this, 'cuadernos')">
+                    Siguiente
+                </button>
             </li>
             {{/hasNext}}
         </ul>
@@ -138,12 +164,11 @@
         <a href="/cuadernos/crear" class="btn btn-primary navbar-custom">Crear un Cuaderno</a>
     </div>
     {{/cuadernos}}
-
 </div>
 <script>
     function toggleEditForm() {
-        var form = document.getElementById('editForm');
-        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        var form = document.getElementById("editForm");
+        form.style.display = form.style.display === "none" ? "block" : "none";
     }
 </script>
 

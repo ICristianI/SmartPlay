@@ -36,6 +36,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+// Controlador para las operaciones relacionadas con los usuarios
+
 @Controller
 @RequestMapping("/users")
 public class UserController {
@@ -54,20 +56,21 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    
+
     @Autowired
     private VerificationTokenService tokenService;
 
-    // Maneja el formulario de registro
+    // Maneja el formulario de registro con encriptado de contrasreña
 
     @PostMapping("/register")
-    public String register(@ModelAttribute User user, @RequestParam String rol, Model model, RedirectAttributes redirectAttributes) {
+    public String register(@ModelAttribute User user, @RequestParam String rol, Model model,
+            RedirectAttributes redirectAttributes) {
 
         if (!userService.validarUsuarioYCorreo(user, model, false)) {
             redirectAttributes.addFlashAttribute("error", "El nombre o correo electrónico ya está en uso.");
             return "redirect:/signup";
         }
-        // Si no se especifica un rol, se establece como ALUMNO
+
         if (rol == null || rol.isEmpty()) {
             user.setRoles(List.of("ALUMNO"));
         } else {
@@ -93,6 +96,17 @@ public class UserController {
 
     }
 
+    
+    // Muestra el perfil del usuario
+
+    @GetMapping("/perfil")
+    public String profile(Model model) {
+        model.addAttribute("user", userComponent.getUser().get());
+        return "PaginaUsuario/Perfil";
+    }
+
+    // Edita el perfil de un usuario
+
     @PostMapping("/edit")
     public String editarPerfil(@ModelAttribute User user, Model model, RedirectAttributes redirectAttributes) {
         Optional<User> usuarioOptional = userRepository.findById(userComponent.getUser().get().getId());
@@ -117,6 +131,7 @@ public class UserController {
     }
 
     // Elimina un usuario
+
     @PostMapping("/delete")
     public String borrarUsuario(Model model, HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -126,17 +141,9 @@ public class UserController {
             model.addAttribute("message", "Error al eliminar el usuario.");
         }
         return "redirect:/";
-    }  
-
-    // Muestra el perfil del usuario
-
-    @GetMapping("/perfil")
-    public String profile(Model model) {
-        model.addAttribute("user", userComponent.getUser().get());
-        return "PaginaUsuario/Perfil";
     }
 
-    // Muestra la imagen de perfil del usuario
+    // Recupera la imagen de perfil del usuario
     @GetMapping("/image")
     public ResponseEntity<Object> downloadImage(Model model) throws SQLException {
         Optional<User> op = userRepository.findById(userComponent.getUser().get().getId());
@@ -150,47 +157,52 @@ public class UserController {
         binder.setDisallowedFields("photo");
     }
 
+    // Guarda la imagen de perfil del usuario controlando el tamaño
+
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public String guardarFotoUser(@RequestParam("photo") MultipartFile photo, Model model, RedirectAttributes redirectAttributes) throws Exception {
+    public String guardarFotoUser(@RequestParam("photo") MultipartFile photo, Model model,
+            RedirectAttributes redirectAttributes) throws Exception {
         // Verificar si la imagen excede el tamaño máximo de 1 MB
         long maxSize = 1 * 1024 * 1024; // 1 MB
         if (photo.getSize() > maxSize) {
             // Si es mayor a 1 MB, mostrar un mensaje de error
             redirectAttributes.addFlashAttribute("error", "La imagen no puede ser mayor a 1 MB.");
 
-            return "redirect:/users/perfil"; // Redirigir de vuelta al perfil sin cambios
+            return "redirect:/users/perfil";
         }
-    
+
         // Guardar la imagen si el tamaño es adecuado
         Blob photoBlob = imagenService.saveImage(photo);
         User user = userComponent.getUser().get();
         user.setPhoto(photoBlob);
         userRepository.save(user);
-    
+
         return "redirect:/users/perfil";
     }
 
-    
- @GetMapping("/verificar")
-public String mostrarFormularioVerificacion(
-        @RequestParam("token") String token, 
-        @RequestParam(value = "message", required = false) String message, 
-        Model model) {
-    
-    tokenService.verifyToken(token);
+    // Verifica el token de verificación eviado por correo
 
-    if (message == null) {
-        message = "Verificación exitosa";
+    @GetMapping("/verificar")
+    public String mostrarFormularioVerificacion(
+            @RequestParam("token") String token,
+            @RequestParam(value = "message", required = false) String message,
+            Model model) {
+
+        tokenService.verifyToken(token);
+
+        if (message == null) {
+            message = "Verificación exitosa";
+        }
+
+        return "redirect:/verify?message=" + URLEncoder.encode(message, StandardCharsets.UTF_8);
     }
 
-    return "redirect:/verify?message=" + URLEncoder.encode(message, StandardCharsets.UTF_8);
-}
-
+    // Reenvía el correo de verificación (no funcional en la versión actual)
 
     @GetMapping("/resend")
     public String resend(@RequestParam String email, Model model) {
         Optional<User> user = userRepository.findByEmail(email);
-        
+
         if (user.isPresent() && !user.get().isEnabled()) {
             tokenService.sendVerificationEmail(user.get());
             model.addAttribute("message", "Correo de verificación reenviado.");
@@ -201,12 +213,13 @@ public String mostrarFormularioVerificacion(
         }
         return "redirect:/RegistrarIniciarSesion/Verificar";
     }
-    
 
+    // Maneja la excepción de tamaño máximo de archivo
+    
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public String handleMaxSizeException(@PathVariable Long id, MaxUploadSizeExceededException exc, Model model) {
         model.addAttribute("error", "El archivo excede el tamaño máximo permitido.");
-        return "redirect:/users/perfil"; 
+        return "redirect:/users/perfil";
     }
 
 }
