@@ -2,47 +2,47 @@
 
 <div class="container mt-4">
     <div class="d-flex align-items-center justify-content-between mb-4">
-        <h1 class="text-center mt-5">Mis Fichas Interactivas</h1>
+        <h1 class="text-center mt-5">Mis Juegos de Ahorcado</h1>
         <div class="text-center mt-4">
-            <a href="/fichas" class="btn btn-secondary">Volver</a>
+            <a href="/ahorcado" class="btn btn-secondary">Volver</a>
         </div>
     </div>
 
     <div class="row">
-        {{#fichas}}
+        {{#juegos}}
         <div class="col-md-4 mb-4">
             <div class="card h-100 shadow-sm">
-                <img src="/f/ficha/image/{{id}}" class="card-img-top" alt="Vista previa de la ficha" style="height: 150px; object-fit: cover;">
+                <img src="/images/generalImages/AHORCADO.png" class="card-img-top" alt="Vista previa del juego" style="height: 150px; object-fit: cover;">
                 <div class="card-body text-center">
                     <h5 class="card-title">{{nombre}}</h5>
                     <p class="card-text text-muted">{{asignatura}}</p>
-                    <form action="/f/seleccionarFicha" method="post">
-                        <input type="hidden" name="fichaId" value="{{id}}">
-                        <button type="submit" class="btn btn-primary navbar-custom">Ver Ficha</button>
+                    <p class="card-text"><strong>Intentos:</strong> {{maxIntentos}}</p>
+                    <form action="/juegos/ahorcado/seleccionar" method="post">
+                        <input type="hidden" name="juegoId" value="{{id}}">
+                        <button type="submit" class="btn btn-primary navbar-custom">Ver Juego</button>
                     </form>
                 </div>
             </div>
         </div>
-        {{/fichas}}
+        {{/juegos}}
     </div>
 
-    {{^fichas}}
+    {{^juegos}}
     <div class="text-center mt-5">
-        <p class="text-muted">Aún no has creado ninguna ficha.</p>
-        <a href="/crearFichas" class="btn btn-success">Crear una ficha</a>
+        <p class="text-muted">Aún no has creado ningún juego de ahorcado.</p>
+        <a href="/juegos/ahorcado/crear" class="btn btn-success">Crear un juego</a>
     </div>
-    {{/fichas}}
+    {{/juegos}}
 
     <!-- PAGINACIÓN -->
     {{#totalPages}}
     <nav aria-label="Paginación" id="navPaginacion">
         <input type="hidden" id="pageSize" value="6">
 
-        
+        <p class="text-center mt-2">Página {{currentPage}} de {{totalPages}}</p>
+
         <ul class="pagination justify-content-center mt-3">
             {{#hasPrev}}
-            <p class="text-center mt-2">Página {{currentPage}} de {{totalPages}}</p>
-
             <li class="page-item">
                 <a class="page-link" href="?page={{prevPage}}">Anterior</a>
             </li>

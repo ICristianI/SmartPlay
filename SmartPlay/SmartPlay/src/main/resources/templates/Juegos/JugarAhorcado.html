@@ -1,0 +1,98 @@
+{{>header}}
+<style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    #game-container {
+      width: 50%;
+      margin: auto;
+      padding: 20px;
+      border: 2px solid #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #word-container {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
+    #letters {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .letter-button {
+      padding: 10px;
+      margin: 5px;
+      font-size: 1.5em;
+      cursor: pointer;
+      border: none;
+      background-color: #f0f0f0;
+      border-radius: 5px;
+    }
+
+    .letter-button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+<div id="game-container">
+  <div id="word-container">_ _ _ _ _</div>
+  <div id="letters"></div>
+</div>
+
+<script>
+  const wordToGuess = 'AHORCADO';
+  let guessedLetters = [];
+  const wordContainer = document.getElementById('word-container');
+  const lettersContainer = document.getElementById('letters');
+
+  function displayWord() {
+    let display = '';
+    for (let letter of wordToGuess) {
+      if (guessedLetters.includes(letter)) {
+        display += letter + ' ';
+      } else {
+        display += '_ ';
+      }
+    }
+    wordContainer.textContent = display.trim();
+  }
+
+  function handleLetterClick(letter) {
+    if (!guessedLetters.includes(letter)) {
+      guessedLetters.push(letter);
+      displayWord();
+      checkGameStatus();
+    }
+  }
+
+  function checkGameStatus() {
+    if (guessedLetters.length === new Set(wordToGuess).size) {
+      alert('¡Ganaste! La palabra es: ' + wordToGuess);
+    }
+  }
+
+  function createLetterButtons() {
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    for (let letter of alphabet) {
+      const button = document.createElement('button');
+      button.textContent = letter;
+      button.classList.add('letter-button');
+      button.onclick = () => handleLetterClick(letter);
+      lettersContainer.appendChild(button);
+    }
+  }
+
+  createLetterButtons();
+  displayWord();
+</script>
+{{>footer}}

@@ -23,6 +23,9 @@ public class Cuaderno {
     @Column(nullable = false, unique = false)
     private Integer numeroFichas;
 
+    @Column(nullable = false, unique = false)
+    private Integer numeroJuegos;
+
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private User usuario;
@@ -34,5 +37,14 @@ public class Cuaderno {
         inverseJoinColumns = @JoinColumn(name = "ficha_id")
     )
     private List<Ficha> fichas;
+
+    @ManyToMany
+    @JoinTable(
+        name = "cuaderno_juegos",
+        joinColumns = @JoinColumn(name = "cuaderno_id"),
+        inverseJoinColumns = @JoinColumn(name = "juego_id")
+    )
+    private List<Juego> juegos;
+
 }
 

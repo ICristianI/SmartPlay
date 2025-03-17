@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 @Controller
 public class HomeController {
     @GetMapping("/")
@@ -32,7 +31,7 @@ public class HomeController {
 
     // lleva a pagina de inicio de sesion
     @GetMapping("/login")
-    public String signin(@RequestParam(value = "error", required = false) String error,Model model) {
+    public String signin(@RequestParam(value = "error", required = false) String error, Model model) {
         if (error != null) {
             model.addAttribute("error", error);
         }
@@ -42,20 +41,21 @@ public class HomeController {
     @GetMapping("/loginerror")
     public String loginerror() {
 
-    return "redirect:/login?error=" + URLEncoder.encode("Contraseña Incorrecta", StandardCharsets.UTF_8);
+        return "redirect:/login?error=" + URLEncoder.encode("Contraseña Incorrecta", StandardCharsets.UTF_8);
     }
 
     @GetMapping("/verify")
-    public String getMethodName(@RequestParam(value = "error", required = false) String error,@RequestParam(value = "message", required = false) String message,Model model) {
+    public String getMethodName(@RequestParam(value = "error", required = false) String error,
+            @RequestParam(value = "message", required = false) String message, Model model) {
         if (error != null) {
             model.addAttribute("error", error);
         }
-        if(message != null){
+        if (message != null) {
             model.addAttribute("message", message);
         }
-        return "RegistrarIniciarSesion/Verificar" ;
+        return "RegistrarIniciarSesion/Verificar";
     }
-    
+
     // lleva a pagina de configuracion
     @GetMapping("/config")
     public String config(Model model) {
@@ -66,12 +66,6 @@ public class HomeController {
     @GetMapping("/fames")
     public String fames(Model model) {
         return "Fichas/FichasJuegos";
-    }
-
-    // lleva a pagina de juegos
-    @GetMapping("/juegos")
-    public String games(Model model) {
-        return "Fichas/Juegos";
     }
 
     // lleva a pagina de fichas
@@ -86,7 +80,7 @@ public class HomeController {
         return "Fichas/crearFichas";
     }
 
-        // lleva a pagina de crear fichas
+    // lleva a pagina de crear fichas
     @GetMapping("/verFichas")
     public String verFichas(Model model) {
         return "Fichas/verFichas";
@@ -96,12 +90,21 @@ public class HomeController {
     public String Cuadernos(Model model) {
         return "Cuadernos/Cuadernos";
     }
-    
+
     @GetMapping("/crearCuadernos")
     public String crearCuadernos(Model model) {
         return "Cuadernos/crearCuadernos";
     }
 
-    
+    @GetMapping("/juegos")
+    public String juegos(Model model) {
+        return "Juegos/Juegos";
+    }
+
+    @GetMapping("/ahorcado")
+    public String games(Model model) {
+        return "Juegos/Ahorcado";
+    }
+
 
 }

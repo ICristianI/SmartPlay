@@ -1,0 +1,132 @@
+{{> header}}
+
+<div class="container mt-4">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h1 class="mb-0">Crear Juego de Ahorcado</h1>
+    <button class="btn btn-secondary" onclick="window.history.back();">Volver</button>
+  </div>
+
+  <form action="/juegos/ahorcado/guardar" method="POST" class="shadow p-4 rounded">
+    <!-- Nombre del juego -->
+    <div class="mb-3">
+      <label for="nombre" class="form-label">Nombre del Juego</label>
+      <input 
+        type="text" 
+        class="form-control" 
+        id="nombre" 
+        name="nombre" 
+        placeholder="Escribe el nombre del juego" 
+        maxlength="30" 
+        required 
+      />
+    </div>
+
+    <!-- Idioma -->
+    <div class="mb-3">
+      <label for="idioma" class="form-label">Idioma</label>
+      <input 
+        type="text" 
+        class="form-control" 
+        id="idioma" 
+        name="idioma" 
+        placeholder="Ej: Español, Inglés" 
+        maxlength="20" 
+        required 
+      />
+    </div>
+
+    <!-- Asignatura -->
+    <div class="mb-3">
+      <label for="asignatura" class="form-label">Asignatura</label>
+      <input 
+        type="text" 
+        class="form-control" 
+        id="asignatura" 
+        name="asignatura" 
+        placeholder="Ej: Matemáticas, Ciencias" 
+        maxlength="30" 
+        required 
+      />
+    </div>
+
+    <!-- Contenido -->
+    <div class="mb-3">
+      <label for="contenido" class="form-label">Contenido</label>
+      <textarea 
+        class="form-control" 
+        id="contenido" 
+        name="contenido" 
+        rows="3" 
+        placeholder="Describe el contenido del juego" 
+        maxlength="100" 
+        required
+      ></textarea>
+    </div>
+
+    <!-- Descripción -->
+    <div class="mb-3">
+      <label for="descripcion" class="form-label">Descripción</label>
+      <textarea 
+        class="form-control" 
+        id="descripcion" 
+        name="descripcion" 
+        rows="3" 
+        placeholder="Breve descripción del juego" 
+        maxlength="100" 
+        required
+      ></textarea>
+    </div>
+
+    <!-- Palabra para el juego -->
+    <div class="mb-3">
+      <label for="palabra" class="form-label">Palabra Secreta</label>
+      <input 
+        type="text" 
+        class="form-control" 
+        id="palabra" 
+        name="palabra" 
+        placeholder="Escribe la palabra que se debe adivinar" 
+        maxlength="15" 
+        required 
+      />
+    </div>
+
+   <!-- Número máximo de intentos -->
+   <div class="mb-3">
+    <label for="maxIntentos" class="form-label">Número Máximo de Intentos</label>
+    <div class="input-group">
+      <button type="button" class="btn btn-outline-secondary" onclick="cambiarIntentos(-1)">-</button>
+      <input 
+        type="number" 
+        class="form-control text-center" 
+        id="maxIntentos" 
+        name="maxIntentos" 
+        value="6"
+        min="1" 
+        max="15" 
+        readonly
+      />
+      <button type="button" class="btn btn-outline-secondary" onclick="cambiarIntentos(1)">+</button>
+    </div>
+  </div>
+
+    <!-- Botón para guardar -->
+    <div class="text-center">
+      <button type="submit" class="btn btn-primary navbar-custom">Guardar Juego</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  function cambiarIntentos(cambio) {
+    let input = document.getElementById("maxIntentos");
+    let valorActual = parseInt(input.value);
+    let nuevoValor = valorActual + cambio;
+
+    if (nuevoValor >= 1 && nuevoValor <= 15) {
+      input.value = nuevoValor;
+    }
+  }
+</script>
+
+{{> footer}}

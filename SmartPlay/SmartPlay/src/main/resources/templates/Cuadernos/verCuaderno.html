@@ -12,18 +12,19 @@
         <div class="col-md-8">
             <p><strong>Propietario:</strong> {{cuaderno.usuario.nombre}}</p>
             <p><strong>Número de fichas:</strong> {{cuaderno.numeroFichas}}</p>
+            <p><strong>Número de juegos:</strong> {{cuaderno.numeroJuegos}}</p>
 
             {{#error}}
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <p>{{error}}</p>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">Cerrar</button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             {{/error}}
 
             {{#mensaje}}
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <p>{{mensaje}}</p>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">Cerrar</button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             {{/mensaje}}
 
@@ -42,6 +43,7 @@
                 </div>
                 <input type="hidden" name="cuadernoId" value="{{cuaderno.id}}">
 
+                <!-- Selección de fichas -->
                 <div class="mb-4 mt-4">
                     <label class="form-label">Seleccionar Fichas</label>
                     <button type="button" class="btn btn-primary navbar-custom" data-bs-toggle="modal" data-bs-target="#fichaModal">
@@ -53,8 +55,21 @@
                     <label class="form-label">Fichas para añadir</label>
                     <ul id="listaFichas" class="list-group"></ul>
                 </div>
-
                 <input type="hidden" name="fichasSeleccionadas" id="fichasSeleccionadas" />
+
+                <!-- Selección de juegos -->
+                <div class="mb-4 mt-4">
+                    <label class="form-label">Seleccionar Juegos</label>
+                    <button type="button" class="btn btn-primary navbar-custom" data-bs-toggle="modal" data-bs-target="#juegoModal">
+                        Elegir Juegos
+                    </button>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Juegos para añadir</label>
+                    <ul id="listaJuegos" class="list-group"></ul>
+                </div>
+                <input type="hidden" name="juegosSeleccionados" id="juegosSeleccionados" />
 
                 <button type="submit" class="btn btn-success mt-3">Guardar Cambios</button>
             </form>
@@ -97,28 +112,83 @@
         {{/fichasPage}}
     </div>
 
-    <!-- PAGINACIÓN -->
-<nav aria-label="Paginación" id="navPaginacion">
-    <input type="hidden" id="pageSize" value="3">
+ <!-- PAGINACIÓN DE FICHAS -->
+<nav aria-label="Paginación de Fichas" id="navPaginacionFichas">
+    <p class="text-center mt-2">Página {{currentPageFichas}} de {{totalPagesFichas}}</p>
+    <input type="hidden" id="pageSizeFichas" value="3">
 
-    <p class="text-center mt-2">Página {{currentPage}} de {{totalPages}}</p>
 
     <ul class="pagination justify-content-center mt-3">
-        {{#hasPrev}}
+        {{#hasPrevFichas}}
         <li class="page-item">
-            <button class="page-link" data-page="{{prevPage}}" onclick="cargarPagina(this)">Anterior</button>
+            <button class="page-link" data-page="{{prevPageFichas}}" onclick="cargarPagina(this, 'fichas')">Anterior</button>
         </li>
-        {{/hasPrev}}
+        {{/hasPrevFichas}}
 
-        {{#hasNext}}
+        {{#hasNextFichas}}
         <li class="page-item">
-            <button class="page-link" data-page="{{nextPage}}" onclick="cargarPagina(this)">Siguiente</button>
+            <button class="page-link" data-page="{{nextPageFichas}}" onclick="cargarPagina(this, 'fichas')">Siguiente</button>
         </li>
-        {{/hasNext}}
+        {{/hasNextFichas}}
     </ul>
 </nav>
 
-    
+<hr>
+
+   <!-- Juegos agregados al cuaderno -->
+   
+   <div class="row" id="contenedorJuegos">
+       {{#juegosPage}}
+       <div class="col-md-4">
+           <div class="card mb-4">
+               <div class="card-body">
+                   <h5 class="card-title">{{nombre}}</h5>
+                   <p class="card-text"><strong>Descripción:</strong> {{descripcion}}</p>
+
+                   <form action="/juegos/ahorcado/seleccionar" method="post" class="mb-2">
+                       <input type="hidden" name="juegoId" value="{{id}}">
+                       <button type="submit" class="btn btn-primary navbar-custom w-100">Ver Juego</button>
+                   </form>
+
+                   <form action="/cuadernos/eliminarJuego" method="post">
+                       <input type="hidden" name="cuadernoId" value="{{cuaderno.id}}">
+                       <input type="hidden" name="juegoId" value="{{id}}">
+                       <button type="submit" class="btn btn-danger w-100">Eliminar del Cuaderno</button>
+                   </form>
+               </div>
+           </div>
+       </div>
+       {{/juegosPage}}
+
+       {{^juegosPage}}
+       <div class="col-12">
+           <div class="alert alert-warning text-center">
+               Aún no tienes juegos en este cuaderno.
+           </div>
+       </div>
+       {{/juegosPage}}
+   </div>
+
+<!-- PAGINACIÓN DE JUEGOS -->
+<nav aria-label="Paginación de Juegos" id="navPaginacionJuegos">
+    <p class="text-center mt-2">Página {{currentPageJuegos}} de {{totalPagesJuegos}}</p>
+    <input type="hidden" id="pageSizeJuegos" value="3">
+
+    <ul class="pagination justify-content-center mt-3">
+        {{#hasPrevJuegos}}
+        <li class="page-item">
+            <button class="page-link" data-page="{{prevPageJuegos}}" onclick="cargarPagina(this, 'juegos')">Anterior</button>
+        </li>
+        {{/hasPrevJuegos}}
+
+        {{#hasNextJuegos}}
+        <li class="page-item">
+            <button class="page-link" data-page="{{nextPageJuegos}}" onclick="cargarPagina(this, 'juegos')">Siguiente</button>
+        </li>
+        {{/hasNextJuegos}}
+    </ul>
+</nav>
+
 
     <!-- Modal para seleccionar fichas -->
     <div class="modal fade" id="fichaModal" tabindex="-1" aria-labelledby="fichaModalLabel" aria-hidden="true">
@@ -158,11 +228,46 @@
         </div>
     </div>
 
+<!-- Modal para seleccionar juegos -->
+<div class="modal fade" id="juegoModal" tabindex="-1" aria-labelledby="juegoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="juegoModalLabel">Seleccionar Juegos</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    {{#juegosNoAgregados}}
+                    <div class="col-md-4 mb-4">
+                        <div class="card juego-item h-100 shadow-sm" data-id="{{id}}" data-nombre="{{nombre}}" onclick="agregarJuego('{{id}}', '{{nombre}}')">
+                            <div class="card-body text-center">
+                                <p class="card-text">{{nombre}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {{/juegosNoAgregados}}
+
+                    {{^juegosNoAgregados}}
+                    <div class="col-12">
+                        <div class="alert alert-warning text-center d-flex justify-content-center align-items-center">
+                            No hay más juegos disponibles para agregar.
+                        </div>
+                    </div>
+                    {{/juegosNoAgregados}}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </div>
 
 <script src="/js/cuaderno.js"></script>
 <script src="/js/cuadernoEditar.js"></script>
 <script src="/js/PaginacionAJAX.js"></script>
-
 
 {{> footer}}

@@ -189,13 +189,15 @@ h1 {
   white-space: normal; /* Permite saltos de línea */
 }
 
-.ficha-seleccionada {
+.ficha-seleccionada,
+.juego-seleccionado {
   border: 2px solid #007bff !important;
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
   border-radius: 8px;
 }
 
-.eliminar-ficha {
+.eliminar-ficha,
+.eliminar-juego {
   color: #6c757d; /* Gris sutil */
   font-size: 18px;
   cursor: pointer;

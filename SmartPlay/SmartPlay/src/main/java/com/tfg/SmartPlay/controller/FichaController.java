@@ -147,26 +147,26 @@ public class FichaController {
         redirectAttributes.addFlashAttribute("mensaje", "Ficha guardada correctamente.");
         return "redirect:/f/listarFichas";
     }
-
     @PostMapping("/eliminar")
-    public String eliminarFicha(@AuthenticationPrincipal UserDetails userDetails,
-            HttpSession session,
+    public String eliminarFicha(@RequestParam("fichaId") Long fichaId,
+            @AuthenticationPrincipal UserDetails userDetails,
             RedirectAttributes redirectAttributes) {
-        Ficha ficha = (Ficha) session.getAttribute("fichaSeleccionada");
-
-        if (ficha == null) {
-            redirectAttributes.addFlashAttribute("error", "No hay ficha seleccionada.");
+    
+        Optional<Ficha> ficha = fichaService.obtenerFicha(fichaId, userDetails.getUsername());
+    
+        if (ficha.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Ficha no encontrada.");
             return "redirect:/f/listarFichas";
         }
-
+    
         try {
-            fichaService.eliminarFicha(ficha.getId(), userDetails.getUsername());
-            session.removeAttribute("fichaSeleccionada"); // Quitamos de la sesión
+            fichaService.eliminarFicha(fichaId, userDetails.getUsername());
             redirectAttributes.addFlashAttribute("mensaje", "Ficha eliminada exitosamente.");
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
-
+    
         return "redirect:/f/listarFichas";
     }
+    
 }
