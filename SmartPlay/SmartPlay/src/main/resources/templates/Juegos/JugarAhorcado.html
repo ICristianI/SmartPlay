@@ -1,98 +1,45 @@
-{{>header}}
-<style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-    }
+{{> header}}
 
-    #game-container {
-      width: 50%;
-      margin: auto;
-      padding: 20px;
-      border: 2px solid #000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+<div class="container mt-5 text-center">
+    <h1 class="mb-4">{{ juego.nombre }}</h1>
 
-    #word-container {
-      font-size: 2em;
-      margin-bottom: 20px;
-    }
+    <!-- Imagen identificativa del juego -->
+    <div class="mb-3 ">
+        <img src="/images/generalImages/imagenAhorcado.png" id="imagenJuego" alt="Imagen del juego" class="img-fluid rounded shadow navbar-custom" style="max-height: 250px;">
+    </div>
 
-    #letters {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
+    <p><strong>Intentos restantes:</strong> <span id="intentosRestantes">{{ juego.maxIntentos }}</span></p>
 
-    .letter-button {
-      padding: 10px;
-      margin: 5px;
-      font-size: 1.5em;
-      cursor: pointer;
-      border: none;
-      background-color: #f0f0f0;
-      border-radius: 5px;
-    }
+    <!-- Espacios para la palabra -->
+    <div id="palabraAdivinada" class="d-flex justify-content-center flex-wrap mb-4"></div>
 
-    .letter-button:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-  </style>
-</head>
-<body>
+    <!-- Teclado virtual en dos filas -->
+    <div id="teclado" class="d-flex flex-column align-items-center"></div>
 
-<div id="game-container">
-  <div id="word-container">_ _ _ _ _</div>
-  <div id="letters"></div>
+    <!-- Botón para reiniciar -->
+    <button class="btn btn-primary mt-4" onclick="reiniciarJuego()">Reiniciar Juego</button>
+
+    <!-- Botón para descargar PDF -->
+    <button class="btn btn-success mt-4" onclick="descargarPDF()">Descargar en PDF</button>
+
+    <!-- Mensaje de resultado -->
+    <div id="mensaje" class="mt-4"></div>
+
+    <!-- Volver -->
+    <a href="/juegos/ahorcado/listar" class="btn btn-secondary mt-3">Volver</a>
 </div>
 
 <script>
-  const wordToGuess = 'AHORCADO';
-  let guessedLetters = [];
-  const wordContainer = document.getElementById('word-container');
-  const lettersContainer = document.getElementById('letters');
-
-  function displayWord() {
-    let display = '';
-    for (let letter of wordToGuess) {
-      if (guessedLetters.includes(letter)) {
-        display += letter + ' ';
-      } else {
-        display += '_ ';
-      }
-    }
-    wordContainer.textContent = display.trim();
-  }
-
-  function handleLetterClick(letter) {
-    if (!guessedLetters.includes(letter)) {
-      guessedLetters.push(letter);
-      displayWord();
-      checkGameStatus();
-    }
-  }
-
-  function checkGameStatus() {
-    if (guessedLetters.length === new Set(wordToGuess).size) {
-      alert('¡Ganaste! La palabra es: ' + wordToGuess);
-    }
-  }
-
-  function createLetterButtons() {
-    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    for (let letter of alphabet) {
-      const button = document.createElement('button');
-      button.textContent = letter;
-      button.classList.add('letter-button');
-      button.onclick = () => handleLetterClick(letter);
-      lettersContainer.appendChild(button);
-    }
-  }
-
-  createLetterButtons();
-  displayWord();
+    const juego = {
+        palabra: "{{ juego.palabra }}",
+        maxIntentos: "{{ juego.maxIntentos }}",
+        nombre: "{{ juego.nombre }}",
+        descripcion: "{{ juego.descripcion }}"
+    };
 </script>
-{{>footer}}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="/js/ahorcado.js"></script>
+
+{{> footer}}

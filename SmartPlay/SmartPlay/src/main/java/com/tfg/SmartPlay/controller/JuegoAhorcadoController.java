@@ -3,6 +3,8 @@ package com.tfg.SmartPlay.controller;
 import com.tfg.SmartPlay.entity.Cuaderno;
 import com.tfg.SmartPlay.entity.JuegoAhorcado;
 import com.tfg.SmartPlay.service.JuegoAhorcadoService;
+import com.tfg.SmartPlay.service.UserComponent;
+
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +25,15 @@ public class JuegoAhorcadoController {
     @Autowired
     private JuegoAhorcadoService juegoAhorcadoService;
 
+    @Autowired
+    private UserComponent userComponent;
+
     @GetMapping("/listar")
     public String listarJuegos(Model model,
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestParam(defaultValue = "0") int page) {
 
-        int size = 6; // Tamaño de la paginación
+        int size = 6;
 
         Page<JuegoAhorcado> juegosPage = juegoAhorcadoService
                 .obtenerJuegosPaginadosPorUsuario(userDetails.getUsername(), page, size);
@@ -43,6 +48,23 @@ public class JuegoAhorcadoController {
 
         return "/Juegos/verJuegosAhorcados";
     }
+
+
+    @GetMapping("/jugar")
+    public String jugarAhorcado(@RequestParam("juegoId") Long juegoId, Model model) {
+        Optional<JuegoAhorcado> juegoOpt = juegoAhorcadoService.obtenerJuego(juegoId, userComponent.getUser().get().getEmail());
+    
+        if (juegoOpt.isPresent()) {
+            JuegoAhorcado juego = juegoOpt.get();
+            model.addAttribute("juego", juego);
+            return "Juegos/JugarAhorcado";
+        } else {
+            model.addAttribute("error", "El juego no existe.");
+            return "redirect:/juegos/ahorcado/listar";
+        }
+    }
+    
+
 
     @PostMapping("/seleccionar")
     public String seleccionarJuego(@RequestParam("juegoId") Long juegoId,
@@ -79,8 +101,7 @@ public class JuegoAhorcadoController {
         if (juego.isPresent()) {
             model.addAttribute("juego", juego.get());
 
-            // Obtener cuadernos paginados que contienen este juego
-            int size = 3; // Tamaño de la paginación
+            int size = 3;
             Page<Cuaderno> cuadernosPage = juegoAhorcadoService.obtenerCuadernosConJuegoPaginados(juego.get(), page,
                     size);
 

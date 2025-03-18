@@ -35,15 +35,12 @@ public class VerificationTokenService {
         Optional<VerificationToken> existingToken = tokenRepository.findByUser(user);
 
         if (existingToken.isPresent()) {
-            System.out.println("Token encontrado: " + existingToken.get().getId());
-
+            
             tokenRepository.delete(existingToken.get());
             tokenRepository.flush();
 
-            System.out.println("Intento de eliminación realizado.");
-        } else {
-            System.out.println("No se encontró token para eliminar.");
-        }
+        } 
+
         String token = UUID.randomUUID().toString();
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(token);

@@ -79,47 +79,48 @@ public class FichaController {
     // Método para ver una ficha que lleva a la template
 
     @GetMapping("/verFicha")
-    public String verFichaDesdeSesion(HttpSession session,
-            @AuthenticationPrincipal UserDetails userDetails,
-            Model model,
-            @RequestParam(defaultValue = "0") int page,
-            RedirectAttributes redirectAttributes) {
+public String verFichaDesdeSesion(HttpSession session,
+        @AuthenticationPrincipal UserDetails userDetails,
+        Model model,
+        @RequestParam(name = "pageCuadernos", defaultValue = "0") int pageCuadernos,
+        RedirectAttributes redirectAttributes) {
 
-        Long fichaId = (Long) session.getAttribute("fichaId");
+    Long fichaId = (Long) session.getAttribute("fichaId");
 
-        if (fichaId == null) {
-            redirectAttributes.addFlashAttribute("error", "Ficha no encontrada.");
-            return "redirect:/f/listarFichas";
-        }
-
-        Optional<Ficha> ficha = fichaService.obtenerFicha(fichaId, userDetails.getUsername());
-
-        if (ficha.isPresent()) {
-            model.addAttribute("ficha", ficha.get());
-
-            int size = 3;
-            Page<Cuaderno> cuadernosPage = cuadernoService.obtenerCuadernosConFichaPaginados(ficha.get(), page, size);
-
-            int totalPages = cuadernosPage.getTotalPages();
-            boolean hasPrev = page > 0;
-            boolean hasNext = page < totalPages - 1;
-            int prevPage = hasPrev ? page - 1 : 0;
-            int nextPage = hasNext ? page + 1 : page;
-
-            model.addAttribute("cuadernos", cuadernosPage.getContent());
-            model.addAttribute("currentPage", page + 1);
-            model.addAttribute("totalPages", totalPages);
-            model.addAttribute("hasPrev", hasPrev);
-            model.addAttribute("hasNext", hasNext);
-            model.addAttribute("prevPage", prevPage);
-            model.addAttribute("nextPage", nextPage);
-
-            return "Fichas/verFicha";
-        } else {
-            redirectAttributes.addFlashAttribute("error", "No tienes permisos para ver esta ficha.");
-            return "redirect:/f/listarFichas";
-        }
+    if (fichaId == null) {
+        redirectAttributes.addFlashAttribute("error", "Ficha no encontrada.");
+        return "redirect:/f/listarFichas";
     }
+
+    Optional<Ficha> ficha = fichaService.obtenerFicha(fichaId, userDetails.getUsername());
+
+    if (ficha.isPresent()) {
+        model.addAttribute("ficha", ficha.get());
+
+        int size = 3;
+        Page<Cuaderno> cuadernosPage = cuadernoService.obtenerCuadernosConFichaPaginados(ficha.get(), pageCuadernos, size);
+
+        int totalPagesCuadernos = cuadernosPage.getTotalPages();
+        boolean hasPrevCuadernos = pageCuadernos > 0;
+        boolean hasNextCuadernos = pageCuadernos < totalPagesCuadernos - 1;
+        int prevPageCuadernos = hasPrevCuadernos ? pageCuadernos - 1 : 0;
+        int nextPageCuadernos = hasNextCuadernos ? pageCuadernos + 1 : pageCuadernos;
+
+        model.addAttribute("cuadernos", cuadernosPage.getContent());
+        model.addAttribute("currentPageCuadernos", pageCuadernos + 1);
+        model.addAttribute("totalPagesCuadernos", totalPagesCuadernos);
+        model.addAttribute("hasPrevCuadernos", hasPrevCuadernos);
+        model.addAttribute("hasNextCuadernos", hasNextCuadernos);
+        model.addAttribute("prevPageCuadernos", prevPageCuadernos);
+        model.addAttribute("nextPageCuadernos", nextPageCuadernos);
+
+        return "Fichas/verFicha";
+    } else {
+        redirectAttributes.addFlashAttribute("error", "No tienes permisos para ver esta ficha.");
+        return "redirect:/f/listarFichas";
+    }
+}
+
 
     // Método que lleva a la template de crear fichas
 

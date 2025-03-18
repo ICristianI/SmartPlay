@@ -47,8 +47,9 @@
     <!-- Palabra para el juego -->
     <div class="mb-3">
       <label for="palabra" class="form-label">Palabra Secreta</label>
+
       <input type="text" class="form-control" id="palabra" name="palabra"
-        placeholder="Escribe la palabra que se debe adivinar" maxlength="15" required />
+        placeholder="Escribe la palabra que se debe adivinar" pattern="[A-Za-z]+" maxlength="15" required />
     </div>
 
     <!-- Número máximo de intentos -->
@@ -75,16 +76,6 @@
   </form>
 </div>
 
-<script>
-  function cambiarIntentos(cambio) {
-    let input = document.getElementById("maxIntentos");
-    let valorActual = parseInt(input.value);
-    let nuevoValor = valorActual + cambio;
-
-    if (nuevoValor >= 1 && nuevoValor <= 15) {
-      input.value = nuevoValor;
-    }
-  }
-</script>
+<script src="/js/validacionAhorcado.js"></script>
 
 {{> footer}}

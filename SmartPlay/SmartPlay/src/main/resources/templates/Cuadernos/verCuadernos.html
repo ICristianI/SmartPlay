@@ -19,7 +19,7 @@
     {{#mensaje}}
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <p>{{mensaje}}</p>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar">Cerrar</button>
     </div>
     {{/mensaje}}
 
@@ -57,13 +57,13 @@
         <ul class="pagination justify-content-center mt-3">
             {{#hasPrev}}
             <li class="page-item">
-                <a class="page-link" href="?page={{prevPage}}">Anterior</a>
+                <a class="btn btn-secondary" href="?page={{prevPage}}">Anterior</a>
             </li>
             {{/hasPrev}}
 
             {{#hasNext}}
             <li class="page-item">
-                <a class="page-link" href="?page={{nextPage}}">Siguiente</a>
+                <a class="btn btn-secondary" href="?page={{nextPage}}">Siguiente</a>
             </li>
             {{/hasNext}}
         </ul>

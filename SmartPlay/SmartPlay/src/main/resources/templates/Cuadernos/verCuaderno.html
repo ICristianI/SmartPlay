@@ -134,13 +134,13 @@
         <ul class="pagination justify-content-center mt-3">
             {{#hasPrevFichas}}
             <li class="page-item">
-                <button class="page-link" data-page="{{prevPageFichas}}" onclick="cargarPagina(this, 'fichas')">
+                <button class="btn btn-secondary" data-page="{{prevPageFichas}}" onclick="cargarPagina(this, 'fichas')">
                     Anterior
                 </button>
             </li>
             {{/hasPrevFichas}} {{#hasNextFichas}}
             <li class="page-item">
-                <button class="page-link" data-page="{{nextPageFichas}}" onclick="cargarPagina(this, 'fichas')">
+                <button class="btn btn-secondary" data-page="{{nextPageFichas}}" onclick="cargarPagina(this, 'fichas')">
                     Siguiente
                 </button>
             </li>
@@ -196,13 +196,13 @@
         <ul class="pagination justify-content-center mt-3">
             {{#hasPrevJuegos}}
             <li class="page-item">
-                <button class="page-link" data-page="{{prevPageJuegos}}" onclick="cargarPagina(this, 'juegos')">
+                <button class="btn btn-secondary" data-page="{{prevPageJuegos}}" onclick="cargarPagina(this, 'juegos')">
                     Anterior
                 </button>
             </li>
             {{/hasPrevJuegos}} {{#hasNextJuegos}}
             <li class="page-item">
-                <button class="page-link" data-page="{{nextPageJuegos}}" onclick="cargarPagina(this, 'juegos')">
+                <button class="btn btn-secondary" data-page="{{nextPageJuegos}}" onclick="cargarPagina(this, 'juegos')">
                     Siguiente
                 </button>
             </li>
@@ -265,7 +265,10 @@
                         <div class="col-md-4 mb-4">
                             <div class="card juego-item h-100 shadow-sm" data-id="{{id}}" data-nombre="{{nombre}}"
                                 onclick="agregarJuego('{{id}}', '{{nombre}}')">
+                                <img src="/images/generalImages/Ahorcado.jpg" class="card-img-top" alt="Imagen de {{nombre}}"
+                                style="height: 150px; object-fit: cover" />
                                 <div class="card-body text-center">
+
                                     <p class="card-text">{{nombre}}</p>
                                 </div>
                             </div>

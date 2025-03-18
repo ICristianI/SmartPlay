@@ -10,11 +10,11 @@
                 <strong>Asignatura:</strong> {{ficha.asignatura}}
             </p>
             <p class="text-break"><strong>Descripción:</strong></p>
-            <div class="p-3 border rounded bg-light" style="word-wrap: break-word; overflow-wrap: break-word">
+            <div class="descripcion-cuadro p-3 border rounded bg-light" style="word-wrap: break-word; overflow-wrap: break-word">
                 {{ficha.descripcion}}
             </div>
             <p class="mt-3"><strong>Contenido:</strong></p>
-            <div class="p-3 border rounded bg-light mb-3" style="word-wrap: break-word; overflow-wrap: break-word">
+            <div class="descripcion-cuadro p-3 border rounded bg-light mb-3" style="word-wrap: break-word; overflow-wrap: break-word">
                 {{ficha.contenido}}
             </div>
 
@@ -132,30 +132,32 @@
         {{/cuadernos}}
     </div>
 
-    <!-- PAGINACIÓN DE CUADERNOS -->
-    {{#totalPages}}
-    <nav aria-label="Paginación Cuadernos" id="navPaginacionCuadernos">
-        <input type="hidden" id="pageSizeCuadernos" value="3" />
+<!-- PAGINACIÓN DE CUADERNOS -->
+<nav aria-label="Paginación Cuadernos" id="navPaginacionCuadernos">
+    <input type="hidden" id="pageSizeCuadernos" value="3" />
 
-        <p class="text-center mt-2">Página {{currentPage}} de {{totalPages}}</p>
+    <p class="text-center mt-2">Página {{currentPageCuadernos}} de {{totalPagesCuadernos}}</p>
 
-        <ul class="pagination justify-content-center mt-3">
-            {{#hasPrev}}
-            <li class="page-item">
-                <button class="page-link" data-page="{{prevPage}}" onclick="cargarPagina(this, 'cuadernos')">
-                    Anterior
-                </button>
-            </li>
-            {{/hasPrev}} {{#hasNext}}
-            <li class="page-item">
-                <button class="page-link" data-page="{{nextPage}}" onclick="cargarPagina(this, 'cuadernos')">
-                    Siguiente
-                </button>
-            </li>
-            {{/hasNext}}
-        </ul>
-    </nav>
-    {{/totalPages}}
+    <ul class="pagination justify-content-center mt-3">
+        {{#hasPrevCuadernos}}
+        <li class="page-item">
+            <button class="btn btn-secondary" data-page="{{prevPageCuadernos}}" onclick="cargarPagina(this, 'cuadernos')">
+                Anterior
+            </button>
+        </li>
+        {{/hasPrevCuadernos}} 
+        {{#hasNextCuadernos}}
+        <li class="page-item">
+            <button class="btn btn-secondary" data-page="{{nextPageCuadernos}}" onclick="cargarPagina(this, 'cuadernos')">
+                Siguiente
+            </button>
+        </li>
+        {{/hasNextCuadernos}}
+    </ul>
+</nav>
+
+
+    
 
     <!-- Si no tiene cuadernos, mostrar un mensaje -->
     {{^cuadernos}}

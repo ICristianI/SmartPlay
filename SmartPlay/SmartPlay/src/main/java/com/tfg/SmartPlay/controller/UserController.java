@@ -121,6 +121,8 @@ public class UserController {
         if (!userService.validarUsuarioYCorreo(user, model, true)) {
             redirectAttributes.addFlashAttribute("error", "El nombre ya está en uso.");
             return "redirect:/users/perfil";
+        }else{
+            redirectAttributes.addFlashAttribute("mensaje", "Perfil actualizado correctamente.");
         }
 
         usuario.setNombre(user.getNombre());

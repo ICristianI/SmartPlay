@@ -88,7 +88,8 @@ document.addEventListener("DOMContentLoaded", function () {
       "list-group-item",
       "d-flex",
       "justify-content-between",
-      "align-items-center"
+      "align-items-center",
+      "item-seleccionado"
     );
     li.innerHTML = `
           ${nombre}

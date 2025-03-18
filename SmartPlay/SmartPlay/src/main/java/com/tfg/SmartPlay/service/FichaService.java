@@ -122,8 +122,6 @@ public class FichaService {
 
         Page<Ficha> fichas = fichaRepository.obtenerFichasPorCuaderno(cuadernoId, PageRequest.of(page, size));
 
-        System.out.println("Fichas recuperadas para el cuaderno " + cuadernoId + ": " + fichas.getContent().size());
-
         return fichas;
 
     }
