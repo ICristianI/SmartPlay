@@ -160,8 +160,9 @@
                     <h5 class="card-title">{{nombre}}</h5>
                     <p class="card-text"><strong>Descripción:</strong> {{descripcion}}</p>
 
-                    <form action="/juegos/ahorcado/seleccionar" method="post" class="mb-2">
+                    <form action="/juegos/seleccionar" method="post" class="mb-2">
                         <input type="hidden" name="juegoId" value="{{id}}" />
+                        <input type="hidden" name="tipo" value='ahorcado' />
                         <button type="submit" class="btn btn-primary navbar-custom w-100">
                             Ver Juego
                         </button>

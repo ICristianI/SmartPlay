@@ -68,7 +68,7 @@ public class SecurityConfig {
                         .requestMatchers("/f/**", "/fames", "/juegos", "/fichas",
                                 "/verFichas", "/crearCuadernos", "/f/listarFichas", "/f/ficha/image/**",
                                 "/Fichas/verFichas",
-                                "/juegos/ahorcado/**", "/ahorcado", "/Cuadernos", "/users/**", "/cuadernos/**")
+                                "/juegos/**","/ahorcado/**", "/Cuadernos", "/users/**", "/cuadernos/**")
                         .hasAnyRole("ALUMNO", "PROFESOR"))
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")

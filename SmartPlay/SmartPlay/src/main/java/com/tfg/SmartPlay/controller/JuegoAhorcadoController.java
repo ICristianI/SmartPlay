@@ -19,7 +19,7 @@ import org.springframework.data.domain.Page;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/juegos/ahorcado")
+@RequestMapping("/ahorcado")
 public class JuegoAhorcadoController {
 
     @Autowired
@@ -60,40 +60,23 @@ public class JuegoAhorcadoController {
             return "Juegos/JugarAhorcado";
         } else {
             model.addAttribute("error", "El juego no existe.");
-            return "redirect:/juegos/ahorcado/listar";
+            return "redirect:/ahorcado/listar";
         }
     }
     
-
-
-    @PostMapping("/seleccionar")
-    public String seleccionarJuego(@RequestParam("juegoId") Long juegoId,
-            HttpSession session,
-            @AuthenticationPrincipal UserDetails userDetails,
-            RedirectAttributes redirectAttributes) {
-        Optional<JuegoAhorcado> juego = juegoAhorcadoService.obtenerJuego(juegoId, userDetails.getUsername());
-
-        if (juego.isPresent()) {
-            session.setAttribute("juegoId", juegoId);
-            return "redirect:/juegos/ahorcado/ver";
-        } else {
-            redirectAttributes.addFlashAttribute("error", "Juego no encontrado o sin permiso.");
-            return "redirect:/juegos/ahorcado/listar";
-        }
-    }
 
     @GetMapping("/ver")
     public String verJuego(HttpSession session,
             @AuthenticationPrincipal UserDetails userDetails,
             Model model,
-            @RequestParam(defaultValue = "0") int page, // Página actual
+            @RequestParam(name = "pageCuadernos", defaultValue = "0") int pageCuadernos, // Página actual
             RedirectAttributes redirectAttributes) {
 
         Long juegoId = (Long) session.getAttribute("juegoId");
 
         if (juegoId == null) {
             redirectAttributes.addFlashAttribute("error", "Juego no encontrado.");
-            return "redirect:/juegos/ahorcado/listar";
+            return "redirect:/ahorcado/listar";
         }
 
         Optional<JuegoAhorcado> juego = juegoAhorcadoService.obtenerJuego(juegoId, userDetails.getUsername());
@@ -102,27 +85,28 @@ public class JuegoAhorcadoController {
             model.addAttribute("juego", juego.get());
 
             int size = 3;
-            Page<Cuaderno> cuadernosPage = juegoAhorcadoService.obtenerCuadernosConJuegoPaginados(juego.get(), page,
+            Page<Cuaderno> cuadernosPage = juegoAhorcadoService.obtenerCuadernosConJuegoPaginados(juego.get(), pageCuadernos,
                     size);
 
-            int totalPages = cuadernosPage.getTotalPages();
-            boolean hasPrev = page > 0;
-            boolean hasNext = page < totalPages - 1;
-            int prevPage = hasPrev ? page - 1 : 0;
-            int nextPage = hasNext ? page + 1 : page;
+                    int totalPagesCuadernos = cuadernosPage.getTotalPages();
+        boolean hasPrevCuadernos = pageCuadernos > 0;
+        boolean hasNextCuadernos = pageCuadernos < totalPagesCuadernos - 1;
+        int prevPageCuadernos = hasPrevCuadernos ? pageCuadernos - 1 : 0;
+        int nextPageCuadernos = hasNextCuadernos ? pageCuadernos + 1 : pageCuadernos;
 
-            model.addAttribute("cuadernos", cuadernosPage.getContent());
-            model.addAttribute("currentPage", page + 1);
-            model.addAttribute("totalPages", totalPages);
-            model.addAttribute("hasPrev", hasPrev);
-            model.addAttribute("hasNext", hasNext);
-            model.addAttribute("prevPage", prevPage);
-            model.addAttribute("nextPage", nextPage);
+        model.addAttribute("cuadernos", cuadernosPage.getContent());
+        model.addAttribute("currentPageCuadernos", pageCuadernos + 1);
+        model.addAttribute("totalPagesCuadernos", totalPagesCuadernos);
+        model.addAttribute("hasPrevCuadernos", hasPrevCuadernos);
+        model.addAttribute("hasNextCuadernos", hasNextCuadernos);
+        model.addAttribute("prevPageCuadernos", prevPageCuadernos);
+        model.addAttribute("nextPageCuadernos", nextPageCuadernos);
+
 
             return "Juegos/verJuegoAhorcado";
         } else {
             redirectAttributes.addFlashAttribute("error", "No tienes permisos para ver este juego.");
-            return "redirect:/juegos/ahorcado/listar";
+            return "redirect:/ahorcado/listar";
         }
     }
 
@@ -138,10 +122,10 @@ public class JuegoAhorcadoController {
             session.setAttribute("juegoId", juegoId);
             redirectAttributes.addFlashAttribute("mensaje", "Juego editado exitosamente.");
 
-            return "redirect:/juegos/ahorcado/ver";
+            return "redirect:/ahorcado/ver";
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/juegos/ahorcado/listar";
+            return "redirect:/ahorcado/listar";
         }
     }
 
@@ -157,7 +141,7 @@ public class JuegoAhorcadoController {
             RedirectAttributes redirectAttributes) {
         juegoAhorcadoService.guardarJuego(juego, userDetails.getUsername());
         redirectAttributes.addFlashAttribute("mensaje", "Juego guardado correctamente.");
-        return "redirect:/juegos/ahorcado/listar";
+        return "redirect:/ahorcado/listar";
     }
 
     @PostMapping("/eliminar")
@@ -169,7 +153,7 @@ public class JuegoAhorcadoController {
 
         if (juego.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Juego no encontrado.");
-            return "redirect:/juegos/ahorcado/listar";
+            return "redirect:/ahorcado/listar";
         }
 
         try {
@@ -179,7 +163,7 @@ public class JuegoAhorcadoController {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
 
-        return "redirect:/juegos/ahorcado/listar";
+        return "redirect:/ahorcado/listar";
     }
 
 }

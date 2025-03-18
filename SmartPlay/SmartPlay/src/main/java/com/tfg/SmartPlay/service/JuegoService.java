@@ -1,6 +1,7 @@
 package com.tfg.SmartPlay.service;
 
 import com.tfg.SmartPlay.entity.Juego;
+import com.tfg.SmartPlay.entity.JuegoAhorcado;
 import com.tfg.SmartPlay.entity.User;
 import com.tfg.SmartPlay.repository.JuegoRepository;
 import com.tfg.SmartPlay.repository.UserRepository;
@@ -99,5 +100,10 @@ public class JuegoService {
     public Page<Juego> obtenerJuegosPaginadosEnCuaderno(Long cuadernoId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return juegoRepository.obtenerJuegosPorCuaderno(cuadernoId, pageable);
+    }
+
+
+    public Optional<Juego> obtenerJuegoPorId(Long id) {
+        return juegoRepository.findById(id);
     }
 }

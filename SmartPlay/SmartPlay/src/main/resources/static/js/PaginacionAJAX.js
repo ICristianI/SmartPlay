@@ -9,6 +9,8 @@ function cargarPagina(button, tipo) {
     size = document.getElementById("pageSizeJuegos")?.value || "3";
   } else if (tipo === "cuadernos") {
     size = document.getElementById("pageSizeCuadernos")?.value || "3";
+  } else if (tipo === "cuadernos2") {
+    size = document.getElementById("pageSizeCuadernos")?.value || "3";
   }
 
   let urlParams = new URLSearchParams(window.location.search);
@@ -18,12 +20,16 @@ function cargarPagina(button, tipo) {
     urlParams.set("pageJuegos", pagina);
   } else if (tipo === "cuadernos") {
     urlParams.set("pageCuadernos", pagina);
+  } else if (tipo === "cuadernos2") {
+    urlParams.set("pageCuadernos", pagina);
   }
   urlParams.set("size", size);
 
   let url;
   if (tipo === "cuadernos") {
       url = `/f/verFicha?${urlParams.toString()}`;
+  } else if (tipo === "cuadernos2") {
+      url = `/ahorcado/ver?${urlParams.toString()}`;
   } else if (tipo === "fichas") {
       url = `/cuadernos/ver?${urlParams.toString()}`;
   } else if (tipo === "juegos") {
@@ -70,7 +76,7 @@ function cargarPagina(button, tipo) {
       } 
       
       // Actualizar cuadernos
-      else if (tipo === "cuadernos") {
+      else if (tipo === "cuadernos" || tipo === "cuadernos2") {
         let nuevoContenidoCuadernos = doc.querySelector("#contenedorCuadernos");
         let contenedorCuadernos = document.querySelector("#contenedorCuadernos");
         if (nuevoContenidoCuadernos && contenedorCuadernos) {
