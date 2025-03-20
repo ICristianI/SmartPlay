@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tfg.SmartPlay.entity.Juego;
 import com.tfg.SmartPlay.entity.JuegoAhorcado;
+import com.tfg.SmartPlay.entity.JuegoSopaLetras;
 import com.tfg.SmartPlay.service.JuegoService;
 
 import jakarta.servlet.http.HttpSession;
@@ -27,20 +28,33 @@ public class JuegoController {
     JuegoService juegoService;
 
 
-    @PostMapping("/seleccionar")
-    public String seleccionarJuego(@RequestParam("juegoId") Long juegoId, @RequestParam("tipo") String tipo,
-            HttpSession session,
-            @AuthenticationPrincipal UserDetails userDetails,
-            RedirectAttributes redirectAttributes) {
-        Optional<Juego> juego = juegoService.obtenerJuegoPorId(juegoId);
+@PostMapping("/seleccionar")
+public String seleccionarJuego(@RequestParam("juegoId") Long juegoId,
+        HttpSession session,
+        @AuthenticationPrincipal UserDetails userDetails,
+        RedirectAttributes redirectAttributes) {
 
-        if (juego.isPresent()) {
-            session.setAttribute("juegoId", juegoId);
-            return "redirect:/" + tipo + "/ver";
+    Optional<Juego> juego = juegoService.obtenerJuegoPorId(juegoId);
+
+    if (juego.isPresent()) {
+        String tipo;
+
+        // Determinar el tipo de juego basado en la instancia
+        if (juego.get() instanceof JuegoAhorcado) {
+            tipo = "ahorcado";
+        } else if (juego.get() instanceof JuegoSopaLetras) {
+            tipo = "sopaletras";
         } else {
-            redirectAttributes.addFlashAttribute("error", "Juego no encontrado o sin permiso.");
-            return "/juegos";
+            tipo = "generico"; // Si no coincide con ninguno, redirige a un genérico o maneja el caso
         }
+
+        session.setAttribute("juegoId", juegoId);
+        return "redirect:/" + tipo + "/ver";
+    } else {
+        redirectAttributes.addFlashAttribute("error", "Juego no encontrado o sin permiso.");
+        return "redirect:/juegos";
     }
+}
+
     
 }

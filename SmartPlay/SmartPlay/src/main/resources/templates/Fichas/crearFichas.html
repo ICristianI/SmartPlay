@@ -9,6 +9,8 @@
   </div>
 
   <form action="/f/guardar" method="POST" enctype="multipart/form-data" class="shadow p-4 rounded">
+    <input type="hidden" name="_csrf" value="{{token}}"/>
+
     <!-- Nombre de la ficha -->
     <div class="mb-3">
       <label for="nombre" class="form-label">Nombre de la Ficha</label>

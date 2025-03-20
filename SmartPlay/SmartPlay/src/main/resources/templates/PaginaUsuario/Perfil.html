@@ -31,6 +31,8 @@
 
             <!-- Formulario para editar los datos (oculto por defecto) -->
             <form id="editForm" action="/users/edit" method="post" style="display: none;">
+                <input type="hidden" name="_csrf" value="{{token}}"/>
+
                 <div class="mt-3">
                     <label for="nombre" class="form-label">Nombre</label>
                     <input type="text" class="form-control" id="nombre" name="nombre" maxlength="15"
@@ -41,20 +43,32 @@
                     <input type="number" class="form-control" id="edad" name="edad" maxlength="3" value="{{user.edad}}"
                         required>
                 </div>
-                <button type="submit" class="btn btn-success  mt-3">Guardar Cambios</button>
+                <button type="submit" class="btn btn-success mt-3">Guardar Cambios</button>
             </form>
+
 
             <!-- Botón para eliminar la cuenta -->
             <form action="/users/delete" method="post"
                 onsubmit="return confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.');">
+                <input type="hidden" name="_csrf" value="{{token}}"/>
+
                 <button type="submit" class="btn btn-danger mt-3">Eliminar Cuenta</button>
             </form>
+
+            <form id="logout-form" action="/logout" method="post" style="display: none;">
+                <input type="hidden" name="_csrf" value="{{token}}">
+            </form>
+
+            <!-- Botón de logout -->
+            <button class="btn btn-warning mt-3" onclick="document.getElementById('logout-form').submit();">
+                Cerrar sesión
+            </button>
         </div>
 
         <!-- Columna para la imagen -->
-        <div class="col-md-4 text-center ">
+        <div class="col-md-4 text-center">
             <form id="profilePhotoForm" action="/users/upload" method="post" enctype="multipart/form-data">
-                <img src="/users/image" alt="Foto de perfil" class="img-thumbnail rounded-circle "
+                <img src="/users/image" alt="Foto de perfil" class="img-thumbnail rounded-circle"
                     style="width: 200px; height: 200px; object-fit: cover; cursor: pointer;"
                     onclick="document.getElementById('photo').click();" />
 

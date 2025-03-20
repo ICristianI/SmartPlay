@@ -1,12 +1,13 @@
 package com.tfg.SmartPlay.controller;
 
 import com.tfg.SmartPlay.entity.Cuaderno;
-import com.tfg.SmartPlay.entity.JuegoAhorcado;
-import com.tfg.SmartPlay.service.JuegoAhorcadoService;
+import com.tfg.SmartPlay.entity.JuegoSopaLetras;
+import com.tfg.SmartPlay.service.JuegoSopaLetrasService;
 import com.tfg.SmartPlay.service.UserComponent;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,16 +15,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.data.domain.Page;
 
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/ahorcado")
-public class JuegoAhorcadoController {
+@RequestMapping("/sopaletras")
+public class JuegoSopaLetrasController {
 
     @Autowired
-    private JuegoAhorcadoService juegoAhorcadoService;
+    private JuegoSopaLetrasService juegoSopaLetrasService;
 
     @Autowired
     private UserComponent userComponent;
@@ -35,7 +35,7 @@ public class JuegoAhorcadoController {
 
         int size = 6;
 
-        Page<JuegoAhorcado> juegosPage = juegoAhorcadoService
+        Page<JuegoSopaLetras> juegosPage = juegoSopaLetrasService
                 .obtenerJuegosPaginadosPorUsuario(userDetails.getUsername(), page, size);
 
         model.addAttribute("juegos", juegosPage.getContent());
@@ -46,102 +46,92 @@ public class JuegoAhorcadoController {
         model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
         model.addAttribute("nextPage", page < juegosPage.getTotalPages() - 1 ? page + 1 : page);
 
-        return "/Juegos/Ahorcado/verJuegosAhorcados";
+        return "/Juegos/Sopa/verJuegosSopaLetras";
     }
-
 
     @GetMapping("/jugar")
-    public String jugarAhorcado(@RequestParam("juegoId") Long juegoId, Model model) {
-        Optional<JuegoAhorcado> juegoOpt = juegoAhorcadoService.obtenerJuego(juegoId, userComponent.getUser().get().getEmail());
-    
+    public String jugarSopaLetras(@RequestParam("juegoId") Long juegoId, Model model) {
+        Optional<JuegoSopaLetras> juegoOpt = juegoSopaLetrasService.obtenerJuego(juegoId, userComponent.getUser().get().getEmail());
+
         if (juegoOpt.isPresent()) {
-            JuegoAhorcado juego = juegoOpt.get();
+            JuegoSopaLetras juego = juegoOpt.get();
             model.addAttribute("juego", juego);
-            return "Juegos/Ahorcado/JugarAhorcado";
+            return "Juegos/Sopa/JugarSopa";
         } else {
             model.addAttribute("error", "El juego no existe.");
-            return "redirect:/ahorcado/listar";
+            return "redirect:/sopaletras/listar";
         }
     }
-    
 
     @GetMapping("/ver")
     public String verJuego(HttpSession session,
             @AuthenticationPrincipal UserDetails userDetails,
             Model model,
-            @RequestParam(name = "pageCuadernos", defaultValue = "0") int pageCuadernos, // Página actual
+            @RequestParam(name = "pageCuadernos", defaultValue = "0") int pageCuadernos,
             RedirectAttributes redirectAttributes) {
 
         Long juegoId = (Long) session.getAttribute("juegoId");
 
         if (juegoId == null) {
             redirectAttributes.addFlashAttribute("error", "Juego no encontrado.");
-            return "redirect:/ahorcado/listar";
+            return "redirect:/sopaletras/listar";
         }
 
-        Optional<JuegoAhorcado> juego = juegoAhorcadoService.obtenerJuego(juegoId, userDetails.getUsername());
+        Optional<JuegoSopaLetras> juego = juegoSopaLetrasService.obtenerJuego(juegoId, userDetails.getUsername());
 
         if (juego.isPresent()) {
             model.addAttribute("juego", juego.get());
 
             int size = 3;
-            Page<Cuaderno> cuadernosPage = juegoAhorcadoService.obtenerCuadernosConJuegoPaginados(juego.get(), pageCuadernos,
-                    size);
+            Page<Cuaderno> cuadernosPage = juegoSopaLetrasService.obtenerCuadernosConJuegoPaginados(juego.get(), pageCuadernos, size);
 
-                    int totalPagesCuadernos = cuadernosPage.getTotalPages();
-        boolean hasPrevCuadernos = pageCuadernos > 0;
-        boolean hasNextCuadernos = pageCuadernos < totalPagesCuadernos - 1;
-        int prevPageCuadernos = hasPrevCuadernos ? pageCuadernos - 1 : 0;
-        int nextPageCuadernos = hasNextCuadernos ? pageCuadernos + 1 : pageCuadernos;
+            model.addAttribute("cuadernos", cuadernosPage.getContent());
+            model.addAttribute("currentPageCuadernos", pageCuadernos + 1);
+            model.addAttribute("totalPagesCuadernos", cuadernosPage.getTotalPages());
+            model.addAttribute("hasPrevCuadernos", pageCuadernos > 0);
+            model.addAttribute("hasNextCuadernos", pageCuadernos < cuadernosPage.getTotalPages() - 1);
+            model.addAttribute("prevPageCuadernos", pageCuadernos > 0 ? pageCuadernos - 1 : 0);
+            model.addAttribute("nextPageCuadernos", pageCuadernos < cuadernosPage.getTotalPages() - 1 ? pageCuadernos + 1 : pageCuadernos);
 
-        model.addAttribute("cuadernos", cuadernosPage.getContent());
-        model.addAttribute("currentPageCuadernos", pageCuadernos + 1);
-        model.addAttribute("totalPagesCuadernos", totalPagesCuadernos);
-        model.addAttribute("hasPrevCuadernos", hasPrevCuadernos);
-        model.addAttribute("hasNextCuadernos", hasNextCuadernos);
-        model.addAttribute("prevPageCuadernos", prevPageCuadernos);
-        model.addAttribute("nextPageCuadernos", nextPageCuadernos);
-
-
-            return "Juegos/Ahorcado/verJuegoAhorcado";
+            return "Juegos/Sopa/verJuegoSopaLetras";
         } else {
             redirectAttributes.addFlashAttribute("error", "No tienes permisos para ver este juego.");
-            return "redirect:/ahorcado/listar";
+            return "redirect:/sopaletras/listar";
         }
     }
 
     @PostMapping("/editar")
     public String editarJuego(@RequestParam("juegoId") Long juegoId,
-            @ModelAttribute JuegoAhorcado juegoEditado,
+            @ModelAttribute JuegoSopaLetras juegoEditado,
             @AuthenticationPrincipal UserDetails userDetails,
             HttpSession session,
             RedirectAttributes redirectAttributes) {
         try {
-            juegoAhorcadoService.editarJuego(juegoId, juegoEditado, userDetails.getUsername());
+            juegoSopaLetrasService.editarJuego(juegoId, juegoEditado, userDetails.getUsername());
 
             session.setAttribute("juegoId", juegoId);
             redirectAttributes.addFlashAttribute("mensaje", "Juego editado exitosamente.");
 
-            return "redirect:/ahorcado/ver";
+            return "redirect:/sopaletras/ver";
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/ahorcado/listar";
+            return "redirect:/sopaletras/listar";
         }
     }
 
     @GetMapping("/crear")
     public String crearJuego(Model model) {
-        model.addAttribute("juego", new JuegoAhorcado());
-        return "Juegos/Ahorcado/crearJuegosAhorcados";
+        model.addAttribute("juego", new JuegoSopaLetras());
+        return "Juegos/Sopa/crearJuegosSopaLetras";
     }
 
     @PostMapping("/guardar")
-    public String guardarJuego(@ModelAttribute JuegoAhorcado juego,
+    public String guardarJuego(@ModelAttribute JuegoSopaLetras juego,
             @AuthenticationPrincipal UserDetails userDetails,
             RedirectAttributes redirectAttributes) {
-        juegoAhorcadoService.guardarJuego(juego, userDetails.getUsername());
+        juegoSopaLetrasService.guardarJuego(juego, userDetails.getUsername());
         redirectAttributes.addFlashAttribute("mensaje", "Juego guardado correctamente.");
-        return "redirect:/ahorcado/listar";
+        return "redirect:/sopaletras/listar";
     }
 
     @PostMapping("/eliminar")
@@ -149,21 +139,21 @@ public class JuegoAhorcadoController {
             @AuthenticationPrincipal UserDetails userDetails,
             RedirectAttributes redirectAttributes) {
 
-        Optional<JuegoAhorcado> juego = juegoAhorcadoService.obtenerJuego(juegoId, userDetails.getUsername());
+        Optional<JuegoSopaLetras> juego = juegoSopaLetrasService.obtenerJuego(juegoId, userDetails.getUsername());
 
         if (juego.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Juego no encontrado.");
-            return "redirect:/ahorcado/listar";
+            return "redirect:/sopaletras/listar";
         }
 
         try {
-            juegoAhorcadoService.eliminarJuego(juegoId, userDetails.getUsername());
+            juegoSopaLetrasService.eliminarJuego(juegoId, userDetails.getUsername());
             redirectAttributes.addFlashAttribute("mensaje", "Juego eliminado exitosamente.");
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
 
-        return "redirect:/ahorcado/listar";
+        return "redirect:/sopaletras/listar";
     }
 
 }

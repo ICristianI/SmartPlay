@@ -2,9 +2,9 @@
 
 <div class="container mt-4">
     <div class="d-flex align-items-center justify-content-between mb-4">
-        <h1 class="text-center mt-5">Mis Fichas Interactivas</h1>
+        <h1 class="text-center mt-5">Mis Juegos de Ahorcado</h1>
         <div class="text-center mt-4">
-            <a href="/fichas" class="btn btn-secondary">Volver</a>
+            <a href="/ahorcado" class="btn btn-secondary">Volver</a>
         </div>
     </div>
 
@@ -12,48 +12,46 @@
     {{#error}}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <p>{{error}}</p>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar">
-            Cerrar
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar">Cerrar</button>
     </div>
     {{/error}} {{#mensaje}}
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <p>{{mensaje}}</p>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar">
-            Cerrar
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar">Cerrar</button>
     </div>
     {{/mensaje}}
 
     <div class="row">
-        {{#fichas}}
+        {{#juegos}}
         <div class="col-md-4 mb-4">
             <div class="card h-100 shadow-sm">
-                <img src="/f/ficha/image/{{id}}" class="card-img-top" alt="Vista previa de la ficha"
+                <img src="/images/generalImages/Ahorcado.jpg" class="card-img-top" alt="Vista previa del juego"
                     style="height: 150px; object-fit: cover" />
                 <div class="card-body text-center">
                     <h5 class="card-title">{{nombre}}</h5>
                     <p class="card-text text-muted">{{asignatura}}</p>
-                    <form action="/f/seleccionarFicha" method="post">
+                    <p class="card-text"><strong>Intentos:</strong> {{maxIntentos}}</p>
+                    <form action="/juegos/seleccionar" method="post">
                         <input type="hidden" name="_csrf" value="{{token}}"/>
 
-                        <input type="hidden" name="fichaId" value="{{id}}" />
+                        <input type="hidden" name="juegoId" value="{{id}}" />
+                        <input type="hidden" name="tipo" value="ahorcado" />
                         <button type="submit" class="btn btn-primary navbar-custom">
-                            Ver Ficha
+                            Ver Juego
                         </button>
                     </form>
                 </div>
             </div>
         </div>
-        {{/fichas}}
+        {{/juegos}}
     </div>
 
-    {{^fichas}}
+    {{^juegos}}
     <div class="text-center mt-5">
-        <p class="text-muted">Aún no has creado ninguna ficha.</p>
-        <a href="/f/crearFichas" class="btn btn-success">Crear una ficha</a>
+        <p class="text-muted">Aún no has creado ningún juego de ahorcado.</p>
+        <a href="/ahorcado/crear" class="btn btn-success">Crear un juego</a>
     </div>
-    {{/fichas}}
+    {{/juegos}}
 
     <!-- PAGINACIÓN -->
     {{#totalPages}}

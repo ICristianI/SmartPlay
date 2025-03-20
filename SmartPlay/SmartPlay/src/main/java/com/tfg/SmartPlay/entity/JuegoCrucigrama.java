@@ -13,11 +13,9 @@ import lombok.NoArgsConstructor;
 public class JuegoCrucigrama extends Juego {
 
     @Column(columnDefinition = "TEXT", nullable = false)
-    private String pistasJson;
+    private String pistas;
 
     @Column(columnDefinition = "TEXT", nullable = false)
-    private String respuestasJson;
+    private String respuestas;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String gridJson;
 }

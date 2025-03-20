@@ -96,8 +96,14 @@ public class HomeController {
     }
 
     @GetMapping("/ahorcado")
-    public String games(Model model) {
-        return "Juegos/Ahorcado";
+    public String ahorcado(Model model) {
+        return "Juegos/Ahorcado/Ahorcado";
+    }
+
+    
+    @GetMapping("/sopa")
+    public String sopa(Model model) {
+        return "Juegos/Sopa/Sopa";
     }
 
 

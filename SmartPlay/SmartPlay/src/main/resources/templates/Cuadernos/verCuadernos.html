@@ -31,6 +31,8 @@
                     <h5 class="card-title">{{nombre}}</h5>
                     <p class="card-text text-muted">{{numeroFichas}} fichas | {{numeroJuegos}} juegos</p>
                     <form action="/cuadernos/ver" method="post">
+                        <input type="hidden" name="_csrf" value="{{token}}"/>
+
                         <input type="hidden" name="cuadernoId" value="{{id}}">
                         <button type="submit" class="btn btn-primary navbar-custom">Ver Cuaderno</button>
                     </form>

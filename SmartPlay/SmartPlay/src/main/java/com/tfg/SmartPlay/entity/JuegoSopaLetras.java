@@ -13,8 +13,6 @@ import lombok.NoArgsConstructor;
 public class JuegoSopaLetras extends Juego {
 
     @Column(columnDefinition = "TEXT", nullable = false)
-    private String gridJson;
+    private String palabras;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String palabrasJson;
 }

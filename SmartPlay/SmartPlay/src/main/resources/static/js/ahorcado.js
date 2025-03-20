@@ -22,7 +22,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         if (![...palabra].some(letra => !letrasAdivinadas.has(letra) && letra !== " ")) {
-            mostrarMensaje("Ganaste!", "success");
+            mostrarMensaje("🎉 ¡Ganaste!", "success");
+            activarEfectoMulticolor();
         }
     }
 
@@ -30,7 +31,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const teclado = document.getElementById("teclado");
         teclado.innerHTML = "";
         
-        // Letras organizadas en dos filas
         const letrasFila1 = "QWERTYUIOP".split("");
         const letrasFila2 = "ASDFGHJKL".split("");
         const letrasFila3 = "ZXCVBNM".split("");
@@ -63,24 +63,45 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function intentarLetra(letra, boton) {
         boton.disabled = true;
+
+        if (![...palabra].some(letra => !letrasAdivinadas.has(letra) && letra !== " ")) {
+            setTimeout(activarEfectoMulticolor, 100);
+        }
+        
         if (palabra.includes(letra)) {
             letrasAdivinadas.add(letra);
             actualizarPalabra();
+            boton.classList.remove("btn-outline-dark");
+            boton.classList.add("btn-success", "text-white");
         } else {
             intentosRestantes--;
             document.getElementById("intentosRestantes").textContent = intentosRestantes;
+            boton.classList.remove("btn-outline-dark");
+            boton.classList.add("btn-secondary", "text-white")
         }
-
+    
         if (intentosRestantes === 0) {
             mostrarMensaje("Perdiste! La palabra era: " + palabra, "danger");
             document.querySelectorAll("#teclado button").forEach(btn => btn.disabled = true);
         }
     }
-
+    
     function mostrarMensaje(mensaje, tipo) {
         const mensajeDiv = document.getElementById("mensaje");
         mensajeDiv.innerHTML = `<div class="alert alert-${tipo} mt-3">${mensaje}</div>`;
+    
+        if (tipo === "danger") {
+            document.querySelectorAll("#palabraAdivinada span").forEach(span => {
+                span.style.color = "red";
+            });
+    
+            document.querySelectorAll("#teclado button").forEach(btn => {
+                btn.style.backgroundColor = "red";
+                btn.style.color = "white";
+            });
+        }
     }
+    
 
     function reiniciarJuego() {
         letrasAdivinadas.clear();
@@ -93,11 +114,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
 
-        // Agregar título
         doc.setFontSize(20);
         doc.text(juego.nombre, 10, 20);
 
-        // Agregar descripción y detalles
         doc.setFontSize(14);
         doc.text(`Descripción: ${juego.descripcion}`, 10, 40);
         doc.text(`Intentos máximos: ${juego.maxIntentos}`, 10, 50);
@@ -118,19 +137,16 @@ document.addEventListener("DOMContentLoaded", function () {
         const { jsPDF } = window.jspdf;
         const elementoJuego = document.querySelector(".container");
     
-        // Ocultar los botones de "Reiniciar", "Descargar PDF" y "Volver"
         document.querySelectorAll(".btn-primary, .btn-success, .btn-secondary").forEach(el => el.style.display = "none");
     
-        // Ocultar solo el mensaje de victoria/derrota, pero dejar el título
         const mensajeDiv = document.getElementById("mensaje");
         const mensajeOriginal = mensajeDiv.innerHTML;
-        mensajeDiv.innerHTML = ""; // Borra el mensaje temporalmente
+        mensajeDiv.innerHTML = "";
     
         const imagenJuego = document.getElementById("imagenJuego");
         const clasesOriginales = imagenJuego.className;
         imagenJuego.classList.remove("navbar-custom");
     
-        // Cambiar las líneas de la palabra a negro temporalmente
         document.querySelectorAll("#palabraAdivinada span").forEach(span => {
             span.classList.add("border-dark");
         });
@@ -142,24 +158,37 @@ document.addEventListener("DOMContentLoaded", function () {
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
     
             pdf.setFontSize(20);
-            pdf.text(juego.nombre, 10, 20); // Asegura que el título se mantenga
+            pdf.text(juego.nombre, 10, 20);
     
             pdf.addImage(imgData, "PNG", 0, 30, imgWidth, imgHeight);
             pdf.save(`${juego.nombre}.pdf`);
     
-            // Restaurar solo los botones ocultos
             document.querySelectorAll(".btn-primary, .btn-success, .btn-secondary").forEach(el => el.style.display = "");
             imagenJuego.classList.add("navbar-custom");
     
-            // Restaurar el mensaje original
             mensajeDiv.innerHTML = mensajeOriginal;
     
-            // Quitar la clase de borde negro para mantener el diseño original
             document.querySelectorAll("#palabraAdivinada span").forEach(span => {
                 span.classList.remove("border-dark");
             });
         });
     }
+
+    function activarEfectoMulticolor() {
+        const teclasCorrectas = document.querySelectorAll(".btn-success");
+        const palabraSpan = document.querySelectorAll("#palabraAdivinada span");
+    
+        let colores = ["red", "blue", "green", "yellow", "purple", "orange"];
+        let index = 0;
+    
+        setInterval(() => {
+            teclasCorrectas.forEach(btn => btn.style.backgroundColor = colores[index % colores.length]);
+            palabraSpan.forEach(span => span.style.color = colores[index % colores.length]);
+            index++;
+        }, 400);
+    }
+    
+    
     
     
 });

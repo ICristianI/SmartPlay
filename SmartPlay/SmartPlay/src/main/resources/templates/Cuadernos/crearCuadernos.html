@@ -7,6 +7,8 @@
   </div>
 
   <form action="/cuadernos/guardar" method="POST" class="shadow p-4 rounded">
+    <input type="hidden" name="_csrf" value="{{token}}"/>
+
     <!-- Nombre del cuaderno -->
     <div class="mb-3">
       <label for="nombre" class="form-label">Nombre del Cuaderno</label>
@@ -93,7 +95,7 @@
               {{#juegos}}
               <div class="col-md-4 mb-4">
                 <div class="card juego-item h-100 shadow-sm" data-id="{{id}}" data-nombre="{{nombre}}">
-                  <img src="/images/generalImages/Ahorcado.jpg" class="card-img-top" alt="Imagen de {{nombre}}"
+                  <img src="/images/generalImages/Juegos.jpg" class="card-img-top" alt="Imagen de {{nombre}}"
                   style="height: 150px; object-fit: cover" />
                   <div class="card-body text-center">
                     <h5 class="card-title">{{nombre}}</h5>

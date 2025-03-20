@@ -31,6 +31,8 @@
             {{/mensaje}}
 
             <form action="/cuadernos/eliminar" method="post" onsubmit="return confirmarEliminacion();">
+                <input type="hidden" name="_csrf" value="{{token}}"/>
+
                 <input type="hidden" name="cuadernoId" value="{{cuaderno.id}}" />
                 <button type="submit" class="btn btn-danger mt-3">
                     Eliminar Cuaderno
@@ -42,6 +44,8 @@
             </button>
 
             <form id="editForm" action="/cuadernos/editar" method="post" style="display: none">
+                <input type="hidden" name="_csrf" value="{{token}}"/>
+
                 <div class="mt-4">
                     <label for="nombre" class="form-label">Nombre</label>
                     <input type="text" class="form-control" id="nombre" name="nombre" maxlength="30"
@@ -99,6 +103,8 @@
                     <p class="card-text"><strong>Asignatura:</strong> {{asignatura}}</p>
 
                     <form action="/f/seleccionarFicha" method="post" class="mb-2">
+                        <input type="hidden" name="_csrf" value="{{token}}"/>
+
                         <input type="hidden" name="fichaId" value="{{id}}" />
                         <button type="submit" class="btn btn-primary navbar-custom w-100">
                             Ver Ficha
@@ -106,6 +112,8 @@
                     </form>
 
                     <form action="/cuadernos/eliminarFicha" method="post">
+                        <input type="hidden" name="_csrf" value="{{token}}"/>
+
                         <input type="hidden" name="cuadernoId" value="{{cuaderno.id}}" />
                         <input type="hidden" name="fichaId" value="{{id}}" />
                         <button type="submit" class="btn btn-danger w-100">
@@ -161,14 +169,17 @@
                     <p class="card-text"><strong>Descripción:</strong> {{descripcion}}</p>
 
                     <form action="/juegos/seleccionar" method="post" class="mb-2">
+                        <input type="hidden" name="_csrf" value="{{token}}"/>
+
                         <input type="hidden" name="juegoId" value="{{id}}" />
-                        <input type="hidden" name="tipo" value='ahorcado' />
                         <button type="submit" class="btn btn-primary navbar-custom w-100">
                             Ver Juego
                         </button>
                     </form>
 
                     <form action="/cuadernos/eliminarJuego" method="post">
+                        <input type="hidden" name="_csrf" value="{{token}}"/>
+
                         <input type="hidden" name="cuadernoId" value="{{cuaderno.id}}" />
                         <input type="hidden" name="juegoId" value="{{id}}" />
                         <button type="submit" class="btn btn-danger w-100">

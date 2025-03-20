@@ -9,6 +9,8 @@
   </div>
 
   <form action="/ahorcado/guardar" method="POST" class="shadow p-4 rounded">
+    <input type="hidden" name="_csrf" value="{{token}}"/>
+
     <!-- Nombre del juego -->
     <div class="mb-3">
       <label for="nombre" class="form-label">Nombre del Juego</label>

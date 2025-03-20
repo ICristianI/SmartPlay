@@ -14,7 +14,7 @@
       {{/error}}
 
       <form action="/login" method="post" autocomplete="on">
-
+        <input type="hidden" name="_csrf" value="{{token}}"/>
         <!-- Email -->
         <div class="mb-3">
           <label for="email" class="form-label" id="email">Correo electrónico</label>

@@ -55,8 +55,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
 
-        http.csrf(csrf -> csrf.disable()) // Deshabilita CSRF
-                .authenticationProvider(authenticationProvider());
+        http.authenticationProvider(authenticationProvider());
 
         http.addFilterBefore(verificationFilter, UsernamePasswordAuthenticationFilter.class)
 
@@ -68,7 +67,7 @@ public class SecurityConfig {
                         .requestMatchers("/f/**", "/fames", "/juegos", "/fichas",
                                 "/verFichas", "/crearCuadernos", "/f/listarFichas", "/f/ficha/image/**",
                                 "/Fichas/verFichas",
-                                "/juegos/**","/ahorcado/**", "/Cuadernos", "/users/**", "/cuadernos/**")
+                                "/juegos/**","/ahorcado/**", "/Cuadernos", "/users/**", "/cuadernos/**","/sopa/**", "/sopaletras/**")
                         .hasAnyRole("ALUMNO", "PROFESOR"))
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")

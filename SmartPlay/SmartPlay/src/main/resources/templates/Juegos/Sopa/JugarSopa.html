@@ -1,0 +1,56 @@
+{{> header}}
+
+<div class="container mt-5 text-center">
+    <h1 class="mb-4">{{ juego.nombre }}</h1>
+
+    <p><strong>Descripción:</strong> {{ juego.descripcion }}</p>
+
+    <!-- Espacios para la Sopa de Letras -->
+<div id="sopaContainerWrapper" class="d-flex justify-content-center flex-wrap">
+    <div id="sopaDeLetras" class="mb-4"></div>
+</div>
+
+    <!-- Palabras a encontrar -->
+    <h4 class="mt-5">Palabras a encontrar:</h4>
+    <ul id="listaPalabras" class="list-group list-group-horizontal justify-content-center"></ul>
+
+    <!-- Mensaje de resultado -->
+    <div id="mensaje" class="mt-4"></div>
+
+<!-- Selección de dificultad -->
+<div class="mt-4" id="dificultadContainer">
+    <label for="dificultad" class="fw-bold">Selecciona la dificultad:</label>
+    <select id="dificultad" class="form-select w-auto d-inline-block mx-2" onchange="seleccionarDificultad(this.value)">
+        <option value="facil">Fácil (7x7)</option>
+        <option value="normal" selected>Normal (10x10)</option>
+        <option value="dificil">Difícil (15x15)</option>
+    </select>
+</div>
+
+
+    <!-- Botón para reiniciar -->
+    <button class="btn btn-primary mt-4" onclick="reiniciarJuego()">Reiniciar Juego</button>
+
+    <!-- Botón para descargar PDF -->
+    <button class="btn btn-success mt-4" onclick="descargarPDF()">Descargar en PDF</button>
+
+    <!-- Volver -->
+    <button class="btn btn-secondary mt-4" onclick="window.history.back();">
+        Volver
+    </button>
+</div>
+<script>
+    const juego = {
+        palabras: JSON.parse(`{{{ juego.palabras }}}`),
+        nombre: "{{ juego.nombre }}",
+        descripcion: "{{ juego.descripcion }}"
+    };
+    console.log("Juego cargado:", juego);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="/js/sopaLetras.js"></script>
+
+{{> footer}}
