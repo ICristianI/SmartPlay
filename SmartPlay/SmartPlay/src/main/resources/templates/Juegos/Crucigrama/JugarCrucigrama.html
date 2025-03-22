@@ -1,0 +1,59 @@
+{{> header}}
+
+<div class="container mt-5 text-center">
+  <h1 class="mb-4">{{ juego.nombre }}</h1>
+
+  <p><strong>Descripción:</strong> {{ juego.descripcion }}</p>
+
+  <!-- Contenedor del Crucigrama -->
+  <div id="crucigramaContainerWrapper" class="d-flex justify-content-center flex-wrap">
+    <div id="crucigrama" class="mb-4"></div>
+  </div>
+
+  <!-- Pistas -->
+  <h4 class="mt-5">Pistas:</h4>
+  <ul id="listaPistas" class="list-group list-group-flush text-start mx-auto" style="max-width: 600px;">
+    {{#pistasRespuestas}}
+    <li class="list-group-item" >
+      <strong >{{@index + 1}}.</strong> {{pista}}
+    </li>
+    {{/pistasRespuestas}}
+  </ul>
+  
+  <!-- Mueve el botón fuera del bucle -->
+  <div class="text-center mt-3">
+    <button class="btn btn-primary" onclick="verificarRespuestas()">Verificar Respuestas</button>
+  </div>
+  
+
+  <!-- Resultado -->
+  <div id="mensajeCrucigrama" class="mt-4"></div>
+
+  <!-- Botón para reiniciar -->
+  <button class="btn btn-primary mt-4" onclick="reiniciarCrucigrama()">Reiniciar Juego</button>
+
+  <!-- Botón para descargar PDF -->
+  <button class="btn btn-success mt-4" onclick="descargarCrucigramaPDF()">Descargar en PDF</button>
+
+  <!-- Volver -->
+  <button class="btn btn-secondary mt-4" onclick="window.history.back();">Volver</button>
+</div>
+
+<script>
+    const juego = {
+        pistas: "{{{juego.pistas}}}",
+        respuestas: "{{{juego.respuestas}}}",
+        nombre: "{{juego.nombre}}",
+        descripcion: "{{juego.descripcion}}"
+    };
+</script>
+
+
+<!-- Librerías necesarias para exportar -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- Script personalizado del crucigrama -->
+<script src="/js/crucigrama.js"></script>
+
+{{> footer}}

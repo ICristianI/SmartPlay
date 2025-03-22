@@ -112,6 +112,65 @@
             </form>
         </div>
     </div>
+
+    <hr />
+
+<!-- Mostrar los cuadernos en los que está el juego -->
+<h3 class="mt-5 mb-4">Este juego pertenece a los siguientes cuadernos:</h3>
+
+<div class="row" id="contenedorCuadernos">
+  {{#cuadernos}}
+  <div class="col-md-4">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">{{nombre}}</h5>
+        <p class="card-text"><strong>Propietario:</strong> {{usuario.nombre}}</p>
+        <p class="card-text"><strong>Número de juegos:</strong> {{numeroJuegos}}</p>
+
+        <form action="/cuadernos/ver" method="post">
+          <input type="hidden" name="_csrf" value="{{token}}" />
+          <input type="hidden" name="cuadernoId" value="{{id}}" />
+          <button type="submit" class="btn btn-primary navbar-custom w-100">Ver Cuaderno</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {{/cuadernos}}
+</div>
+
+<!-- Paginación de cuadernos -->
+<nav aria-label="Paginación Cuadernos" id="navPaginacionCuadernos">
+  <input type="hidden" id="pageSizeCuadernos" value="3" />
+
+  <p class="text-center mt-2">Página {{currentPageCuadernos}} de {{totalPagesCuadernos}}</p>
+
+  <ul class="pagination justify-content-center mt-3">
+    {{#hasPrevCuadernos}}
+    <li class="page-item">
+      <button class="btn btn-secondary page-link" data-page="{{prevPageCuadernos}}" onclick="cargarPagina(this, 'cuadernos2')">
+        Anterior
+      </button>
+    </li>
+    {{/hasPrevCuadernos}}
+
+    {{#hasNextCuadernos}}
+    <li class="page-item">
+      <button class="btn btn-secondary page-link" data-page="{{nextPageCuadernos}}" onclick="cargarPagina(this, 'cuadernos2')">
+        Siguiente
+      </button>
+    </li>
+    {{/hasNextCuadernos}}
+  </ul>
+</nav>
+
+<!-- Si no tiene cuadernos, mostrar un mensaje -->
+{{^cuadernos}}
+<div class="alert alert-warning text-center mt-4">
+  <p>Este juego no pertenece a ningún cuaderno.</p>
+  <a href="/cuadernos/crear" class="btn btn-primary navbar-custom">Crear un Cuaderno</a>
+</div>
+{{/cuadernos}}
+
 </div>
 
 <script>

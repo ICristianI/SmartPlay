@@ -106,5 +106,9 @@ public class HomeController {
         return "Juegos/Sopa/Sopa";
     }
 
+    @GetMapping("/crucigrama")
+    public String crucigrama(Model model) {
+        return "Juegos/Crucigrama/Crucigrama";
+    }
 
 }

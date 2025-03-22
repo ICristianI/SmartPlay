@@ -205,7 +205,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
         const cells = document.querySelectorAll(".sopa-cell");
         let colores = ["#ff0000", "#ff7300", "#ffeb00", "#47ff00", "#00ffcc", "#0033ff", "#8000ff", "#ff00aa"];
-        
+    
         let index = 0;
         let intervalo = setInterval(() => {
             cells.forEach((cell) => {
@@ -216,9 +216,18 @@ document.addEventListener("DOMContentLoaded", function () {
     
         setTimeout(() => {
             clearInterval(intervalo);
-            cells.forEach(cell => cell.style.backgroundColor = "#32CD32");
+    
+            // Restaurar SOLO las celdas que pertenecen a palabras encontradas
+            cells.forEach((cell) => {
+                if (cell.classList.contains("palabra-encontrada")) {
+                    cell.style.backgroundColor = "#32CD32"; // Verde
+                } else {
+                    cell.style.backgroundColor = ""; // Restaurar normal (vacío)
+                }
+            });
         }, 5000);
     }
+    
     
     
     window.reiniciarJuego = function() {
@@ -285,9 +294,6 @@ window.seleccionarDificultad = function(dificultad) {
     let nuevoGridSize;
 
     switch (dificultad) {
-        case 'facil':
-            nuevoGridSize = 7;
-            break;
         case 'normal':
             nuevoGridSize = 10;
             break;

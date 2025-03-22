@@ -173,20 +173,33 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
     }
-
     function activarEfectoMulticolor() {
         const teclasCorrectas = document.querySelectorAll(".btn-success");
-        const palabraSpan = document.querySelectorAll("#palabraAdivinada span");
-    
+        const palabraSpan = Array.from(document.querySelectorAll("#palabraAdivinada span")).filter(span => span.textContent !== " ");
+        
         let colores = ["red", "blue", "green", "yellow", "purple", "orange"];
         let index = 0;
     
-        setInterval(() => {
-            teclasCorrectas.forEach(btn => btn.style.backgroundColor = colores[index % colores.length]);
-            palabraSpan.forEach(span => span.style.color = colores[index % colores.length]);
+        // Desactiva todas las teclas para que no se puedan seguir pulsando
+        document.querySelectorAll("#teclado button").forEach(btn => btn.disabled = true);
+    
+        // Inicia efecto multicolor
+        const intervalo = setInterval(() => {
+            const color = colores[index % colores.length];
+            teclasCorrectas.forEach(btn => btn.style.backgroundColor = color);
+            palabraSpan.forEach(span => span.style.color = color);
             index++;
-        }, 400);
+        }, 300);
+    
+        // Detener efecto y restaurar color verde después de 5 segundos
+        setTimeout(() => {
+            clearInterval(intervalo);
+            teclasCorrectas.forEach(btn => btn.style.backgroundColor = "#198754"); // Bootstrap green
+            palabraSpan.forEach(span => span.style.color = "#198754");
+        }, 5000);
     }
+    
+    
     
     
     

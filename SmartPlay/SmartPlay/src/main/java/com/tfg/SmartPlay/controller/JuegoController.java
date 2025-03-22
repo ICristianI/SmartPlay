@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tfg.SmartPlay.entity.Juego;
 import com.tfg.SmartPlay.entity.JuegoAhorcado;
+import com.tfg.SmartPlay.entity.JuegoCrucigrama;
 import com.tfg.SmartPlay.entity.JuegoSopaLetras;
 import com.tfg.SmartPlay.service.JuegoService;
 
@@ -39,13 +40,15 @@ public String seleccionarJuego(@RequestParam("juegoId") Long juegoId,
     if (juego.isPresent()) {
         String tipo;
 
-        // Determinar el tipo de juego basado en la instancia
         if (juego.get() instanceof JuegoAhorcado) {
             tipo = "ahorcado";
         } else if (juego.get() instanceof JuegoSopaLetras) {
             tipo = "sopaletras";
-        } else {
-            tipo = "generico"; // Si no coincide con ninguno, redirige a un genérico o maneja el caso
+        } else if (juego.get() instanceof JuegoCrucigrama) {
+            tipo = "crucigrama";
+        }else{
+            redirectAttributes.addFlashAttribute("error", "Juego no encontrado o sin permiso.");
+            return "redirect:/juegos";
         }
 
         session.setAttribute("juegoId", juegoId);
