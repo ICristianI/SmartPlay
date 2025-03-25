@@ -31,6 +31,7 @@
 
             <!-- Formulario para editar los datos (oculto por defecto) -->
             <form id="editForm" action="/users/edit" method="post" style="display: none;">
+                <input type="hidden" name="id" value="{{user.id}}">
                 <input type="hidden" name="_csrf" value="{{token}}"/>
 
                 <div class="mt-3">
@@ -68,6 +69,7 @@
         <!-- Columna para la imagen -->
         <div class="col-md-4 text-center">
             <form id="profilePhotoForm" action="/users/upload" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="_csrf" value="{{token}}"/>
                 <img src="/users/image" alt="Foto de perfil" class="img-thumbnail rounded-circle"
                     style="width: 200px; height: 200px; object-fit: cover; cursor: pointer;"
                     onclick="document.getElementById('photo').click();" />

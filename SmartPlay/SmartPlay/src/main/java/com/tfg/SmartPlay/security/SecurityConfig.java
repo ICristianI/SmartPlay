@@ -64,7 +64,7 @@ public class SecurityConfig {
                                 "/users/register", "/json/**", "/config", "/msj", "/regin", "/verify",
                                 "/users/verificar", "/users/verificar/**", "/users/resend")
                         .permitAll()
-                        .requestMatchers("/f/**", "/fames", "/juegos", "/fichas",
+                        .requestMatchers("/f/**", "/creacion", "/juegos", "/fichas",
                                 "/verFichas", "/crearCuadernos", "/f/listarFichas", "/f/ficha/image/**",
                                 "/Fichas/verFichas",
                                 "/juegos/**","/ahorcado/**", "/Cuadernos", "/users/**", "/cuadernos/**",

@@ -65,12 +65,6 @@ public class JuegoAhorcadoService {
         juegoAhorcadoRepository.save(juego);
     }
 
-    public void eliminarJuego(Long juegoId, String email) {
-        JuegoAhorcado juego = obtenerJuego(juegoId, email)
-                .orElseThrow(() -> new RuntimeException("Juego no encontrado o sin permisos"));
-
-        juegoAhorcadoRepository.deleteById(juegoId);
-    }
 
     public Page<JuegoAhorcado> obtenerJuegosPaginadosPorUsuario(String email, int page, int size) {
         User usuario = userRepository.findByEmail(email)

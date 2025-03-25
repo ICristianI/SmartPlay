@@ -51,7 +51,7 @@ public abstract class Juego {
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private User usuario;
-
+    
     @ManyToMany
     @JoinTable(name = "cuaderno_juegos", joinColumns = @JoinColumn(name = "juego_id"), inverseJoinColumns = @JoinColumn(name = "cuaderno_id"))
     private List<Cuaderno> cuadernos;

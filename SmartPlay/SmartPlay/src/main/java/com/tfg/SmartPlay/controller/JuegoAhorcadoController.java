@@ -3,6 +3,7 @@ package com.tfg.SmartPlay.controller;
 import com.tfg.SmartPlay.entity.Cuaderno;
 import com.tfg.SmartPlay.entity.JuegoAhorcado;
 import com.tfg.SmartPlay.service.JuegoAhorcadoService;
+import com.tfg.SmartPlay.service.JuegoService;
 import com.tfg.SmartPlay.service.UserComponent;
 
 import jakarta.servlet.http.HttpSession;
@@ -22,6 +23,9 @@ import java.util.Optional;
 public class JuegoAhorcadoController {
 
     @Autowired
+    private JuegoService juegoService;
+
+    @Autowired
     private JuegoAhorcadoService juegoAhorcadoService;
 
     @Autowired
@@ -37,6 +41,9 @@ public class JuegoAhorcadoController {
         Page<JuegoAhorcado> juegosPage = juegoAhorcadoService
                 .obtenerJuegosPaginadosPorUsuario(userDetails.getUsername(), page, size);
 
+        boolean pages = juegosPage.getTotalPages() > 0;
+
+        model.addAttribute("pages", pages);
         model.addAttribute("juegos", juegosPage.getContent());
         model.addAttribute("currentPage", page + 1);
         model.addAttribute("totalPages", juegosPage.getTotalPages());
@@ -68,7 +75,7 @@ public class JuegoAhorcadoController {
     public String verJuego(HttpSession session,
             @AuthenticationPrincipal UserDetails userDetails,
             Model model,
-            @RequestParam(name = "pageCuadernos", defaultValue = "0") int pageCuadernos, // Página actual
+            @RequestParam(name = "pageCuadernos", defaultValue = "0") int pageCuadernos,
             RedirectAttributes redirectAttributes) {
 
         Long juegoId = (Long) session.getAttribute("juegoId");
@@ -87,12 +94,14 @@ public class JuegoAhorcadoController {
             Page<Cuaderno> cuadernosPage = juegoAhorcadoService.obtenerCuadernosConJuegoPaginados(juego.get(), pageCuadernos,
                     size);
 
-                    int totalPagesCuadernos = cuadernosPage.getTotalPages();
+        boolean pages = cuadernosPage.getTotalPages() > 0;
+        int totalPagesCuadernos = cuadernosPage.getTotalPages();
         boolean hasPrevCuadernos = pageCuadernos > 0;
         boolean hasNextCuadernos = pageCuadernos < totalPagesCuadernos - 1;
         int prevPageCuadernos = hasPrevCuadernos ? pageCuadernos - 1 : 0;
         int nextPageCuadernos = hasNextCuadernos ? pageCuadernos + 1 : pageCuadernos;
 
+        model.addAttribute("pages", pages);
         model.addAttribute("cuadernos", cuadernosPage.getContent());
         model.addAttribute("currentPageCuadernos", pageCuadernos + 1);
         model.addAttribute("totalPagesCuadernos", totalPagesCuadernos);
@@ -156,7 +165,7 @@ public class JuegoAhorcadoController {
         }
 
         try {
-            juegoAhorcadoService.eliminarJuego(juegoId, userDetails.getUsername());
+            juegoService.eliminarJuego(juegoId, userDetails.getUsername());
             redirectAttributes.addFlashAttribute("mensaje", "Juego eliminado exitosamente.");
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());

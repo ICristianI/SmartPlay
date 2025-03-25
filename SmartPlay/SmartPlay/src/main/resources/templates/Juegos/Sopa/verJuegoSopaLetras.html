@@ -142,8 +142,10 @@
 <nav aria-label="Paginación Cuadernos" id="navPaginacionCuadernos">
   <input type="hidden" id="pageSizeCuadernos" value="3" />
 
+  {{#pages}}
   <p class="text-center mt-2">Página {{currentPageCuadernos}} de {{totalPagesCuadernos}}</p>
-
+  {{/pages}}
+  
   <ul class="pagination justify-content-center mt-3">
     {{#hasPrevCuadernos}}
     <li class="page-item">

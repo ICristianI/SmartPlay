@@ -10,7 +10,9 @@
 
   <form action="/f/guardar" method="POST" enctype="multipart/form-data" class="shadow p-4 rounded">
     <input type="hidden" name="_csrf" value="{{token}}"/>
+    <input type="hidden" name="elementosSuperpuestos" value="null" />
 
+    
     <!-- Nombre de la ficha -->
     <div class="mb-3">
       <label for="nombre" class="form-label">Nombre de la Ficha</label>
@@ -57,19 +59,12 @@
         <!-- Botón personalizado para subir la imagen -->
         <label for="imagenFondo" class="btn btn-primary navbar-custom">
           Seleccionar Imagen
-          <input type="file" class="d-none" id="imagenFondo" name="imagenFondo" onchange="mostrarVistaPrevia(event)"
+          <input type="file" class="d-none" id="imagenFondo" name="imagenFondo" accept="image/*" onchange="mostrarVistaPrevia(event)"
             required />
         </label>
       </div>
       <small class="form-text text-muted text-center">Selecciona una imagen que servirá como fondo para la
         ficha.</small>
-    </div>
-
-    <!-- Elementos superpuestos -->
-    <div class="mb-3">
-      <label for="elementosSuperpuestos" class="form-label">Elementos Superpuestos</label>
-      <textarea class="form-control" id="elementosSuperpuestos" name="elementosSuperpuestos" rows="3"
-        placeholder="Describe los elementos superpuestos (en formato JSON si aplica)"></textarea>
     </div>
 
     <!-- Botón para guardar -->

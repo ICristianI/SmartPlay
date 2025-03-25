@@ -54,7 +54,9 @@
     <nav aria-label="Paginación" id="navPaginacion">
         <input type="hidden" id="pageSize" value="6">
 
+        {{#pagesC}}
         <p class="text-center mt-2">Página {{currentPage}} de {{totalPages}}</p>
+        {{/pagesC}}
 
         <ul class="pagination justify-content-center mt-3">
             {{#hasPrev}}

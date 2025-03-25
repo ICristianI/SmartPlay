@@ -1,0 +1,230 @@
+{{> header}}
+
+<div class="container mt-4">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h1 class="mb-0">Editar Ficha Interactiva</h1>
+    <button class="btn btn-secondary" onclick="window.history.back();">Volver</button>
+  </div>
+
+  
+
+    <!-- Botones para añadir elementos -->
+    <div class="row">
+        <div class="col-md-3 ">
+          <div class=" bg-light p-3 rounded shadow-sm sticky-top">
+            <h5 style="color: black;">Elementos</h5>
+            <button class="btn btn-outline-primary w-100 mb-2" onclick="agregarTexto()">➕ Texto Evaluado</button>
+            <button class="btn btn-outline-secondary w-100 mb-2" onclick="agregarTextoDecorativo()">📝 Texto Decorativo</button>
+            <button class="btn btn-outline-success w-100 mb-2" onclick="agregarSeleccionUnica()">🔘 Selección Única</button>
+            <button class="btn btn-outline-warning w-100 mb-2" onclick="agregarCheckbox()">☑️ Checkboxes</button>
+            <button class="btn btn-outline-info w-100 mb-2" onclick="agregarJoin()">🔗 Añadir Join</button>
+            <button class="btn btn-outline-success w-100 mb-2" onclick="agregarDesplegable()">⬇️ Desplegable</button>
+            <!--<button class="btn btn-outline-primary w-100 mb-2" onclick="agregarArrastrable()">🧲 Arrastrable</button>
+            <button class="btn btn-outline-warning w-100 mb-2" onclick="agregarSoltable()">🎯 Soltable</button>
+          -->
+          </div>
+        </div>
+      
+  
+  
+  <!-- Modal para editar texto -->
+  <div class="modal fade" id="modalEditarTexto" tabindex="-1" aria-labelledby="modalEditarTextoLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalEditarTextoLabel">Editar Texto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" id="textoEditable" class="form-control" />
+          <div class="mt-3">
+            <label class="form-label">Color de fondo:</label>
+            <input type="color" id="colorFondoTextoEditable" class="form-control form-control-color" />
+          
+            <label class="form-label mt-2">Color del texto:</label>
+            <input type="color" id="colorTextoEditable" class="form-control form-control-color" />
+          </div>
+
+          <div class="form-check mt-1">
+            <input class="form-check-input" type="checkbox" id="sinFondoTextoEditable">
+            <label class="form-check-label" for="sinFondoTextoEditable">
+              Sin fondo
+            </label>
+          </div>
+          
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" onclick="guardarTextoEditado()">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<!-- Modal de edición para selección única -->
+<div class="modal fade" id="modalSeleccionUnica" tabindex="-1" aria-labelledby="modalSeleccionUnicaLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Editar Selección Única</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <div id="listaOpciones">
+        </div>
+        <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="agregarOpcion()">➕ Añadir opción</button>
+        <div class="mt-3">
+          <label class="form-label">Color de fondo:</label>
+          <input type="color" id="colorFondoSeleccionUnica" class="form-control form-control-color" />
+        
+          <label class="form-label mt-2">Color del texto:</label>
+          <input type="color" id="colorTextoSeleccionUnica" class="form-control form-control-color" />
+        </div>
+
+        <div class="form-check mt-1">
+          <input class="form-check-input" type="checkbox" id="sinFondoSeleccionUnica">
+          <label class="form-check-label" for="sinFondoSeleccionUnica">Sin fondo</label>
+          
+        </div>
+        
+        
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" onclick="guardarSeleccionUnicaEditada()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Checkbox -->
+<div class="modal fade" id="modalCheckbox" tabindex="-1" aria-labelledby="modalCheckboxLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalCheckboxLabel">Editar Checkbox</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <label for="checkboxEstado" class="form-label">Estado:</label>
+          <select id="checkboxEstado" class="form-select">
+            <option value="neutral">Neutral</option>
+            <option value="correcto">Correcto</option>
+            <option value="incorrecto">Incorrecto</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" onclick="guardarCheckbox()">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para editar Join -->
+<div class="modal fade" id="modalJoin" tabindex="-1" aria-labelledby="modalJoinLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalJoinLabel">Editar ID de Unión</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" id="joinIdEditable" class="form-control" placeholder="Escribe un ID (ej: grupo1)" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" onclick="guardarJoin()">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de edición para desplegable -->
+<div class="modal fade" id="modalDesplegable" tabindex="-1" aria-labelledby="modalDesplegableLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalDesplegableLabel">Editar Desplegable</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <div id="listaOpcionesDesplegable">
+          <!-- Opciones dinámicas aquí -->
+        </div>
+        <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="agregarOpcionDesplegable()">➕ Añadir opción</button>
+        <div class="mt-3">
+          <label class="form-label">Color de fondo:</label>
+          <input type="color" id="colorFondoDesplegable" class="form-control form-control-color" />
+        
+          <label class="form-label mt-2">Color del texto:</label>
+          <input type="color" id="colorTextoDesplegable" class="form-control form-control-color" />
+        </div>
+
+        <div class="form-check mt-1">
+          <input class="form-check-input" type="checkbox" id="sinFondoDesplegable">
+          <label class="form-check-label" for="sinFondoDesplegable">Sin fondo</label>
+          
+        </div>
+        
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" onclick="guardarDesplegableEditado()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  
+    <!-- Área principal de edición -->
+    <div class="col-md-9">
+      <!-- Selector de tamaño -->
+      <div class="mb-3">
+        <label for="tamanoFicha" class="form-label">Tamaño de visualización:</label>
+        <select id="tamanoFicha" class="form-select w-auto d-inline-block ms-2">
+          <option value="600">Pequeño (600px)</option>
+          <option value="800" selected>Mediano (800px)</option>
+          <option value="1000">Grande (1000px)</option>
+        </select>
+        
+      </div>
+      
+
+      <!-- Contenedor editable con imagen -->
+      <div id="contenedorFicha" class="border border-secondary rounded shadow-sm mb-4 mx-auto" style="width: 800px; position: relative;">
+        <img id="imagenFicha" src="/f/ficha/image/{{ficha.id}}" alt="Ficha" class="w-100 d-block rounded" />
+        <!-- Aquí se agregarán los inputs superpuestos dinámicamente -->
+      </div>
+
+      <!-- Guardado de elementos superpuestos -->
+      <form action="/f/guardarElementos" method="post">
+        <input type="hidden" name="_csrf" value="{{token}}" />
+        <input type="hidden" name="fichaId" value="{{ficha.id}}" />
+        <input type="hidden" id="elementosSuperpuestos" name="elementosSuperpuestos" value="" />
+
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary navbar-custom">Guardar Cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script type="application/json" id="elementosSuperpuestosRaw">
+  {{{ficha.elementosSuperpuestos}}}
+</script>
+
+
+  
+  <!-- Script del editor -->
+  <script src="/js/cargarFicha.js"></script>
+
+  <script src="/js/editorFicha.js"></script>
+
+{{> footer}}

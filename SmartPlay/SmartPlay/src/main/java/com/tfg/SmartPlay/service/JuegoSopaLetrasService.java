@@ -54,10 +54,6 @@ public class JuegoSopaLetrasService {
         juegoSopaLetrasRepository.save(juego);
     }
 
-    public void eliminarJuego(Long juegoId, String email) {
-        juegoSopaLetrasRepository.deleteById(juegoId);
-    }
-
     public Page<Cuaderno> obtenerCuadernosConJuegoPaginados(Juego juego, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return cuadernoRepository.obtenerCuadernosPorJuego(juego, pageable);

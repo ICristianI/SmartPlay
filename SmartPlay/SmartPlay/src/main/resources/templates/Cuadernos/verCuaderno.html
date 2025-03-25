@@ -93,7 +93,10 @@
     <hr />
 
     <!-- Fichas agregadas al cuaderno -->
+    <h3 class="mt-5 mb-3">Fichas del Cuaderno</h3>
+
     <div class="row" id="contenedorFichas">
+
         {{#fichasPage}}
         <div class="col-md-4">
             <div class="card mb-4">
@@ -134,9 +137,11 @@
 
     <!-- PAGINACIÓN DE FICHAS -->
     <nav aria-label="Paginación de Fichas" id="navPaginacionFichas">
+        {{#pagesF}}
         <p class="text-center mt-2">
             Página {{currentPageFichas}} de {{totalPagesFichas}}
         </p>
+        {{/pagesF}}
         <input type="hidden" id="pageSizeFichas" value="3" />
 
         <ul class="pagination justify-content-center mt-3">
@@ -159,6 +164,8 @@
     <hr />
 
     <!-- Juegos agregados al cuaderno -->
+
+    <h3 class="mt-5 mb-3">Juegos del Cuaderno</h3>
 
     <div class="row" id="contenedorJuegos">
         {{#juegosPage}}
@@ -200,9 +207,13 @@
 
     <!-- PAGINACIÓN DE JUEGOS -->
     <nav aria-label="Paginación de Juegos" id="navPaginacionJuegos">
+        {{#pagesJ}}
+
         <p class="text-center mt-2">
             Página {{currentPageJuegos}} de {{totalPagesJuegos}}
         </p>
+        {{/pagesJ}}
+
         <input type="hidden" id="pageSizeJuegos" value="3" />
 
         <ul class="pagination justify-content-center mt-3">

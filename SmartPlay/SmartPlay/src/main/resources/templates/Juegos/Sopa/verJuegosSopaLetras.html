@@ -4,7 +4,7 @@
     <div class="d-flex align-items-center justify-content-between mb-4">
         <h1 class="text-center mt-5">Mis Juegos de Sopa de Letras</h1>
         <div class="text-center mt-4">
-            <a href="/sopaletras" class="btn btn-secondary">Volver</a>
+            <a href="/sopa" class="btn btn-secondary">Volver</a>
         </div>
     </div>
 
@@ -58,8 +58,10 @@
     <nav aria-label="Paginación" id="navPaginacion">
         <input type="hidden" id="pageSize" value="6" />
 
+        {{#pages}}
         <p class="text-center mt-2">Página {{currentPage}} de {{totalPages}}</p>
-
+        {{/pages}}
+        
         <ul class="pagination justify-content-center mt-3">
             {{#hasPrev}}
             <li class="page-item">

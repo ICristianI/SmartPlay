@@ -55,7 +55,10 @@ public class CuadernoController {
         boolean hasNext = page < totalPages - 1;
         int prevPage = hasPrev ? page - 1 : 0;
         int nextPage = hasNext ? page + 1 : page;
+        boolean pagesC = cuadernosPage.getTotalPages() > 0;
+        
 
+        model.addAttribute("pagesC", pagesC);
         model.addAttribute("cuadernos", cuadernosPage.getContent());
         model.addAttribute("currentPage", page + 1);
         model.addAttribute("totalPages", totalPages);
@@ -111,6 +114,10 @@ public class CuadernoController {
             Page<Ficha> fichasPage = fichaService.obtenerFichasPaginadas(cuadernoId, pageFichas, size);
             Page<Juego> juegosPage = cuadernoService.obtenerJuegosPaginados(cuadernoId, pageJuegos, size);
 
+            boolean pagesF = fichasPage.getTotalPages() > 0;
+            boolean pagesJ = juegosPage.getTotalPages() > 0;
+
+
             // Datos de paginación independientes para fichas y juegos
             model.addAttribute("cuaderno", cuadernoObj);
 
@@ -123,6 +130,7 @@ public class CuadernoController {
             model.addAttribute("prevPageFichas", pageFichas > 0 ? pageFichas - 1 : 0);
             model.addAttribute("nextPageFichas",
                     pageFichas < fichasPage.getTotalPages() - 1 ? pageFichas + 1 : pageFichas);
+            model.addAttribute("pagesF", pagesF);
 
             // Paginación de juegos
             model.addAttribute("juegosPage", juegosPage.getContent());
@@ -133,6 +141,7 @@ public class CuadernoController {
             model.addAttribute("prevPageJuegos", pageJuegos > 0 ? pageJuegos - 1 : 0);
             model.addAttribute("nextPageJuegos",
                     pageJuegos < juegosPage.getTotalPages() - 1 ? pageJuegos + 1 : pageJuegos);
+            model.addAttribute("pagesJ", pagesJ);
 
             // Listas de fichas y juegos no agregados
             model.addAttribute("fichasNoAgregadas", fichasNoAgregadas);

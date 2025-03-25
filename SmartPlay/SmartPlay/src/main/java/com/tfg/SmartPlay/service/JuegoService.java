@@ -78,13 +78,22 @@ public class JuegoService {
     /**
      * Elimina un juego si pertenece al usuario autenticado.
      */
+
     public void eliminarJuego(Long juegoId, String email) {
         Juego juego = obtenerJuego(juegoId, email)
                 .orElseThrow(() -> new RuntimeException("Juego no encontrado o sin permisos"));
-
+    
+        for (var cuaderno : juego.getCuadernos()) {
+            cuaderno.getJuegos().remove(juego);
+            cuaderno.setNumeroJuegos(Math.max(0, cuaderno.getNumeroJuegos() - 1));
+        }
+    
+        juego.getCuadernos().clear();
+        juegoRepository.save(juego);
+    
         juegoRepository.delete(juego);
     }
-
+    
     /**
      * Obtiene juegos no agregados a un cuaderno.
      */

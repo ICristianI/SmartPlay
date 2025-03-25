@@ -63,9 +63,9 @@ public class HomeController {
     }
 
     // lleva a pagina de seleccion de fichas o juegos
-    @GetMapping("/fames")
-    public String fames(Model model) {
-        return "Fichas/FichasJuegos";
+    @GetMapping("/creacion")
+    public String creacion(Model model) {
+        return "Creacion";
     }
 
     // lleva a pagina de fichas

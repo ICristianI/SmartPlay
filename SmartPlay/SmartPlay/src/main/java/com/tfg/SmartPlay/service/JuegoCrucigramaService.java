@@ -54,9 +54,6 @@ public class JuegoCrucigramaService {
         juegoCrucigramaRepository.save(juego);
     }
 
-    public void eliminarJuego(Long juegoId, String email) {
-        juegoCrucigramaRepository.deleteById(juegoId);
-    }
 
     public Page<Cuaderno> obtenerCuadernosConJuegoPaginados(JuegoCrucigrama juego, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);

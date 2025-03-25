@@ -2,6 +2,7 @@ package com.tfg.SmartPlay.controller;
 
 import com.tfg.SmartPlay.entity.Cuaderno;
 import com.tfg.SmartPlay.entity.JuegoSopaLetras;
+import com.tfg.SmartPlay.service.JuegoService;
 import com.tfg.SmartPlay.service.JuegoSopaLetrasService;
 import com.tfg.SmartPlay.service.UserComponent;
 
@@ -21,6 +22,10 @@ import java.util.Optional;
 @RequestMapping("/sopaletras")
 public class JuegoSopaLetrasController {
 
+
+    @Autowired
+    private JuegoService juegoService;
+    
     @Autowired
     private JuegoSopaLetrasService juegoSopaLetrasService;
 
@@ -37,6 +42,9 @@ public class JuegoSopaLetrasController {
         Page<JuegoSopaLetras> juegosPage = juegoSopaLetrasService
                 .obtenerJuegosPaginadosPorUsuario(userDetails.getUsername(), page, size);
 
+        boolean pages = juegosPage.getTotalPages() > 0;
+
+        model.addAttribute("pages", pages);
         model.addAttribute("juegos", juegosPage.getContent());
         model.addAttribute("currentPage", page + 1);
         model.addAttribute("totalPages", juegosPage.getTotalPages());
@@ -84,6 +92,9 @@ public class JuegoSopaLetrasController {
             int size = 3;
             Page<Cuaderno> cuadernosPage = juegoSopaLetrasService.obtenerCuadernosConJuegoPaginados(juego.get(), pageCuadernos, size);
 
+            boolean pages = cuadernosPage.getTotalPages() > 0;
+
+            model.addAttribute("pages", pages);
             model.addAttribute("cuadernos", cuadernosPage.getContent());
             model.addAttribute("currentPageCuadernos", pageCuadernos + 1);
             model.addAttribute("totalPagesCuadernos", cuadernosPage.getTotalPages());
@@ -146,7 +157,7 @@ public class JuegoSopaLetrasController {
         }
 
         try {
-            juegoSopaLetrasService.eliminarJuego(juegoId, userDetails.getUsername());
+            juegoService.eliminarJuego(juegoId, userDetails.getUsername());
             redirectAttributes.addFlashAttribute("mensaje", "Juego eliminado exitosamente.");
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());

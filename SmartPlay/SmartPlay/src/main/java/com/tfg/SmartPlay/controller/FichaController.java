@@ -15,8 +15,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.data.domain.Page;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 import java.util.Optional;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 // Controlador de las fichas
 
@@ -42,6 +46,7 @@ public class FichaController {
         Page<Ficha> fichasPage = fichaService.obtenerFichasPaginadasPorUsuario(userDetails.getUsername(), page, size);
 
         int totalPages = fichasPage.getTotalPages();
+        boolean pages = totalPages > 0;
         boolean hasPrev = page > 0;
         boolean hasNext = page < totalPages - 1;
         int prevPage = hasPrev ? page - 1 : 0;
@@ -54,6 +59,7 @@ public class FichaController {
         model.addAttribute("hasNext", hasNext);
         model.addAttribute("prevPage", prevPage);
         model.addAttribute("nextPage", nextPage);
+        model.addAttribute("pages", pages);
 
         return "/Fichas/verFichas";
     }
@@ -79,48 +85,50 @@ public class FichaController {
     // Método para ver una ficha que lleva a la template
 
     @GetMapping("/verFicha")
-public String verFichaDesdeSesion(HttpSession session,
-        @AuthenticationPrincipal UserDetails userDetails,
-        Model model,
-        @RequestParam(name = "pageCuadernos", defaultValue = "0") int pageCuadernos,
-        RedirectAttributes redirectAttributes) {
+    public String verFichaDesdeSesion(HttpSession session,
+            @AuthenticationPrincipal UserDetails userDetails,
+            Model model,
+            @RequestParam(name = "pageCuadernos", defaultValue = "0") int pageCuadernos,
+            RedirectAttributes redirectAttributes) {
 
-    Long fichaId = (Long) session.getAttribute("fichaId");
+        Long fichaId = (Long) session.getAttribute("fichaId");
 
-    if (fichaId == null) {
-        redirectAttributes.addFlashAttribute("error", "Ficha no encontrada.");
-        return "redirect:/f/listarFichas";
+        if (fichaId == null) {
+            redirectAttributes.addFlashAttribute("error", "Ficha no encontrada.");
+            return "redirect:/f/listarFichas";
+        }
+
+        Optional<Ficha> ficha = fichaService.obtenerFicha(fichaId, userDetails.getUsername());
+
+        if (ficha.isPresent()) {
+            model.addAttribute("ficha", ficha.get());
+
+            int size = 3;
+            Page<Cuaderno> cuadernosPage = cuadernoService.obtenerCuadernosConFichaPaginados(ficha.get(), pageCuadernos,
+                    size);
+
+            int totalPagesCuadernos = cuadernosPage.getTotalPages();
+            boolean pages = totalPagesCuadernos > 0;
+            boolean hasPrevCuadernos = pageCuadernos > 0;
+            boolean hasNextCuadernos = pageCuadernos < totalPagesCuadernos - 1;
+            int prevPageCuadernos = hasPrevCuadernos ? pageCuadernos - 1 : 0;
+            int nextPageCuadernos = hasNextCuadernos ? pageCuadernos + 1 : pageCuadernos;
+
+            model.addAttribute("cuadernos", cuadernosPage.getContent());
+            model.addAttribute("currentPage", pageCuadernos + 1);
+            model.addAttribute("totalPages", totalPagesCuadernos);
+            model.addAttribute("hasPrevCuadernos", hasPrevCuadernos);
+            model.addAttribute("hasNextCuadernos", hasNextCuadernos);
+            model.addAttribute("prevPageCuadernos", prevPageCuadernos);
+            model.addAttribute("nextPageCuadernos", nextPageCuadernos);
+            model.addAttribute("pages", pages);
+
+            return "Fichas/verFicha";
+        } else {
+            redirectAttributes.addFlashAttribute("error", "No tienes permisos para ver esta ficha.");
+            return "redirect:/f/listarFichas";
+        }
     }
-
-    Optional<Ficha> ficha = fichaService.obtenerFicha(fichaId, userDetails.getUsername());
-
-    if (ficha.isPresent()) {
-        model.addAttribute("ficha", ficha.get());
-
-        int size = 3;
-        Page<Cuaderno> cuadernosPage = cuadernoService.obtenerCuadernosConFichaPaginados(ficha.get(), pageCuadernos, size);
-
-        int totalPagesCuadernos = cuadernosPage.getTotalPages();
-        boolean hasPrevCuadernos = pageCuadernos > 0;
-        boolean hasNextCuadernos = pageCuadernos < totalPagesCuadernos - 1;
-        int prevPageCuadernos = hasPrevCuadernos ? pageCuadernos - 1 : 0;
-        int nextPageCuadernos = hasNextCuadernos ? pageCuadernos + 1 : pageCuadernos;
-
-        model.addAttribute("cuadernos", cuadernosPage.getContent());
-        model.addAttribute("currentPageCuadernos", pageCuadernos + 1);
-        model.addAttribute("totalPagesCuadernos", totalPagesCuadernos);
-        model.addAttribute("hasPrevCuadernos", hasPrevCuadernos);
-        model.addAttribute("hasNextCuadernos", hasNextCuadernos);
-        model.addAttribute("prevPageCuadernos", prevPageCuadernos);
-        model.addAttribute("nextPageCuadernos", nextPageCuadernos);
-
-        return "Fichas/verFicha";
-    } else {
-        redirectAttributes.addFlashAttribute("error", "No tienes permisos para ver esta ficha.");
-        return "redirect:/f/listarFichas";
-    }
-}
-
 
     // Método que lleva a la template de crear fichas
 
@@ -133,11 +141,12 @@ public String verFichaDesdeSesion(HttpSession session,
 
     @PostMapping("/guardar")
     public String guardarFicha(@ModelAttribute Ficha ficha, @RequestParam("imagenFondo") MultipartFile imagenFondo,
-            @AuthenticationPrincipal UserDetails userDetails,
+            @AuthenticationPrincipal UserDetails userDetails,HttpSession session,
             RedirectAttributes redirectAttributes) throws Exception {
+
         fichaService.guardarFicha(ficha, imagenFondo, userDetails.getUsername());
         redirectAttributes.addFlashAttribute("mensaje", "Ficha guardada correctamente.");
-        return "redirect:/f/listarFichas";
+        return "Fichas/ModificarFicha";
     }
 
     // Método para editar una ficha
@@ -160,7 +169,7 @@ public String verFichaDesdeSesion(HttpSession session,
             return "redirect:/f/listarFichas";
         }
     }
-    
+
     // Método para eliminar una ficha
 
     @PostMapping("/eliminar")
@@ -191,6 +200,87 @@ public String verFichaDesdeSesion(HttpSession session,
     public ResponseEntity<Object> downloadFichaImage(@PathVariable Long id) {
         return fichaService.obtenerImagenFicha(id);
     }
+
+    // Método para modificar una ficha
+
+    @PostMapping("/irModificarFicha")
+    public String irAModificarFicha(@RequestParam("fichaId") Long fichaId,
+            HttpSession session,
+            @AuthenticationPrincipal UserDetails userDetails,
+            RedirectAttributes redirectAttributes) {
+        Optional<Ficha> ficha = fichaService.obtenerFicha(fichaId, userDetails.getUsername());
+
+        if (ficha.isPresent()) {
+            session.setAttribute("fichaId", fichaId);
+            return "redirect:/f/modificarFicha";
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Ficha no encontrada o sin permisos.");
+            return "redirect:/f/listarFichas";
+        }
+    }
+
+    @GetMapping("/modificarFicha")
+    public String modificarFichaDesdeSesion(HttpSession session,
+            @AuthenticationPrincipal UserDetails userDetails,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+
+        Long fichaId = (Long) session.getAttribute("fichaId");
+
+        if (fichaId == null) {
+            redirectAttributes.addFlashAttribute("error", "Ficha no seleccionada.");
+            return "redirect:/f/listarFichas";
+        }
+
+        Optional<Ficha> ficha = fichaService.obtenerFicha(fichaId, userDetails.getUsername());
+
+        if (ficha.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "No tienes permisos para modificar esta ficha.");
+            return "redirect:/f/listarFichas";
+        }
+
+        model.addAttribute("ficha", ficha.get());
+        return "Fichas/ModificarFicha";
+    }
+
+    @PostMapping("/guardarElementos")
+    public String guardarElementosSuperpuestos(@RequestParam Long fichaId,
+            @RequestParam String elementosSuperpuestos,
+            @AuthenticationPrincipal UserDetails userDetails,
+            RedirectAttributes redirectAttributes,
+            HttpSession session) {
+        try {
+            session.setAttribute("fichaId", fichaId);
+            fichaService.guardarElementosSuperpuestos(fichaId, elementosSuperpuestos, userDetails.getUsername());
+            redirectAttributes.addFlashAttribute("mensaje", "Elementos guardados correctamente.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al guardar elementos: " + e.getMessage());
+        }
+        return "redirect:/f/verFichaInteractiva";
+    }
+
+
+@GetMapping("/verFichaInteractiva")
+public String verFichaInteractiva(Model model, HttpSession session) throws JsonProcessingException {
+
+    Long fichaId = (Long) session.getAttribute("fichaId");
+
+    Optional<Ficha> fichaOptional = fichaService.obtenerFichaPorId(fichaId);
+
+    if (fichaOptional.isPresent()) {
+        Ficha ficha = fichaOptional.get();
+
+        ObjectMapper mapper = new ObjectMapper();
+        String elementosJson = mapper.writeValueAsString(ficha.getElementosSuperpuestos());
+
+        model.addAttribute("ficha", ficha);
+        model.addAttribute("elementosJson", elementosJson);
+
+        return "Fichas/verFichaInteractiva";
+    } else {
+        return "redirect:/f/listarFichas";
+    }
+}
 
 
 }

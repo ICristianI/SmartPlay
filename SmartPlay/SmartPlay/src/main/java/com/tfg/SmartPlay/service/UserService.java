@@ -31,17 +31,25 @@ public class UserService {
     public boolean validarUsuarioYCorreo(User user, Model model, boolean isEditing) {
         Optional<User> usuarioExistente = userRepository.findByEmail(user.getEmail());
         Optional<User> nombreExistente = userRepository.findByNombre(user.getNombre());
-
-        if (usuarioExistente.isPresent() && (!isEditing || !usuarioExistente.get().getId().equals(user.getId()))) {
-            model.addAttribute("error", "El correo electrónico ya está en uso.");
-            return false;
+    
+        if (usuarioExistente.isPresent()) {
+            
+            if (!isEditing || user.getId() == null || !usuarioExistente.get().getId().equals(user.getId())) {
+                model.addAttribute("error", "El correo electrónico ya está en uso.");
+                return false;
+            }
         }
-        if (nombreExistente.isPresent() && (!isEditing || !nombreExistente.get().getId().equals(user.getId()))) {
-            model.addAttribute("error", "El nombre de usuario ya está en uso.");
-            return false;
+    
+        if (nombreExistente.isPresent()) {
+            if (!isEditing || user.getId() == null || !nombreExistente.get().getId().equals(user.getId())) {
+                model.addAttribute("error", "El nombre de usuario ya está en uso.");
+                return false;
+            }
         }
+    
         return true;
     }
+    
 
     // Elimina un usuario
 
