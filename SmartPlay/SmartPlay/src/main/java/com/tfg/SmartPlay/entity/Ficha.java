@@ -49,6 +49,10 @@ public class Ficha {
     @Column(columnDefinition = "LONGBLOB")
     private Blob imagen;
 
+    @Column(nullable = false)
+    private boolean privada = false;
+
+
     @Column(columnDefinition = "TEXT")
     private String elementosSuperpuestos;
 

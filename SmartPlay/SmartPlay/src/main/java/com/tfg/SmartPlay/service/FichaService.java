@@ -75,15 +75,17 @@ public class FichaService {
     public void editarFicha(Long fichaId, Ficha fichaEditada, String email) {
         Ficha ficha = obtenerFicha(fichaId, email)
                 .orElseThrow(() -> new RuntimeException("Ficha no encontrada o sin permisos"));
-
+    
         ficha.setNombre(fichaEditada.getNombre());
         ficha.setIdioma(fichaEditada.getIdioma());
         ficha.setAsignatura(fichaEditada.getAsignatura());
         ficha.setContenido(fichaEditada.getContenido());
         ficha.setDescripcion(fichaEditada.getDescripcion());
-
+        ficha.setPrivada(fichaEditada.isPrivada());
+    
         fichaRepository.save(ficha);
     }
+    
 
     // Elimina una ficha.
 
@@ -166,5 +168,12 @@ public void eliminarFicha(Long fichaId, String email) {
         ficha.setElementosSuperpuestos(elementosJson);
         fichaRepository.save(ficha);
     }
+
+    
+    public Page<Ficha> obtenerTodasLasFichas(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return fichaRepository.findAll(pageable);
+    }
+    
 
 }

@@ -1,5 +1,6 @@
 package com.tfg.SmartPlay.repository;
 
+import com.tfg.SmartPlay.entity.Ficha;
 import com.tfg.SmartPlay.entity.Juego;
 import com.tfg.SmartPlay.entity.User;
 import org.springframework.data.domain.Page;
@@ -26,5 +27,8 @@ public interface JuegoRepository extends JpaRepository<Juego, Long> {
 
     @Query("SELECT j FROM Juego j WHERE j.usuario = :usuario")
     Page<Juego> obtenerJuegosPaginados(@Param("usuario") User usuario, Pageable pageable);
-
+    
+    @Query("SELECT j FROM Juego j WHERE j.privada = false")
+    Page<Juego> findAll(Pageable pageable);
+    
 }

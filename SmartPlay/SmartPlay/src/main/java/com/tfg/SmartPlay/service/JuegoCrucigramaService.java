@@ -49,6 +49,7 @@ public class JuegoCrucigramaService {
         juego.setAsignatura(juegoEditado.getAsignatura());
         juego.setContenido(juegoEditado.getContenido());
         juego.setDescripcion(juegoEditado.getDescripcion());
+        juego.setPrivada(juegoEditado.isPrivada());
         juego.setPistas(juegoEditado.getPistas());
         juego.setRespuestas(juegoEditado.getRespuestas());
         juegoCrucigramaRepository.save(juego);

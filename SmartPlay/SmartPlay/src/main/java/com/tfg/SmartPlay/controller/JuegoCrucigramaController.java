@@ -58,7 +58,8 @@ public class JuegoCrucigramaController {
     }
 
     @GetMapping("/jugar")
-    public String jugarCrucigrama(@RequestParam("juegoId") Long juegoId, Model model) {
+    public String jugarCrucigrama(Model model, HttpSession session) {
+        Long juegoId = (Long) session.getAttribute("juegoId");
         Optional<JuegoCrucigrama> juegoOpt = juegoCrucigramaService.obtenerJuego(juegoId, userComponent.getUser().get().getEmail());
         
         if (juegoOpt.isPresent()) {

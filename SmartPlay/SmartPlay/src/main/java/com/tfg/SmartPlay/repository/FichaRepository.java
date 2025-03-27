@@ -42,4 +42,9 @@ public interface FichaRepository extends JpaRepository<Ficha, Long> {
     @Query("SELECT f FROM Ficha f WHERE f.usuario = :usuario")
     Page<Ficha> findByUsuario(@Param("usuario") User usuario, Pageable pageable);
 
+    
+    @Query("SELECT f FROM Ficha f WHERE f.privada = false")
+    Page<Ficha> findAll(Pageable pageable);
+    
+
 }

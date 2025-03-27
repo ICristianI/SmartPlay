@@ -49,6 +49,7 @@ public class JuegoSopaLetrasService {
         juego.setAsignatura(juegoEditado.getAsignatura());
         juego.setContenido(juegoEditado.getContenido());
         juego.setDescripcion(juegoEditado.getDescripcion());
+        juego.setPrivada(juegoEditado.isPrivada());
         juego.setPalabras(juegoEditado.getPalabras());
 
         juegoSopaLetrasRepository.save(juego);

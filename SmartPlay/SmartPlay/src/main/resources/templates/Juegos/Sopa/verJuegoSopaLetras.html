@@ -14,6 +14,11 @@
             <div class="descripcion-cuadro p-3 border rounded bg-light mb-3" style="word-wrap: break-word; overflow-wrap: break-word">
                 {{juego.contenido}}
             </div>
+            <p class="text-break">
+              <strong>Privacidad:</strong>
+              {{#juego.privada}}<span class="badge bg-danger">Privado</span>{{/juego.privada}}
+              {{^juego.privada}}<span class="badge bg-success">Público</span>{{/juego.privada}}
+            </p>
 
             <!-- Presentación de palabras del juego -->
             <p class="text-break"><strong>Palabras del juego:</strong></p>
@@ -27,13 +32,13 @@
 
             <!-- Mensajes -->
             {{#error}}
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
                 <p>{{error}}</p>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             {{/error}}
             {{#mensaje}}
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
                 <p>{{mensaje}}</p>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">Cerrar</button>
             </div>
@@ -71,20 +76,27 @@
                     <label for="descripcion" class="form-label">Descripción</label>
                     <textarea class="form-control" id="descripcion" name="descripcion" maxlength="150" required>{{juego.descripcion}}</textarea>
                 </div>
+                <div class="form-check form-switch mt-3">
+                  <input class="form-check-input" type="checkbox" id="privada" name="privada" value="true" {{#juego.privada}}checked{{/juego.privada}}>
+                  <label class="form-check-label" for="privada">Juego privado</label>
+                </div>
 
                 <!-- Gestión de palabras dinámicamente -->
                 <div class="mt-3">
-                    <label class="form-label">Palabras del Juego (Máx. 7, 10 letras c/u)</label>
-                    <div class="d-flex">
-                        <input type="text" class="form-control me-2" id="palabraInput" placeholder="Escribe una palabra" maxlength="10">
-                        <button type="button" class="btn btn-success" onclick="agregarPalabra()">Añadir</button>
-                    </div>
-                    <div id="listaPalabras" class="border p-3 rounded bg-light d-flex flex-wrap">
-                    <ul id="listaPalabras" class="list-group mb-3 mt-3"></ul>
-                    </div>
-                    <input type="hidden" name="palabras" id="palabras">
-                </div>
+                  <label class="form-label">Palabras del Juego (Máx. 7, 10 letras c/u)</label>
+                  <div class="d-flex">
+                    <input type="text" class="form-control me-2" id="palabraInput" placeholder="Escribe una palabra" maxlength="10">
+                    <button type="button" class="btn btn-success" onclick="agregarPalabra()">Añadir</button>
+                  </div>
 
+                  <!-- Lista visual -->
+                  <div id="listaPalabras" class="border p-3 rounded bg-light mt-3">
+                    <!-- Aquí se cargarán las palabras existentes al iniciar -->
+                  </div>
+
+                  <!-- Campo oculto que almacena las palabras -->
+                  <input type="hidden" name="palabras" id="palabras" value="{{juego.palabras}}">
+                </div>
                 <input type="hidden" name="juegoId" value="{{juego.id}}" />
                 <button type="submit" class="btn btn-success mt-3" onclick="guardarPalabrasEditar(event)">Guardar Cambios</button>
             </form>

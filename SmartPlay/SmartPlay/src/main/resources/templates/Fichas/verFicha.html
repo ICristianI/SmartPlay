@@ -18,6 +18,13 @@
         {{ficha.contenido}}
       </div>
 
+      <p class="text-break">
+        <strong>Privacidad:</strong>
+        {{#ficha.privada}}<span class="badge bg-danger">Privada</span>{{/ficha.privada}}
+        {{^ficha.privada}}<span class="badge bg-success">Pública</span>{{/ficha.privada}}
+      </p>
+      
+
       <!-- Mensajes -->
       {{#error}}
       <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -35,17 +42,6 @@
 
       <!-- Botones -->
       <button class="btn btn-primary navbar-custom mt-3" id="btnEditarFicha" onclick="toggleEditForm()">Editar Ficha</button>
-
-      <form action="/f/irModificarFicha" method="post">
-        <input type="hidden" name="_csrf" value="{{token}}" />
-        <input type="hidden" name="fichaId" value="{{ficha.id}}" />
-        <button type="submit" class="btn btn-warning mt-3">Añadir Elementos a la Ficha</button>
-      </form>
-
-      <form action="/f/verFichaInteractiva" method="get">
-        <input type="hidden" name="fichaId" value="{{ficha.id}}" />
-        <button type="submit" class="btn btn-primary mt-3">Ver Ficha Interactiva</button>
-      </form>
 
       <!-- Formulario de edición -->
       <form id="editForm" action="/f/editar" method="post" style="display: none;">
@@ -77,7 +73,23 @@
           <textarea class="form-control" id="descripcion" name="descripcion" maxlength="150" required>{{ficha.descripcion}}</textarea>
         </div>
 
+        <div class="form-check form-switch mt-3">
+          <input class="form-check-input" type="checkbox" id="privada" name="privada" value="true" {{#ficha.privada}}checked{{/ficha.privada}}>
+          <label class="form-check-label" for="privada">Ficha privada</label>
+        </div>
+        
         <button type="submit" class="btn btn-success mt-3">Guardar Cambios</button>
+      </form>
+
+      <form action="/f/irModificarFicha" method="post">
+        <input type="hidden" name="_csrf" value="{{token}}" />
+        <input type="hidden" name="fichaId" value="{{ficha.id}}" />
+        <button type="submit" class="btn btn-warning mt-3">Añadir Elementos a la Ficha</button>
+      </form>
+
+      <form action="/f/verFichaInteractiva" method="get">
+        <input type="hidden" name="fichaId" value="{{ficha.id}}" />
+        <button type="submit" class="btn btn-primary mt-3">Ver Ficha Interactiva</button>
       </form>
 
       <!-- Eliminar ficha -->

@@ -52,6 +52,7 @@ public class JuegoAhorcadoService {
         juego.setContenido(juegoEditado.getContenido());
         juego.setDescripcion(juegoEditado.getDescripcion());
         juego.setPalabra(juegoEditado.getPalabra());
+        juego.setPrivada(juegoEditado.isPrivada());
         juego.setMaxIntentos(juegoEditado.getMaxIntentos());
 
         juegoAhorcadoRepository.save(juego);

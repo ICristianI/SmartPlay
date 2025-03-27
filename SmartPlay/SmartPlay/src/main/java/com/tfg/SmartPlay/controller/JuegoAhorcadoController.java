@@ -57,7 +57,8 @@ public class JuegoAhorcadoController {
 
 
     @GetMapping("/jugar")
-    public String jugarAhorcado(@RequestParam("juegoId") Long juegoId, Model model) {
+    public String jugarAhorcado(Model model, HttpSession session) {
+        Long juegoId = (Long) session.getAttribute("juegoId");
         Optional<JuegoAhorcado> juegoOpt = juegoAhorcadoService.obtenerJuego(juegoId, userComponent.getUser().get().getEmail());
     
         if (juegoOpt.isPresent()) {

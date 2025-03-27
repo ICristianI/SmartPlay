@@ -3,11 +3,12 @@
 <!-- Main Content -->
 <div class="container mt-4 flex-grow-1">
   <!-- Categories -->
-  <div class="card-deck ">
+  <div class="card-deck">
+
     <!-- Mostrar "Inicio" solo si no está logueado -->
     {{^isLogged}}
-    <div class="card navbar-custom">
-      <img src="/images/generalImages/Inicio.jpg" class="cardVertical card-img-top limited-img " alt="Inicio" />
+    <div class="card navbar-custom text-center">
+      <img src="/images/generalImages/Inicio.jpg" class="cardVertical card-img-top limited-img" alt="Inicio" />
       <div class="card-body">
         <h5 class="card-title" id="start-menu">Inicio</h5>
         <a href="/regin" class="stretched-link"></a>
@@ -15,21 +16,44 @@
     </div>
     {{/isLogged}}
 
-    <div class="card navbar-custom ">
-      <img src="/images/generalImages/fichas2.jpg" class="cardVertical limited-img " alt="Creacion" />
-      <div class="card-body ">
-        <h5 class="card-title" id="creacion">Creacion</h5>
+    <!-- Carta de Creación -->
+    <div class="card navbar-custom text-center">
+      <img src="/images/generalImages/fichas2.jpg" class="cardVertical limited-img" alt="Creación" />
+      <div class="card-body">
+        <h5 class="card-title" id="creacion">Creación</h5>
         <a href="/creacion" class="stretched-link"></a>
       </div>
     </div>
-    <div class="card navbar-custom">
-      <img src="/images/generalImages/Estadisticas.jpg" class="cardVertical limited-img " alt="Estadísticas" />
-      <div class="card-body">
-        <h5 class="card-title" id="statistics-menu">Estadísticas</h5>
-        <a href="/ImagenPrueba" class="stretched-link"></a>
-      </div>
+
+    <!-- Carta de Investigar Fichas (formulario estilo botón completo) -->
+    <div class="card navbar-custom p-0 text-center">
+      <form action="/f/investigar" method="get" class="h-100 w-100">
+        <input type="hidden" name="_csrf" value="{{token}}" />
+        <button type="submit" class="btn p-0 h-100 w-100 text-center" style="border: none; background: none; color: white;">
+          <img src="/images/generalImages/investigar.jpg" class="cardVertical limited-img card-img-top" alt="Investigar Fichas" />
+          <div class="card-body">
+            <h5 class="card-title" id="explore">Investigar Fichas</h5>
+          </div>
+        </button>
+      </form>
     </div>
+
+    <!-- Carta de Investigar Juegos (como botón) -->
+<div class="card navbar-custom p-0 text-center">
+  <form action="/juegos/investigar" method="get" class="h-100 w-100">
+    <input type="hidden" name="_csrf" value="{{token}}" />
+    <button type="submit" class="btn p-0 h-100 w-100 text-center" style="border: none; background: none; color: white;">
+      <img src="/images/generalImages/Estadisticas.jpg" class="cardVertical limited-img card-img-top" alt="Investigar Juegos" />
+      <div class="card-body">
+        <h5 class="card-title" id="juegos">Investigar Juegos</h5>
+      </div>
+    </button>
+  </form>
+</div>
+
+
   </div>
 </div>
 
-{{>footer}}
+
+{{> footer}}

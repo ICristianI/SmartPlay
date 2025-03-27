@@ -66,7 +66,7 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers("/f/**", "/creacion", "/juegos", "/fichas",
                                 "/verFichas", "/crearCuadernos", "/f/listarFichas", "/f/ficha/image/**",
-                                "/Fichas/verFichas",
+                                "/Fichas/verFichas", "/investigar",
                                 "/juegos/**","/ahorcado/**", "/Cuadernos", "/users/**", "/cuadernos/**",
                                 "/sopa/**", "/sopaletras/**", "/crucigrama/**")
                         .hasAnyRole("ALUMNO", "PROFESOR"))

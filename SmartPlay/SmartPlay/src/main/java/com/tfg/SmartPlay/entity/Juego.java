@@ -35,18 +35,17 @@ public abstract class Juego {
     @Size(max = 50, message = "La asignatura no puede exceder los 50 caracteres")
     private String asignatura;
 
-    @Column(nullable = false)
-    @NotBlank(message = "El contenido no puede estar vacío")
-    @Size(max = 1000, message = "El contenido no puede exceder los 1000 caracteres")
+    @Size(max = 500, message = "El contenido no puede exceder los 1000 caracteres")
     private String contenido;
 
-    @Column(nullable = false)
-    @NotBlank(message = "La descripción no puede estar vacía")
     @Size(max = 255, message = "La descripción no puede exceder los 255 caracteres")
     private String descripcion;
 
     @Column(columnDefinition = "TEXT")
     private String comentarios;
+
+    @Column(nullable = false)
+    private boolean privada = false;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)

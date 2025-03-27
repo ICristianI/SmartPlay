@@ -1,0 +1,58 @@
+{{> header}}
+
+<div class="container mt-4">
+  <h1 class="text-center mt-5 mb-4">Explorar Fichas de la Comunidad</h1>
+
+  <div class="row">
+    {{#fichas}}
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow-sm">
+        <img src="/f/ficha/image/{{id}}" class="card-img-top" alt="Vista previa de la ficha"
+          style="height: 150px; object-fit: cover" />
+        <div class="card-body text-center">
+          <h5 class="card-title">{{nombre}}</h5>
+          <p class="card-text text-muted">{{asignatura}}</p>
+          <form action="/f/conseguirFicha" method="post">
+            <input type="hidden" name="_csrf" value="{{token}}" />
+            <input type="hidden" name="fichaId" value="{{id}}" />
+            <button type="submit" class="btn btn-primary navbar-custom mt-3">Ver Ficha</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {{/fichas}}
+  </div>
+
+  {{^fichas}}
+  <div class="text-center mt-5">
+    <p class="text-muted">No hay fichas públicas aún.</p>
+  </div>
+  {{/fichas}}
+
+  <!-- Paginación de fichas estilo cuadernos -->
+  {{#totalPages}}
+  <nav aria-label="Paginación Fichas" id="navPaginacionFichas">
+    <input type="hidden" id="pageSizeFichas" value="6">
+
+    {{#pages}}
+    <p class="text-center mt-2">Página {{currentPage}} de {{totalPages}}</p>
+    {{/pages}}
+
+    <ul class="pagination justify-content-center mt-3">
+      {{#hasPrev}}
+      <li class="page-item">
+        <a class="btn btn-secondary" href="?page={{prevPage}}">Anterior</a>
+      </li>
+      {{/hasPrev}}
+
+      {{#hasNext}}
+      <li class="page-item">
+        <a class="btn btn-secondary" href="?page={{nextPage}}">Siguiente</a>
+      </li>
+      {{/hasNext}}
+    </ul>
+  </nav>
+  {{/totalPages}}
+</div>
+
+{{> footer}}

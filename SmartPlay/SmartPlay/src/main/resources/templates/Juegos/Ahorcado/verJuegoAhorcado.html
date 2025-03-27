@@ -22,6 +22,12 @@
             <p class="text-break">
                 <strong>Máximo de Intentos:</strong> {{juego.maxIntentos}}
             </p>
+            <p class="text-break">
+                <strong>Privacidad:</strong>
+                {{#juego.privada}}<span class="badge bg-danger">Privado</span>{{/juego.privada}}
+                {{^juego.privada}}<span class="badge bg-success">Público</span>{{/juego.privada}}
+            </p>
+              
 
             <!-- Mensajes -->
             {{#error}}
@@ -66,14 +72,18 @@
                 </div>
                 <div class="mt-3">
                     <label for="contenido" class="form-label">Contenido</label>
-                    <textarea class="form-control" id="contenido" name="contenido" maxlength="500" required>
-{{juego.contenido}}</textarea>
+                    <textarea class="form-control" id="contenido" name="contenido" maxlength="500" required>{{juego.contenido}}</textarea>
                 </div>
                 <div class="mt-3">
                     <label for="descripcion" class="form-label">Descripción</label>
-                    <textarea class="form-control" id="descripcion" name="descripcion" maxlength="150" required>
-{{juego.descripcion}}</textarea>
+                    <textarea class="form-control" id="descripcion" name="descripcion" maxlength="150" required>{{juego.descripcion}}</textarea>
                 </div>
+                
+                <div class="form-check form-switch mt-3">
+                    <input class="form-check-input" type="checkbox" id="privada" name="privada" value="true" {{#juego.privada}}checked{{/juego.privada}}>
+                    <label class="form-check-label" for="privada">Juego privado</label>
+                </div>
+  
                 <div class="mt-3">
                     <label for="palabra" class="form-label">Palabra Secreta</label>
                     <input type="text" class="form-control" id="palabra" name="palabra"  pattern="[A-Za-z]+" maxlength="15"

@@ -1,5 +1,6 @@
 package com.tfg.SmartPlay.service;
 
+import com.tfg.SmartPlay.entity.Ficha;
 import com.tfg.SmartPlay.entity.Juego;
 import com.tfg.SmartPlay.entity.JuegoAhorcado;
 import com.tfg.SmartPlay.entity.User;
@@ -71,6 +72,7 @@ public class JuegoService {
         juego.setIdioma(juegoEditado.getIdioma());
         juego.setDescripcion(juegoEditado.getDescripcion());
         juego.setComentarios(juegoEditado.getComentarios());
+        juego.setPrivada(juegoEditado.isPrivada());
 
         juegoRepository.save(juego);
     }
@@ -115,4 +117,10 @@ public class JuegoService {
     public Optional<Juego> obtenerJuegoPorId(Long id) {
         return juegoRepository.findById(id);
     }
+
+    public Page<Juego> obtenerTodosLosJuegos(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return juegoRepository.findAll(pageable);
+    }
 }
+    

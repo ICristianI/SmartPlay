@@ -26,11 +26,7 @@
     <div class="d-flex justify-content-center gap-4 flex-wrap">
       <button class="btn btn-primary" id="btnCorregir">Corregir</button>
       <button class="btn btn-secondary" onclick="descargarPDF()">Descargar en PDF</button>
-  
-      <form action="/f/verFicha" method="get" class="d-inline-block m-0">
-        <input type="hidden" name="_csrf" value="{{token}}" />
-        <button type="submit" class="btn btn-success" id="btnAceptar">Aceptar</button>
-      </form>
+      <button class="btn btn-success" onclick="window.history.back();">Aceptar</button>
     </div>
   </div>
   

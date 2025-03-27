@@ -17,10 +17,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.data.domain.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
+import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+
 
 // Controlador de las fichas
 
@@ -259,6 +260,13 @@ public class FichaController {
         return "redirect:/f/verFichaInteractiva";
     }
 
+@PostMapping("/conseguirFicha")
+public String conseguirFicha(Model model, @RequestParam Long fichaId, HttpSession session) {
+    session.setAttribute("fichaId", fichaId);
+    return "redirect:/f/verFichaInteractiva";
+}
+
+
 
 @GetMapping("/verFichaInteractiva")
 public String verFichaInteractiva(Model model, HttpSession session) throws JsonProcessingException {
@@ -281,6 +289,25 @@ public String verFichaInteractiva(Model model, HttpSession session) throws JsonP
         return "redirect:/f/listarFichas";
     }
 }
+
+@GetMapping("/investigar")
+public String verFichasPublicas(Model model, @RequestParam(defaultValue = "0") int page) {
+    int size = 24;
+
+    Page<Ficha> fichasPage = fichaService.obtenerTodasLasFichas(page, size);
+
+    model.addAttribute("fichas", fichasPage.getContent());
+    model.addAttribute("currentPage", page + 1);
+    model.addAttribute("totalPages", fichasPage.getTotalPages());
+    model.addAttribute("hasPrev", page > 0);
+    model.addAttribute("hasNext", page < fichasPage.getTotalPages() - 1);
+    model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
+    model.addAttribute("nextPage", page < fichasPage.getTotalPages() - 1 ? page + 1 : page);
+    model.addAttribute("pages", fichasPage.getTotalPages() > 0);
+
+    return "investigar";
+}
+
 
 
 }
