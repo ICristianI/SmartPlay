@@ -96,7 +96,6 @@ public class UserController {
 
     }
 
-    
     // Muestra el perfil del usuario
 
     @GetMapping("/perfil")
@@ -121,7 +120,7 @@ public class UserController {
         if (!userService.validarUsuarioYCorreo(user, model, true)) {
             redirectAttributes.addFlashAttribute("error", "El nombre ya está en uso.");
             return "redirect:/users/perfil";
-        }else{
+        } else {
             redirectAttributes.addFlashAttribute("mensaje", "Perfil actualizado correctamente.");
         }
 
@@ -147,8 +146,15 @@ public class UserController {
 
     // Recupera la imagen de perfil del usuario
     @GetMapping("/image")
-    public ResponseEntity<Object> downloadImage(Model model) throws SQLException {
+    public ResponseEntity<Object> downloadImage() throws SQLException {
         Optional<User> op = userRepository.findById(userComponent.getUser().get().getId());
+        ResponseEntity<Object> imageResponse = imagenService.getImageResponse(op.get().getPhoto());
+        return imageResponse;
+    }
+
+    @GetMapping("images/{id}")
+    public ResponseEntity<Object> getMethodName(@PathVariable Long id) throws SQLException {
+        Optional<User> op = userRepository.findById(id);
         ResponseEntity<Object> imageResponse = imagenService.getImageResponse(op.get().getPhoto());
         return imageResponse;
     }
@@ -217,11 +223,24 @@ public class UserController {
     }
 
     // Maneja la excepción de tamaño máximo de archivo
-    
+
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public String handleMaxSizeException(@PathVariable Long id, MaxUploadSizeExceededException exc, Model model) {
         model.addAttribute("error", "El archivo excede el tamaño máximo permitido.");
         return "redirect:/users/perfil";
+    }
+
+    @GetMapping("/perfil/{id}")
+    public String verPerfilDeOtroUsuario(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+        Optional<User> usuarioOptional = userService.findUserById(id);
+
+        if (usuarioOptional.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "El usuario no existe.");
+            return "redirect:/"; // O puedes redirigir a una página de error personalizada
+        }
+
+        model.addAttribute("user", usuarioOptional.get());
+        return "PaginaUsuario/PerfilPublico";
     }
 
 }

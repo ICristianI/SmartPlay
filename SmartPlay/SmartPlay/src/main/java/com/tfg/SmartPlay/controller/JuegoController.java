@@ -1,5 +1,8 @@
 package com.tfg.SmartPlay.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +100,17 @@ public class JuegoController {
     
         Page<Juego> juegosPage = juegoService.obtenerTodosLosJuegos(page, size);
     
-        model.addAttribute("juegos", juegosPage.getContent());
+        List<Map<String, Object>> juegosProcesados = juegosPage.getContent().stream().map(juego -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", juego.getId());
+            map.put("nombre", juego.getNombre());
+            map.put("asignatura", juego.getAsignatura());
+            map.put("meGusta", juego.getMeGusta());
+            map.put("fechaFormateada",juego.getFechaCreacionFormateada());
+            return map;
+        }).toList();
+
+        model.addAttribute("juegos", juegosProcesados);
         model.addAttribute("currentPage", page + 1);
         model.addAttribute("totalPages", juegosPage.getTotalPages());
         model.addAttribute("hasPrev", page > 0);

@@ -17,11 +17,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.data.domain.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 
 // Controlador de las fichas
 
@@ -53,7 +55,17 @@ public class FichaController {
         int prevPage = hasPrev ? page - 1 : 0;
         int nextPage = hasNext ? page + 1 : page;
 
-        model.addAttribute("fichas", fichasPage.getContent());
+        List<Map<String, Object>> fichasProcesadas = fichasPage.getContent().stream().map(ficha -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", ficha.getId());
+            map.put("nombre", ficha.getNombre());
+            map.put("asignatura", ficha.getAsignatura());
+            map.put("meGusta", ficha.getMeGusta());
+            map.put("fechaFormateada", ficha.getFechaCreacionFormateada()); // aquí sí tiene contexto
+            return map;
+        }).toList();
+
+        model.addAttribute("fichas", fichasProcesadas);
         model.addAttribute("currentPage", page + 1);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("hasPrev", hasPrev);
@@ -123,6 +135,7 @@ public class FichaController {
             model.addAttribute("prevPageCuadernos", prevPageCuadernos);
             model.addAttribute("nextPageCuadernos", nextPageCuadernos);
             model.addAttribute("pages", pages);
+            model.addAttribute("fechaFormateada", ficha.get().getFechaCreacionFormateada());
 
             return "Fichas/verFicha";
         } else {
@@ -142,7 +155,7 @@ public class FichaController {
 
     @PostMapping("/guardar")
     public String guardarFicha(@ModelAttribute Ficha ficha, @RequestParam("imagenFondo") MultipartFile imagenFondo,
-            @AuthenticationPrincipal UserDetails userDetails,HttpSession session,
+            @AuthenticationPrincipal UserDetails userDetails, HttpSession session,
             RedirectAttributes redirectAttributes) throws Exception {
 
         fichaService.guardarFicha(ficha, imagenFondo, userDetails.getUsername());
@@ -260,54 +273,62 @@ public class FichaController {
         return "redirect:/f/verFichaInteractiva";
     }
 
-@PostMapping("/conseguirFicha")
-public String conseguirFicha(Model model, @RequestParam Long fichaId, HttpSession session) {
-    session.setAttribute("fichaId", fichaId);
-    return "redirect:/f/verFichaInteractiva";
-}
-
-
-
-@GetMapping("/verFichaInteractiva")
-public String verFichaInteractiva(Model model, HttpSession session) throws JsonProcessingException {
-
-    Long fichaId = (Long) session.getAttribute("fichaId");
-
-    Optional<Ficha> fichaOptional = fichaService.obtenerFichaPorId(fichaId);
-
-    if (fichaOptional.isPresent()) {
-        Ficha ficha = fichaOptional.get();
-
-        ObjectMapper mapper = new ObjectMapper();
-        String elementosJson = mapper.writeValueAsString(ficha.getElementosSuperpuestos());
-
-        model.addAttribute("ficha", ficha);
-        model.addAttribute("elementosJson", elementosJson);
-
-        return "Fichas/verFichaInteractiva";
-    } else {
-        return "redirect:/f/listarFichas";
+    @PostMapping("/conseguirFicha")
+    public String conseguirFicha(Model model, @RequestParam Long fichaId, HttpSession session) {
+        session.setAttribute("fichaId", fichaId);
+        return "redirect:/f/verFichaInteractiva";
     }
-}
 
-@GetMapping("/investigar")
-public String verFichasPublicas(Model model, @RequestParam(defaultValue = "0") int page) {
-    int size = 24;
+    @GetMapping("/verFichaInteractiva")
+    public String verFichaInteractiva(Model model, HttpSession session) throws JsonProcessingException {
 
-    Page<Ficha> fichasPage = fichaService.obtenerTodasLasFichas(page, size);
+        Long fichaId = (Long) session.getAttribute("fichaId");
 
-    model.addAttribute("fichas", fichasPage.getContent());
-    model.addAttribute("currentPage", page + 1);
-    model.addAttribute("totalPages", fichasPage.getTotalPages());
-    model.addAttribute("hasPrev", page > 0);
-    model.addAttribute("hasNext", page < fichasPage.getTotalPages() - 1);
-    model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
-    model.addAttribute("nextPage", page < fichasPage.getTotalPages() - 1 ? page + 1 : page);
-    model.addAttribute("pages", fichasPage.getTotalPages() > 0);
+        Optional<Ficha> fichaOptional = fichaService.obtenerFichaPorId(fichaId);
 
-    return "investigar";
-}
+        if (fichaOptional.isPresent()) {
+            Ficha ficha = fichaOptional.get();
 
+            ObjectMapper mapper = new ObjectMapper();
+            String elementosJson = mapper.writeValueAsString(ficha.getElementosSuperpuestos());
 
+            model.addAttribute("ficha", ficha);
+            model.addAttribute("elementosJson", elementosJson);
+
+            return "Fichas/verFichaInteractiva";
+        } else {
+            return "redirect:/f/listarFichas";
+        }
+    }
+
+    @GetMapping("/investigar")
+    public String verFichasPublicas(Model model, @RequestParam(defaultValue = "0") int page) {
+        int size = 24;
+
+        Page<Ficha> fichasPage = fichaService.obtenerTodasLasFichas(page, size);
+
+        List<Map<String, Object>> fichasProcesadas = fichasPage.getContent().stream().map(ficha -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", ficha.getId());
+            map.put("nombre", ficha.getNombre());
+            map.put("asignatura", ficha.getAsignatura());
+            map.put("meGusta", ficha.getMeGusta());
+            map.put("fechaFormateada", ficha.getFechaCreacionFormateada()); // aquí sí tiene contexto
+            return map;
+        }).toList();
+
+        model.addAttribute("fichas", fichasProcesadas);
+        model.addAttribute("currentPage", page + 1);
+        model.addAttribute("totalPages", fichasPage.getTotalPages());
+        model.addAttribute("hasPrev", page > 0);
+        model.addAttribute("hasNext", page < fichasPage.getTotalPages() - 1);
+        model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
+        model.addAttribute("nextPage", page < fichasPage.getTotalPages() - 1 ? page + 1 : page);
+        model.addAttribute("pages", fichasPage.getTotalPages() > 0);
+
+        
+
+        return "investigar";
+    }
 
 }

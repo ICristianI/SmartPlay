@@ -16,6 +16,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -44,14 +47,26 @@ public class JuegoSopaLetrasController {
 
         boolean pages = juegosPage.getTotalPages() > 0;
 
+
+         List<Map<String, Object>> juegosProcesados = juegosPage.getContent().stream().map(juego -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", juego.getId());
+            map.put("nombre", juego.getNombre());
+            map.put("asignatura", juego.getAsignatura());
+            map.put("meGusta", juego.getMeGusta());
+            map.put("fechaFormateada", juego.getFechaCreacionFormateada());
+            return map;
+        }).toList();
+
+        model.addAttribute("juegos", juegosProcesados);
         model.addAttribute("pages", pages);
-        model.addAttribute("juegos", juegosPage.getContent());
         model.addAttribute("currentPage", page + 1);
         model.addAttribute("totalPages", juegosPage.getTotalPages());
         model.addAttribute("hasPrev", page > 0);
         model.addAttribute("hasNext", page < juegosPage.getTotalPages() - 1);
         model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
         model.addAttribute("nextPage", page < juegosPage.getTotalPages() - 1 ? page + 1 : page);
+
 
         return "/Juegos/Sopa/verJuegosSopaLetras";
     }
@@ -103,6 +118,8 @@ public class JuegoSopaLetrasController {
             model.addAttribute("hasNextCuadernos", pageCuadernos < cuadernosPage.getTotalPages() - 1);
             model.addAttribute("prevPageCuadernos", pageCuadernos > 0 ? pageCuadernos - 1 : 0);
             model.addAttribute("nextPageCuadernos", pageCuadernos < cuadernosPage.getTotalPages() - 1 ? pageCuadernos + 1 : pageCuadernos);
+            model.addAttribute("fechaFormateada", juego.get().getFechaCreacionFormateada());
+
 
             return "Juegos/Sopa/verJuegoSopaLetras";
         } else {

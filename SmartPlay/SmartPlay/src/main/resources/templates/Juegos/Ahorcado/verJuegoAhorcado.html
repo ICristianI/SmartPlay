@@ -3,6 +3,11 @@
 <div class="container mt-5">
     <div class="row align-items-center">
         <div class="col-md-8">
+            
+            <div class="d-flex justify-content-between align-items-center mt-4 px-2">
+                <small class="text-muted"><strong>Creada el:</strong> {{fechaFormateada}}</small>
+                <small class="text-danger" style="font-size: 1.1rem;">❤️ {{juego.meGusta}}</small>
+            </div>
             <h1>{{juego.nombre}}</h1>
             <p class="text-break"><strong>Idioma:</strong> {{juego.idioma}}</p>
             <p class="text-break">
@@ -169,6 +174,8 @@
     <!-- PAGINACIÓN DE CUADERNOS -->
 <nav aria-label="Paginación Cuadernos" id="navPaginacionCuadernos">
     <input type="hidden" id="pageSizeCuadernos" value="3" />
+    <input type="hidden" name="juegoId" value="{{juego.id}}" />
+
 
     {{#pages}}
     <p class="text-center mt-2">Página {{currentPageCuadernos}} de {{totalPagesCuadernos}}</p>

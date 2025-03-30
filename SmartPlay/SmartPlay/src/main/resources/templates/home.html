@@ -14,7 +14,10 @@
         <a href="/regin" class="stretched-link"></a>
       </div>
     </div>
+
     {{/isLogged}}
+
+    {{#isLogged}}
 
     <!-- Carta de Creación -->
     <div class="card navbar-custom text-center">
@@ -25,7 +28,20 @@
       </div>
     </div>
 
-    <!-- Carta de Investigar Fichas (formulario estilo botón completo) -->
+    <!-- Carta de Grupo -->
+    <div class="card navbar-custom text-center">
+      <img src="/images/generalImages/Grupo.png" class="cardVertical limited-img" alt="Grupo" />
+      <div class="card-body">
+        <h5 class="card-title" id="grupo">Grupo</h5>
+        <a href="/grupo" class="stretched-link"></a>
+      </div>
+    </div>
+
+
+    {{/isLogged}}
+  
+
+    <!-- Carta de Investigar Fichas -->
     <div class="card navbar-custom p-0 text-center">
       <form action="/f/investigar" method="get" class="h-100 w-100">
         <input type="hidden" name="_csrf" value="{{token}}" />
@@ -38,7 +54,7 @@
       </form>
     </div>
 
-    <!-- Carta de Investigar Juegos (como botón) -->
+    <!-- Carta de Investigar Juegos -->
 <div class="card navbar-custom p-0 text-center">
   <form action="/juegos/investigar" method="get" class="h-100 w-100">
     <input type="hidden" name="_csrf" value="{{token}}" />

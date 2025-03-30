@@ -59,10 +59,6 @@ public class CuadernoService {
         return cuaderno.filter(c -> c.getUsuario().getId().equals(usuario.getId()));
     }
 
-    // Devuelve todos los cuadernos de un usuario.
-    public List<Cuaderno> obtenerCuadernosPorUsuario(User usuario) {
-        return cuadernoRepository.findByUsuario(usuario);
-    }
 
     // Devuelve un cuaderno por id.
     public Optional<Cuaderno> obtenerCuadernoPorId(Long id) {
@@ -237,4 +233,11 @@ public class CuadernoService {
         Pageable pageable = PageRequest.of(page, size);
         return cuadernoRepository.findByFichasContaining(ficha, pageable);
     }
+
+    public List<Cuaderno> listarCuadernosPorUsuario(String email) {
+        User usuario = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        return cuadernoRepository.findByUsuario(usuario);
+    }
+    
 }

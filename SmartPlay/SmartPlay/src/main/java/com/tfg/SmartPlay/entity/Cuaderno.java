@@ -38,4 +38,8 @@ public class Cuaderno {
     @JoinTable(name = "cuaderno_juegos", joinColumns = @JoinColumn(name = "cuaderno_id"), inverseJoinColumns = @JoinColumn(name = "juego_id"))
     private List<Juego> juegos;
 
+    @ManyToMany(mappedBy = "cuadernos")
+    private List<Grupo> grupos;
+
+
 }

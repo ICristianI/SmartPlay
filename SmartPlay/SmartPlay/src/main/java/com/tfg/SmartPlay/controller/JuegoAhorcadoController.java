@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.data.domain.Page;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -43,8 +46,19 @@ public class JuegoAhorcadoController {
 
         boolean pages = juegosPage.getTotalPages() > 0;
 
+        List<Map<String, Object>> juegosProcesados = juegosPage.getContent().stream().map(juego -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", juego.getId());
+            map.put("nombre", juego.getNombre());
+            map.put("asignatura", juego.getAsignatura());
+            map.put("maxIntentos", juego.getMaxIntentos());
+            map.put("meGusta", juego.getMeGusta());
+            map.put("fechaFormateada", juego.getFechaCreacionFormateada());
+            return map;
+        }).toList();
+
+        model.addAttribute("juegos", juegosProcesados);
         model.addAttribute("pages", pages);
-        model.addAttribute("juegos", juegosPage.getContent());
         model.addAttribute("currentPage", page + 1);
         model.addAttribute("totalPages", juegosPage.getTotalPages());
         model.addAttribute("hasPrev", page > 0);
@@ -110,6 +124,7 @@ public class JuegoAhorcadoController {
         model.addAttribute("hasNextCuadernos", hasNextCuadernos);
         model.addAttribute("prevPageCuadernos", prevPageCuadernos);
         model.addAttribute("nextPageCuadernos", nextPageCuadernos);
+        model.addAttribute("fechaFormateada", juego.get().getFechaCreacionFormateada());
 
 
             return "Juegos/Ahorcado/verJuegoAhorcado";

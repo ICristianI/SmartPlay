@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import com.tfg.SmartPlay.entity.Cuaderno;
 import com.tfg.SmartPlay.entity.Ficha;
 import com.tfg.SmartPlay.entity.Juego;
-import com.tfg.SmartPlay.entity.JuegoAhorcado;
 import com.tfg.SmartPlay.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,5 +28,11 @@ public interface CuadernoRepository extends JpaRepository<Cuaderno, Long> {
 
     @Query("SELECT c FROM Cuaderno c JOIN c.juegos j WHERE j = :juego")
     Page<Cuaderno> obtenerCuadernosPorJuego(@Param("juego") Juego juego, Pageable pageable);
+
+    
+    @Query("SELECT c FROM Cuaderno c WHERE c.usuario = :usuario AND c NOT IN :cuadernosGrupo")
+    List<Cuaderno> findByUsuarioAndNotInGrupo(@Param("usuario") User usuario, @Param("cuadernosGrupo") List<Cuaderno> cuadernosGrupo);
+
+    Page<Cuaderno> findByGrupos_Id(Long grupoId, Pageable pageable);
 
 }

@@ -122,5 +122,7 @@ public class JuegoService {
         Pageable pageable = PageRequest.of(page, size);
         return juegoRepository.findAll(pageable);
     }
+
+
 }
     

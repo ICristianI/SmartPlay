@@ -3,6 +3,10 @@
 <div class="container mt-5">
     <div class="row align-items-center">
         <div class="col-md-8">
+          <div class="d-flex justify-content-between align-items-center mt-4 px-2">
+            <small class="text-muted"><strong>Creada el:</strong> {{fechaFormateada}}</small>
+            <small class="text-danger" style="font-size: 1.1rem;">❤️ {{juego.meGusta}}</small>
+          </div>
             <h1>{{juego.nombre}}</h1>
             <p class="text-break"><strong>Idioma:</strong> {{juego.idioma}}</p>
             <p class="text-break"><strong>Asignatura:</strong> {{juego.asignatura}}</p>
@@ -151,8 +155,10 @@
 </div>
 
 <!-- Paginación de cuadernos -->
+<!-- Paginación de cuadernos -->
 <nav aria-label="Paginación Cuadernos" id="navPaginacionCuadernos">
   <input type="hidden" id="pageSizeCuadernos" value="3" />
+  <input type="hidden" id="juegoId" value="{{juego.id}}" />
 
   {{#pages}}
   <p class="text-center mt-2">Página {{currentPageCuadernos}} de {{totalPagesCuadernos}}</p>
@@ -169,13 +175,14 @@
 
     {{#hasNextCuadernos}}
     <li class="page-item">
-      <button class="btn btn-secondary page-link" data-page="{{nextPageCuadernos}}" onclick="cargarPagina(this, 'cuadernos2')">
+      <button class="btn btn-secondary" data-page="{{nextPageCuadernos}}" onclick="cargarPagina(this, 'cuadernos2')">
         Siguiente
       </button>
     </li>
     {{/hasNextCuadernos}}
   </ul>
 </nav>
+
 
 <!-- Si no tiene cuadernos, mostrar un mensaje -->
 {{^cuadernos}}
@@ -197,6 +204,8 @@
 </script>
 
 <script src="/js/validacionSopaLetras.js"></script>
+<script src="/js/PaginacionAJAX.js"></script>
+
 
 
 

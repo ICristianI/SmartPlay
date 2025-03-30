@@ -298,7 +298,8 @@ h1 {
 /* Ajustes para fichas y juegos seleccionados */
 
 .ficha-seleccionada,
-.juego-seleccionado {
+.juego-seleccionado,
+.cuaderno-seleccionado {
   border: 2px solid #007bff !important;
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
   border-radius: 8px;
@@ -413,6 +414,16 @@ h1 {
 .checkbox-cuadro.neutral {
   background-color: white;
   border-color: #ccc;
+}
+
+.btn.navbar-custom {
+  background: var(--bg-navbar);
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+.btn.navbar-custom:hover {
+  filter: brightness(85%);
 }
 
 

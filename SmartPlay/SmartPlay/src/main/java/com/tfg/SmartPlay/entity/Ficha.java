@@ -1,6 +1,8 @@
 package com.tfg.SmartPlay.entity;
 
 import java.sql.Blob;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -52,9 +54,14 @@ public class Ficha {
     @Column(nullable = false)
     private boolean privada = false;
 
-
     @Column(columnDefinition = "TEXT")
     private String elementosSuperpuestos;
+
+    @Column(nullable = false)
+    private int meGusta = 0;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime fechaCreacion;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
@@ -62,5 +69,15 @@ public class Ficha {
 
     @ManyToMany(mappedBy = "fichas")
     private List<Cuaderno> cuadernos;
+
+    @PrePersist
+    protected void onCreate() {
+        this.fechaCreacion = LocalDateTime.now();
+    }
+
+    public String getFechaCreacionFormateada() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return fechaCreacion.format(formatter);
+    }
 
 }

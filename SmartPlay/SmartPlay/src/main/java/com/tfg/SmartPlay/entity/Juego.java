@@ -6,6 +6,9 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.sql.Blob;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Entity
@@ -47,11 +50,27 @@ public abstract class Juego {
     @Column(nullable = false)
     private boolean privada = false;
 
+    @Column(nullable = false)
+    private int meGusta = 0;
+
+    @Column(nullable = false, updatable = false)
+    private java.time.LocalDateTime fechaCreacion;
+
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private User usuario;
-    
+
     @ManyToMany
     @JoinTable(name = "cuaderno_juegos", joinColumns = @JoinColumn(name = "juego_id"), inverseJoinColumns = @JoinColumn(name = "cuaderno_id"))
     private List<Cuaderno> cuadernos;
+
+    @PrePersist
+    protected void onCreate() {
+        this.fechaCreacion = java.time.LocalDateTime.now();
+    }
+
+    public String getFechaCreacionFormateada() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return fechaCreacion.format(formatter);
+    }
 }

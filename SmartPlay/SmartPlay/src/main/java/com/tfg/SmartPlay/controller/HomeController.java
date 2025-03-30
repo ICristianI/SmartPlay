@@ -115,5 +115,20 @@ public class HomeController {
         return "Juegos/Crucigrama/Crucigrama";
     }
 
+    @GetMapping("/grupo")
+    public String grupo(Model model) {
+        return "Grupos/Grupos";
+    }
+
+    @GetMapping("/crearGrupos")
+    public String crearGrupos(Model model) {
+        return "Grupos/crearGrupos";
+    }
+
+    @GetMapping("/verGrupos")
+    public String verGrupos(Model model) {
+        return "Grupos/verGrupos";
+    }
+
 
 }

@@ -45,14 +45,26 @@ public class JuegoCrucigramaController {
 
         boolean pages = juegosPage.getTotalPages() > 0;
 
+
+        List<Map<String, Object>> juegosProcesados = juegosPage.getContent().stream().map(juego -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", juego.getId());
+            map.put("nombre", juego.getNombre());
+            map.put("asignatura", juego.getAsignatura());
+            map.put("meGusta", juego.getMeGusta());
+            map.put("fechaFormateada", juego.getFechaCreacionFormateada());
+            return map;
+        }).toList();
+
+        model.addAttribute("juegos", juegosProcesados);
         model.addAttribute("pages", pages);
-        model.addAttribute("juegos", juegosPage.getContent());
         model.addAttribute("currentPage", page + 1);
         model.addAttribute("totalPages", juegosPage.getTotalPages());
         model.addAttribute("hasPrev", page > 0);
         model.addAttribute("hasNext", page < juegosPage.getTotalPages() - 1);
         model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
         model.addAttribute("nextPage", page < juegosPage.getTotalPages() - 1 ? page + 1 : page);
+
 
         return "Juegos/Crucigrama/verJuegosCrucigrama";
     }
@@ -107,6 +119,8 @@ public class JuegoCrucigramaController {
         model.addAttribute("hasNextCuadernos", pageCuadernos < cuadernosPage.getTotalPages() - 1);
         model.addAttribute("prevPageCuadernos", Math.max(0, pageCuadernos - 1));
         model.addAttribute("nextPageCuadernos", Math.min(pageCuadernos + 1, cuadernosPage.getTotalPages() - 1));
+        model.addAttribute("fechaFormateada", juego.get().getFechaCreacionFormateada());
+
     
         // Procesar pistas y respuestas
         String pistasRaw = juego.get().getPistas();

@@ -6,22 +6,33 @@
   <div class="row">
     {{#fichas}}
     <div class="col-md-4 mb-4">
-      <div class="card h-100 shadow-sm">
-        <img src="/f/ficha/image/{{id}}" class="card-img-top" alt="Vista previa de la ficha"
-          style="height: 150px; object-fit: cover" />
-        <div class="card-body text-center">
+      <div class="card h-100 shadow-sm position-relative">
+        <img
+          src="/f/ficha/image/{{id}}"
+          class="card-img-top"
+          alt="Vista previa de la ficha"
+          style="height: 150px; object-fit: cover"
+        />
+        <div class="card-body text-center px-3 py-4">
           <h5 class="card-title">{{nombre}}</h5>
           <p class="card-text text-muted">{{asignatura}}</p>
+  
           <form action="/f/conseguirFicha" method="post">
             <input type="hidden" name="_csrf" value="{{token}}" />
             <input type="hidden" name="fichaId" value="{{id}}" />
             <button type="submit" class="btn btn-primary navbar-custom mt-3">Ver Ficha</button>
           </form>
         </div>
+  
+        <div class="card-footer d-flex justify-content-between align-items-center px-3 py-2">
+          <small class="text-muted">{{fechaFormateada}}</small>
+          <small class="text-danger" style="font-size: 1.1rem;">❤️ {{meGusta}}</small>
+        </div>
       </div>
     </div>
     {{/fichas}}
   </div>
+  
 
   {{^fichas}}
   <div class="text-center mt-5">
