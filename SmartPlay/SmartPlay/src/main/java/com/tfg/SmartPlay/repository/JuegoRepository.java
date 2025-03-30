@@ -30,5 +30,13 @@ public interface JuegoRepository extends JpaRepository<Juego, Long> {
     
     @Query("SELECT j FROM Juego j WHERE j.privada = false")
     Page<Juego> findAll(Pageable pageable);
-    
+
+    Page<Juego> findByNombreContainingIgnoreCaseAndPrivadaFalse(String nombre, Pageable pageable);
+
+    Page<Juego> findAllByOrderByFechaCreacionDesc(Pageable pageable);
+    Page<Juego> findByNombreContainingIgnoreCaseOrderByFechaCreacionDesc(String nombre, Pageable pageable);
+
+    Page<Juego> findAllByOrderByMeGustaDesc(Pageable pageable);
+    Page<Juego> findByNombreContainingIgnoreCaseOrderByMeGustaDesc(String nombre, Pageable pageable);
+
 }

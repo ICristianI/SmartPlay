@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.data.domain.Page;
 
@@ -159,14 +160,17 @@ public class JuegoAhorcadoController {
         return "Juegos/Ahorcado/crearJuegosAhorcados";
     }
 
-    @PostMapping("/guardar")
-    public String guardarJuego(@ModelAttribute JuegoAhorcado juego,
-            @AuthenticationPrincipal UserDetails userDetails,
-            RedirectAttributes redirectAttributes) {
-        juegoAhorcadoService.guardarJuego(juego, userDetails.getUsername());
-        redirectAttributes.addFlashAttribute("mensaje", "Juego guardado correctamente.");
-        return "redirect:/ahorcado/listar";
-    }
+@PostMapping("/guardar")
+public String guardarJuego(@ModelAttribute JuegoAhorcado juego,
+                           @RequestParam("imagenJuego") MultipartFile imagenJuego,
+                           @AuthenticationPrincipal UserDetails userDetails,
+                           RedirectAttributes redirectAttributes) {
+
+    juegoAhorcadoService.guardarJuego(juego, userDetails.getUsername(), imagenJuego);
+    redirectAttributes.addFlashAttribute("mensaje", "Juego guardado correctamente.");
+    return "redirect:/ahorcado/listar";
+}
+
 
     @PostMapping("/eliminar")
     public String eliminarJuego(@RequestParam("juegoId") Long juegoId,

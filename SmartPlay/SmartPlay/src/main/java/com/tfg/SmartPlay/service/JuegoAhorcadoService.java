@@ -13,7 +13,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
+import java.sql.Blob;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +31,9 @@ public class JuegoAhorcadoService {
 
     @Autowired
     private CuadernoRepository cuadernoRepository;
+
+    @Autowired
+    private ImagenService imagenService;
 
     public List<JuegoAhorcado> listarJuegos(String email) {
         User usuario = userRepository.findByEmail(email)
@@ -58,14 +64,31 @@ public class JuegoAhorcadoService {
         juegoAhorcadoRepository.save(juego);
     }
 
-    public void guardarJuego(JuegoAhorcado juego, String email) {
-        User usuario = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+public void guardarJuego(JuegoAhorcado juego, String email, MultipartFile imagenJuego) {
+    User usuario = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        juego.setUsuario(usuario);
-        juegoAhorcadoRepository.save(juego);
+    juego.setUsuario(usuario);
+
+    try {
+        if (imagenJuego != null && !imagenJuego.isEmpty()) {
+            Blob imagen = imagenService.saveImage(imagenJuego);
+            juego.setImagen(imagen);
+        } else {
+
+            InputStream defaultImgStream = getClass().getResourceAsStream("/static/images/generalImages/AhorcadoDefault.jpg");
+            if (defaultImgStream != null) {
+                byte[] bytes = defaultImgStream.readAllBytes();
+                Blob defaultBlob = new javax.sql.rowset.serial.SerialBlob(bytes);
+                juego.setImagen(defaultBlob);
+            }
+        }
+    } catch (Exception e) {
+        throw new RuntimeException("Error al guardar la imagen del juego", e);
     }
 
+    juegoAhorcadoRepository.save(juego);
+}
 
     public Page<JuegoAhorcado> obtenerJuegosPaginadosPorUsuario(String email, int page, int size) {
         User usuario = userRepository.findByEmail(email)

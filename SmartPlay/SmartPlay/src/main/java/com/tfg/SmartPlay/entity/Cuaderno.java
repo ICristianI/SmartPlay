@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.sql.Blob;
 import java.util.List;
 
 @Entity
@@ -25,6 +27,10 @@ public class Cuaderno {
 
     @Column(nullable = false, unique = false)
     private Integer numeroJuegos;
+
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private Blob imagen;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)

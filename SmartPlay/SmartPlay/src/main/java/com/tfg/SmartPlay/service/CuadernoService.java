@@ -8,14 +8,26 @@ import com.tfg.SmartPlay.repository.CuadernoRepository;
 import com.tfg.SmartPlay.repository.FichaRepository;
 import com.tfg.SmartPlay.repository.JuegoRepository;
 import com.tfg.SmartPlay.repository.UserRepository;
+
+import io.jsonwebtoken.io.IOException;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.InputStream;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import javax.sql.rowset.serial.SerialBlob;
 
 // Servicio para gestionar los cuadernos de un usuario.
 
@@ -43,6 +55,9 @@ public class CuadernoService {
     @Autowired
     private JuegoService juegoService;
 
+    @Autowired
+    private ImagenService imagenService;
+
     // Devuelve todos los cuadernos de un usuario Paginados.
 
     public Page<Cuaderno> listarCuadernosPaginados(String usuarioEmail, int page, int size) {
@@ -58,7 +73,6 @@ public class CuadernoService {
         Optional<Cuaderno> cuaderno = cuadernoRepository.findById(cuadernoId);
         return cuaderno.filter(c -> c.getUsuario().getId().equals(usuario.getId()));
     }
-
 
     // Devuelve un cuaderno por id.
     public Optional<Cuaderno> obtenerCuadernoPorId(Long id) {
@@ -86,11 +100,9 @@ public class CuadernoService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Guarda un nuevo cuaderno con fichas y juegos seleccionados.
-     */
-    public Cuaderno guardarCuaderno(Cuaderno cuaderno, List<Long> fichasIds, List<Long> juegosIds) {
-        User usuario = userComponent.getUser().get();
+    public Cuaderno guardarCuaderno(Cuaderno cuaderno, List<Long> fichasIds, List<Long> juegosIds,
+            MultipartFile imagenCuaderno) throws java.io.IOException {
+        User usuario = userComponent.getUser().orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         cuaderno.setUsuario(usuario);
 
         List<Ficha> fichasSeleccionadas = fichaRepository.findAllById(fichasIds);
@@ -98,11 +110,39 @@ public class CuadernoService {
 
         cuaderno.setFichas(fichasSeleccionadas);
         cuaderno.setJuegos(juegosSeleccionados);
-
         cuaderno.setNumeroFichas(fichasSeleccionadas.size());
         cuaderno.setNumeroJuegos(juegosSeleccionados.size());
 
+        try {
+            if (imagenCuaderno != null && !imagenCuaderno.isEmpty()) {
+                Blob imagen = imagenService.saveImage(imagenCuaderno);
+                cuaderno.setImagen(imagen);
+            } else {
+                // Imagen por defecto si no se sube ninguna
+                InputStream is = getClass().getResourceAsStream("/static/images/generalImages/CuadernoDefault.jpg");
+                if (is != null) {
+                    byte[] bytes = is.readAllBytes();
+                    Blob imagenPorDefecto = new SerialBlob(bytes);
+                    cuaderno.setImagen(imagenPorDefecto);
+                }
+            }
+        } catch (IOException | SQLException e) {
+            throw new RuntimeException("Error al procesar la imagen del cuaderno", e);
+        }
+
         return cuadernoRepository.save(cuaderno);
+    }
+
+    public ResponseEntity<Object> obtenerImagenCuaderno(Long id) {
+        Optional<Cuaderno> cuaderno = cuadernoRepository.findById(id);
+        if (cuaderno.isPresent() && cuaderno.get().getImagen() != null) {
+            try {
+                return imagenService.getImageResponse(cuaderno.get().getImagen());
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al recuperar imagen");
+            }
+        }
+        return ResponseEntity.notFound().build();
     }
 
     /**
@@ -200,17 +240,27 @@ public class CuadernoService {
         if (usuarioOpt.isEmpty()) {
             return false;
         }
-
+    
         User usuario = usuarioOpt.get();
         Optional<Cuaderno> cuadernoOpt = cuadernoRepository.findById(cuadernoId);
-
+    
         if (cuadernoOpt.isPresent() && cuadernoOpt.get().getUsuario().getId().equals(usuario.getId())) {
+            Cuaderno cuaderno = cuadernoOpt.get();
+    
+            // Eliminar asociaciones con grupos
+            if (cuaderno.getGrupos() != null) {
+                cuaderno.getGrupos().forEach(grupo -> grupo.getCuadernos().remove(cuaderno));
+                cuaderno.getGrupos().clear();
+                cuadernoRepository.save(cuaderno); // Persistimos el cambio de relaciones
+            }
+    
             cuadernoRepository.deleteById(cuadernoId);
             return true;
         }
-
+    
         return false;
     }
+    
 
     // Devuelve los cuadernos que contienen una ficha específica.
 
@@ -239,5 +289,5 @@ public class CuadernoService {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         return cuadernoRepository.findByUsuario(usuario);
     }
-    
+
 }

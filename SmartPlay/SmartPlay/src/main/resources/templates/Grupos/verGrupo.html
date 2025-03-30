@@ -108,39 +108,42 @@
   <div class="row" id="contenedorCuadernos">
     {{#cuadernosPage}}
     <div class="col-md-4">
-      <div class="card mb-4 shadow-sm">
-        <div class="card-body">
-            <h5 class="card-title">{{nombre}}</h5>
-            <p class="card-text text-muted">{{numeroFichas}} fichas | {{numeroJuegos}} juegos</p>
-          
-            <!-- Botón Resolver -->
-            <form action="#" method="post" class="mb-2">
-              <input type="hidden" name="_csrf" value="{{token}}" />
-              <input type="hidden" name="cuadernoId" value="{{id}}" />
-              <button type="submit" class="btn btn-success w-100">
-                Resolver
-              </button>
-            </form>
-            <!-- Botón para ver el cuaderno -->
-            <form action="/cuadernos/ver" method="post" class="mb-2">
-                <input type="hidden" name="_csrf" value="{{token}}" />
-                <input type="hidden" name="cuadernoId" value="{{id}}" />
-                <button type="submit" class="btn btn-primary navbar-custom w-100">
-                  Ver Cuaderno
-                </button>
-              </form>
-              
-          
-            <!-- Botón para eliminar del grupo -->
-            <form action="/grupos/eliminarCuaderno" method="post">
-              <input type="hidden" name="_csrf" value="{{token}}" />
-              <input type="hidden" name="grupoId" value="{{grupo.id}}" />
-              <input type="hidden" name="cuadernoId" value="{{id}}" />
-              <button type="submit" class="btn btn-danger w-100">Eliminar del Grupo</button>
-            </form>
-          </div>
-          
+      <div class="card h-100 shadow-sm position-relative">
+        <img
+          src="/cuaderno/image/{{id}}"
+          class="card-img-top"
+          alt="Vista previa del cuaderno"
+          style="height: 150px; object-fit: cover"
+          onerror="this.onerror=null; this.src='/images/generalImages/CuadernoDefault.jpg';"
+        />
+        <div class="card-body text-center px-3 py-4">
+          <h5 class="card-title">{{nombre}}</h5>
+          <p class="card-text text-muted">{{numeroFichas}} fichas | {{numeroJuegos}} juegos</p>
+      
+          <!-- Botón Resolver -->
+          <form action="#" method="post" class="mb-2">
+            <input type="hidden" name="_csrf" value="{{token}}" />
+            <input type="hidden" name="cuadernoId" value="{{id}}" />
+            <button type="submit" class="btn btn-success w-100">Resolver</button>
+          </form>
+      
+          <!-- Botón Ver -->
+          <form action="/cuadernos/ver" method="post" class="mb-2">
+            <input type="hidden" name="_csrf" value="{{token}}" />
+            <input type="hidden" name="cuadernoId" value="{{id}}" />
+            <button type="submit" class="btn btn-primary navbar-custom w-100">Ver Cuaderno</button>
+          </form>
+      
+          <!-- Botón Eliminar -->
+          <form action="/grupos/eliminarCuaderno" method="post">
+            <input type="hidden" name="_csrf" value="{{token}}" />
+            <input type="hidden" name="grupoId" value="{{grupo.id}}" />
+            <input type="hidden" name="cuadernoId" value="{{id}}" />
+            <button type="submit" class="btn btn-danger w-100">Eliminar del Grupo</button>
+          </form>
+        </div>
       </div>
+      
     </div>
     {{/cuadernosPage}}
   
@@ -242,7 +245,7 @@
             {{#cuadernosDisponibles}}
             <div class="col-md-4 mb-4">
               <div class="card cuaderno-item h-100 shadow-sm" data-id="{{id}}" data-nombre="{{nombre}}">
-                <img src="/images/generalImages/CREARCUADERNO.png" class="card-img-top" alt="Imagen de {{nombre}}"
+                <img src="/cuadernos/image/{{id}}" class="card-img-top" alt="Imagen de {{nombre}}"
                   style="height: 150px; object-fit: cover" />
                 <div class="card-body text-center">
                   <h5 class="card-title">{{nombre}}</h5>

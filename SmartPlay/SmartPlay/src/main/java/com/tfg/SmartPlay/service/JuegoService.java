@@ -1,8 +1,6 @@
 package com.tfg.SmartPlay.service;
 
-import com.tfg.SmartPlay.entity.Ficha;
 import com.tfg.SmartPlay.entity.Juego;
-import com.tfg.SmartPlay.entity.JuegoAhorcado;
 import com.tfg.SmartPlay.entity.User;
 import com.tfg.SmartPlay.repository.JuegoRepository;
 import com.tfg.SmartPlay.repository.UserRepository;
@@ -10,8 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,9 @@ public class JuegoService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ImagenService imagenService;
 
 
     /**
@@ -122,6 +126,24 @@ public class JuegoService {
         Pageable pageable = PageRequest.of(page, size);
         return juegoRepository.findAll(pageable);
     }
+
+    public ResponseEntity<Object> obtenerImagenJuego(Blob imagenBlob) throws SQLException {
+    return imagenService.getImageResponse(imagenBlob);
+}
+
+public Page<Juego> ordenarPorFecha(String buscar, int page, int size) {
+    if (buscar != null && !buscar.trim().isEmpty()) {
+        return juegoRepository.findByNombreContainingIgnoreCaseOrderByFechaCreacionDesc(buscar, PageRequest.of(page, size));
+    }
+    return juegoRepository.findAllByOrderByFechaCreacionDesc(PageRequest.of(page, size));
+}
+
+public Page<Juego> ordenarPorMeGusta(String buscar, int page, int size) {
+    if (buscar != null && !buscar.trim().isEmpty()) {
+        return juegoRepository.findByNombreContainingIgnoreCaseOrderByMeGustaDesc(buscar, PageRequest.of(page, size));
+    }
+    return juegoRepository.findAllByOrderByMeGustaDesc(PageRequest.of(page, size));
+}
 
 
 }

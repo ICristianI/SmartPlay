@@ -11,12 +11,16 @@ import com.tfg.SmartPlay.service.JuegoService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -166,20 +170,27 @@ public class CuadernoController {
         return "Cuadernos/crearCuadernos";
     }
 
-    /**
-     * Guarda un nuevo cuaderno.
-     */
     @PostMapping("/guardar")
     public String guardarCuaderno(@ModelAttribute Cuaderno cuaderno,
             @RequestParam("fichasSeleccionadas") List<Long> fichasIds,
             @RequestParam("juegosSeleccionados") List<Long> juegosIds,
+            @RequestParam(value = "imagenCuaderno", required = false) MultipartFile imagenCuaderno,
             RedirectAttributes redirectAttributes) {
-
-        cuadernoService.guardarCuaderno(cuaderno, fichasIds, juegosIds);
+    
+        try {
+            cuadernoService.guardarCuaderno(cuaderno, fichasIds, juegosIds, imagenCuaderno);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         redirectAttributes.addFlashAttribute("mensaje", "Cuaderno guardado correctamente.");
         return "redirect:/cuadernos";
     }
-
+    
+    @GetMapping("/image/{id}")
+    public ResponseEntity<Object> downloadCuadernoImage(@PathVariable Long id) {
+        return cuadernoService.obtenerImagenCuaderno(id);
+    }
+    
     /**
      * Editar un cuaderno.
      */

@@ -56,6 +56,10 @@ public abstract class Juego {
     @Column(nullable = false, updatable = false)
     private java.time.LocalDateTime fechaCreacion;
 
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private Blob imagen;
+
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private User usuario;

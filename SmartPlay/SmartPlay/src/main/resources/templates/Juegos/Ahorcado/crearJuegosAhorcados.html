@@ -8,7 +8,7 @@
     </button>
   </div>
 
-  <form action="/ahorcado/guardar" method="POST" class="shadow p-4 rounded">
+  <form action="/ahorcado/guardar" method="POST" enctype="multipart/form-data" class="shadow p-4 rounded">
     <input type="hidden" name="_csrf" value="{{token}}"/>
 
     <!-- Nombre del juego -->
@@ -51,7 +51,23 @@
       <input class="form-check-input" type="checkbox" id="privada" name="privada" value="true">
       <label class="form-check-label" for="privada">Juego privado (solo tú podrás verlo)</label>
     </div>
-
+    <!-- Imagen del juego -->
+    <div class="mb-3">
+      <label class="form-label">Imagen del Juego</label>
+      <div class="d-flex flex-column align-items-center">
+        <div class="border border-secondary rounded mb-3" style="width: 200px; height: 150px; overflow: hidden">
+          <img id="previewImagen" src="/images/generalImages/AhorcadoDefault.jpg" alt="Vista previa"
+            class="w-100 h-100 object-cover" />
+        </div>
+        <label for="imagenJuego" class="btn btn-primary navbar-custom">
+          Seleccionar Imagen
+          <input type="file" class="d-none" id="imagenJuego" name="imagenJuego" accept="image/*" onchange="mostrarVistaPrevia(event)" />
+        </label>
+      </div>
+      <small class="form-text text-muted text-center">
+        Selecciona una imagen representativa para el juego (opcional).
+      </small>
+    </div>
 
     <!-- Palabra para el juego -->
     <div class="mb-3">
@@ -86,5 +102,6 @@
 </div>
 
 <script src="/js/validacionAhorcado.js"></script>
+<script src="/js/ImagenPreview.js"></script>
 
 {{> footer}}

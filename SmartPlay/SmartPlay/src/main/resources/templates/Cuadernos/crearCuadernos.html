@@ -6,14 +6,30 @@
     <a href="/Cuadernos" class="btn btn-secondary">Volver</a>
   </div>
 
-  <form action="/cuadernos/guardar" method="POST" class="shadow p-4 rounded">
+  <form action="/cuadernos/guardar" method="POST" enctype="multipart/form-data" class="shadow p-4 rounded">
     <input type="hidden" name="_csrf" value="{{token}}"/>
-
+  
     <!-- Nombre del cuaderno -->
     <div class="mb-3">
       <label for="nombre" class="form-label">Nombre del Cuaderno</label>
       <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Escribe el nombre del cuaderno"
         maxlength="30" required />
+    </div>
+  
+    <!-- Imagen del cuaderno -->
+    <div class="mb-3">
+      <label class="form-label">Imagen del Cuaderno</label>
+      <div class="d-flex flex-column align-items-center">
+        <div class="border border-secondary rounded mb-3" style="width: 200px; height: 150px; overflow: hidden">
+          <img id="previewImagen" src="/images/generalImages/CuadernoDefault.jpg" alt="Vista previa"
+          class="w-100 h-100 object-cover" />
+        </div>
+        <label for="imagenCuaderno" class="btn btn-primary navbar-custom">
+          Seleccionar Imagen
+          <input type="file" class="d-none" id="imagenCuaderno" name="imagenCuaderno" accept="image/*" onchange="mostrarVistaPrevia(event)" />
+        </label>
+      </div>
+      <small class="form-text text-muted text-center">Selecciona una imagen representativa para este cuaderno.</small>
     </div>
 
     <!-- Botón para abrir el modal de fichas -->
@@ -95,7 +111,7 @@
               {{#juegos}}
               <div class="col-md-4 mb-4">
                 <div class="card juego-item h-100 shadow-sm" data-id="{{id}}" data-nombre="{{nombre}}">
-                  <img src="/images/generalImages/Juegos.jpg" class="card-img-top" alt="Imagen de {{nombre}}"
+                  <img src="/juegos/image/{{id}}" class="card-img-top" alt="Imagen de {{nombre}}"
                   style="height: 150px; object-fit: cover" />
                   <div class="card-body text-center">
                     <h5 class="card-title">{{nombre}}</h5>
@@ -124,5 +140,7 @@
 </div>
 
 <script src="/js/cuaderno.js"></script>
+<script src="/js/ImagenPreview.js"></script>
+
 
 {{> footer}}

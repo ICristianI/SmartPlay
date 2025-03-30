@@ -128,12 +128,19 @@
   <div class="row" id="contenedorCuadernos">
     {{#cuadernos}}
     <div class="col-md-4">
-      <div class="card mb-4">
-        <div class="card-body">
+      <div class="card h-100 shadow-sm position-relative">
+        <img
+          src="/cuaderno/image/{{id}}"
+          class="card-img-top"
+          alt="Imagen del cuaderno"
+          style="height: 150px; object-fit: cover"
+          onerror="this.onerror=null; this.src='/images/generalImages/CuadernoDefault.jpg';"
+        />
+        <div class="card-body text-center px-3 py-4">
           <h5 class="card-title">{{nombre}}</h5>
-          <p class="card-text"><strong>Propietario:</strong> {{usuario.nombre}}</p>
-          <p class="card-text"><strong>Número de fichas:</strong> {{numeroFichas}}</p>
-
+          <p class="card-text text-muted"><strong>Propietario:</strong> {{usuario.nombre}}</p>
+          <p class="card-text text-muted">{{numeroFichas}} fichas | {{numeroJuegos}} juegos</p>
+      
           <form action="/cuadernos/ver" method="post">
             <input type="hidden" name="_csrf" value="{{token}}" />
             <input type="hidden" name="cuadernoId" value="{{id}}" />
@@ -141,6 +148,7 @@
           </form>
         </div>
       </div>
+      
     </div>
     {{/cuadernos}}
   </div>

@@ -11,7 +11,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
+import java.sql.Blob;
 import java.util.Optional;
 
 @Service
@@ -26,15 +29,36 @@ public class JuegoCrucigramaService {
     @Autowired
     private CuadernoRepository cuadernoRepository;
 
-    public void guardarJuego(JuegoCrucigrama juego, String email) {
-        User usuario = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    @Autowired
+    private ImagenService imagenService;
 
-        juego.setUsuario(usuario);
-        juego.setPistas(juego.getPistas());
-        juego.setRespuestas(juego.getRespuestas());
-        juegoCrucigramaRepository.save(juego);
+    public void guardarJuego(JuegoCrucigrama juego, String email, MultipartFile imagenJuego) {
+    User usuario = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+    juego.setUsuario(usuario);
+    juego.setPistas(juego.getPistas());
+    juego.setRespuestas(juego.getRespuestas());
+
+    try {
+        if (imagenJuego != null && !imagenJuego.isEmpty()) {
+            Blob imagen = imagenService.saveImage(imagenJuego);
+            juego.setImagen(imagen);
+        } else {
+            InputStream defaultImgStream = getClass().getResourceAsStream("/static/images/generalImages/CrucigramaDefault.jpg");
+            if (defaultImgStream != null) {
+                byte[] bytes = defaultImgStream.readAllBytes();
+                Blob defaultBlob = new javax.sql.rowset.serial.SerialBlob(bytes);
+                juego.setImagen(defaultBlob);
+            }
+        }
+    } catch (Exception e) {
+        throw new RuntimeException("Error al guardar la imagen del juego de Crucigrama", e);
     }
+
+    juegoCrucigramaRepository.save(juego);
+}
+
 
     public Optional<JuegoCrucigrama> obtenerJuego(Long juegoId, String email) {
         return juegoCrucigramaRepository.findById(juegoId);

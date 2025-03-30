@@ -151,6 +151,14 @@ public class FichaController {
         return "Fichas/crearFichas";
     }
 
+     // Método para obtener la imagen de una ficha
+
+     @GetMapping("/ficha/image/{id}")
+     public ResponseEntity<Object> downloadFichaImage(@PathVariable Long id) {
+         return fichaService.obtenerImagenFicha(id);
+     }
+ 
+
     // Método para guardar una ficha
 
     @PostMapping("/guardar")
@@ -206,13 +214,6 @@ public class FichaController {
         }
 
         return "redirect:/f/listarFichas";
-    }
-
-    // Método para obtener la imagen de una ficha
-
-    @GetMapping("/ficha/image/{id}")
-    public ResponseEntity<Object> downloadFichaImage(@PathVariable Long id) {
-        return fichaService.obtenerImagenFicha(id);
     }
 
     // Método para modificar una ficha
@@ -302,33 +303,45 @@ public class FichaController {
     }
 
     @GetMapping("/investigar")
-    public String verFichasPublicas(Model model, @RequestParam(defaultValue = "0") int page) {
-        int size = 24;
+public String verFichasPublicas(
+        Model model,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(required = false) String buscar,
+        @RequestParam(required = false, defaultValue = "fecha") String orden) {
 
-        Page<Ficha> fichasPage = fichaService.obtenerTodasLasFichas(page, size);
+    int size = 24;
 
-        List<Map<String, Object>> fichasProcesadas = fichasPage.getContent().stream().map(ficha -> {
-            Map<String, Object> map = new HashMap<>();
-            map.put("id", ficha.getId());
-            map.put("nombre", ficha.getNombre());
-            map.put("asignatura", ficha.getAsignatura());
-            map.put("meGusta", ficha.getMeGusta());
-            map.put("fechaFormateada", ficha.getFechaCreacionFormateada()); // aquí sí tiene contexto
-            return map;
-        }).toList();
-
-        model.addAttribute("fichas", fichasProcesadas);
-        model.addAttribute("currentPage", page + 1);
-        model.addAttribute("totalPages", fichasPage.getTotalPages());
-        model.addAttribute("hasPrev", page > 0);
-        model.addAttribute("hasNext", page < fichasPage.getTotalPages() - 1);
-        model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
-        model.addAttribute("nextPage", page < fichasPage.getTotalPages() - 1 ? page + 1 : page);
-        model.addAttribute("pages", fichasPage.getTotalPages() > 0);
-
-        
-
-        return "investigar";
+    Page<Ficha> fichasPage;
+    if ("popularidad".equalsIgnoreCase(orden)) {
+        fichasPage = fichaService.ordenarPorMeGusta(buscar, page, size);
+    } else {
+        fichasPage = fichaService.ordenarPorFecha(buscar, page, size);
     }
+
+    List<Map<String, Object>> fichasProcesadas = fichasPage.getContent().stream().map(ficha -> {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", ficha.getId());
+        map.put("nombre", ficha.getNombre());
+        map.put("asignatura", ficha.getAsignatura());
+        map.put("meGusta", ficha.getMeGusta());
+        map.put("fechaFormateada", ficha.getFechaCreacionFormateada());
+        return map;
+    }).toList();
+
+    model.addAttribute("fichas", fichasProcesadas);
+    model.addAttribute("currentPage", page + 1);
+    model.addAttribute("totalPages", fichasPage.getTotalPages());
+    model.addAttribute("hasPrev", page > 0);
+    model.addAttribute("hasNext", page < fichasPage.getTotalPages() - 1);
+    model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
+    model.addAttribute("nextPage", page < fichasPage.getTotalPages() - 1 ? page + 1 : page);
+    model.addAttribute("pages", fichasPage.getTotalPages() > 0);
+    model.addAttribute("buscar", buscar != null ? buscar : "");
+    model.addAttribute("ordenFecha", "fecha".equalsIgnoreCase(orden));
+    model.addAttribute("ordenPopularidad", "popularidad".equalsIgnoreCase(orden));
+
+    return "investigar";
+}
+
 
 }

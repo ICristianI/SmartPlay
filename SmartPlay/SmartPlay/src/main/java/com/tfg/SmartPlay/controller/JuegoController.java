@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,8 +24,7 @@ import com.tfg.SmartPlay.entity.JuegoSopaLetras;
 import com.tfg.SmartPlay.service.JuegoService;
 
 import org.springframework.data.domain.Page;
-
-
+import org.springframework.http.ResponseEntity;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -95,10 +95,21 @@ public class JuegoController {
     }
 
     @GetMapping("/investigar")
-    public String verJuegosPublicos(Model model, @RequestParam(defaultValue = "0") int page) {
+    public String verJuegosPublicos(
+            Model model,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(required = false) String buscar,
+            @RequestParam(required = false, defaultValue = "fecha") String orden) {
+    
         int size = 24;
     
-        Page<Juego> juegosPage = juegoService.obtenerTodosLosJuegos(page, size);
+        Page<Juego> juegosPage;
+    
+        if ("popularidad".equalsIgnoreCase(orden)) {
+            juegosPage = juegoService.ordenarPorMeGusta(buscar, page, size);
+        } else {
+            juegosPage = juegoService.ordenarPorFecha(buscar, page, size);
+        }
     
         List<Map<String, Object>> juegosProcesados = juegosPage.getContent().stream().map(juego -> {
             Map<String, Object> map = new HashMap<>();
@@ -106,10 +117,10 @@ public class JuegoController {
             map.put("nombre", juego.getNombre());
             map.put("asignatura", juego.getAsignatura());
             map.put("meGusta", juego.getMeGusta());
-            map.put("fechaFormateada",juego.getFechaCreacionFormateada());
+            map.put("fechaFormateada", juego.getFechaCreacionFormateada());
             return map;
         }).toList();
-
+    
         model.addAttribute("juegos", juegosProcesados);
         model.addAttribute("currentPage", page + 1);
         model.addAttribute("totalPages", juegosPage.getTotalPages());
@@ -118,9 +129,26 @@ public class JuegoController {
         model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
         model.addAttribute("nextPage", page < juegosPage.getTotalPages() - 1 ? page + 1 : page);
         model.addAttribute("pages", juegosPage.getTotalPages() > 0);
+        model.addAttribute("buscar", buscar != null ? buscar : "");
+        model.addAttribute("ordenFecha", "fecha".equalsIgnoreCase(orden));
+        model.addAttribute("ordenPopularidad", "popularidad".equalsIgnoreCase(orden));
     
         return "jugar";
     }
     
+
+    @GetMapping("/image/{id}")
+    public ResponseEntity<Object> obtenerImagenJuego(@PathVariable Long id) {
+        Optional<Juego> juegoOpt = juegoService.obtenerJuegoPorId(id);
+
+        if (juegoOpt.isPresent() && juegoOpt.get().getImagen() != null) {
+            try {
+                return juegoService.obtenerImagenJuego(juegoOpt.get().getImagen());
+            } catch (Exception e) {
+                return ResponseEntity.internalServerError().body("Error al recuperar la imagen");
+            }
+        }
+        return ResponseEntity.notFound().build();
+    }
 
 }

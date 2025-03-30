@@ -100,32 +100,28 @@
         {{#fichasPage}}
         <div class="col-md-4">
             <div class="card mb-4">
+                <img src="/f/ficha/image/{{id}}" class="card-img-top" alt="Imagen de {{nombre}}" style="height: 150px; object-fit: cover" />
                 <div class="card-body">
                     <h5 class="card-title">{{nombre}}</h5>
                     <p class="card-text"><strong>Idioma:</strong> {{idioma}}</p>
                     <p class="card-text"><strong>Asignatura:</strong> {{asignatura}}</p>
-
+        
                     <form action="/f/seleccionarFicha" method="post" class="mb-2">
                         <input type="hidden" name="_csrf" value="{{token}}"/>
-
                         <input type="hidden" name="fichaId" value="{{id}}" />
-                        <button type="submit" class="btn btn-primary navbar-custom w-100">
-                            Ver Ficha
-                        </button>
+                        <button type="submit" class="btn btn-primary navbar-custom w-100">Ver Ficha</button>
                     </form>
-
+        
                     <form action="/cuadernos/eliminarFicha" method="post">
                         <input type="hidden" name="_csrf" value="{{token}}"/>
-
                         <input type="hidden" name="cuadernoId" value="{{cuaderno.id}}" />
                         <input type="hidden" name="fichaId" value="{{id}}" />
-                        <button type="submit" class="btn btn-danger w-100">
-                            Eliminar del Cuaderno
-                        </button>
+                        <button type="submit" class="btn btn-danger w-100">Eliminar del Cuaderno</button>
                     </form>
                 </div>
             </div>
         </div>
+        
         {{/fichasPage}} {{^fichasPage}}
         <div class="col-12">
             <div class="alert alert-warning text-center">
@@ -171,31 +167,31 @@
         {{#juegosPage}}
         <div class="col-md-4">
             <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">{{nombre}}</h5>
-                    <p class="card-text"><strong>Descripción:</strong> {{descripcion}}</p>
-
-                    <form action="/juegos/seleccionar" method="post" class="mb-2">
-                        <input type="hidden" name="_csrf" value="{{token}}"/>
-
-                        <input type="hidden" name="juegoId" value="{{id}}" />
-                        <button type="submit" class="btn btn-primary navbar-custom w-100">
-                            Ver Juego
-                        </button>
-                    </form>
-
-                    <form action="/cuadernos/eliminarJuego" method="post">
-                        <input type="hidden" name="_csrf" value="{{token}}"/>
-
-                        <input type="hidden" name="cuadernoId" value="{{cuaderno.id}}" />
-                        <input type="hidden" name="juegoId" value="{{id}}" />
-                        <button type="submit" class="btn btn-danger w-100">
-                            Eliminar del Cuaderno
-                        </button>
-                    </form>
-                </div>
+              <img src="/juegos/image/{{id}}" class="card-img-top" alt="Imagen de {{nombre}}" style="height: 150px; object-fit: cover;" />
+              <div class="card-body">
+                <h5 class="card-title">{{nombre}}</h5>
+                <p class="card-text"><strong>Descripción:</strong> {{descripcion}}</p>
+          
+                <form action="/juegos/seleccionar" method="post" class="mb-2">
+                  <input type="hidden" name="_csrf" value="{{token}}"/>
+                  <input type="hidden" name="juegoId" value="{{id}}" />
+                  <button type="submit" class="btn btn-primary navbar-custom w-100">
+                    Ver Juego
+                  </button>
+                </form>
+          
+                <form action="/cuadernos/eliminarJuego" method="post">
+                  <input type="hidden" name="_csrf" value="{{token}}"/>
+                  <input type="hidden" name="cuadernoId" value="{{cuaderno.id}}" />
+                  <input type="hidden" name="juegoId" value="{{id}}" />
+                  <button type="submit" class="btn btn-danger w-100">
+                    Eliminar del Cuaderno
+                  </button>
+                </form>
+              </div>
             </div>
-        </div>
+          </div>
+          
         {{/juegosPage}} {{^juegosPage}}
         <div class="col-12">
             <div class="alert alert-warning text-center">
@@ -288,7 +284,7 @@
                         <div class="col-md-4 mb-4">
                             <div class="card juego-item h-100 shadow-sm" data-id="{{id}}" data-nombre="{{nombre}}"
                                 onclick="agregarJuego('{{id}}', '{{nombre}}')">
-                                <img src="/images/generalImages/Ahorcado.jpg" class="card-img-top" alt="Imagen de {{nombre}}"
+                                <img src="/juegos/image/{{id}}" class="card-img-top" alt="Imagen de {{nombre}}"
                                 style="height: 150px; object-fit: cover" />
                                 <div class="card-body text-center">
 

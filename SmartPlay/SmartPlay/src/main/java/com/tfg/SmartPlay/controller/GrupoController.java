@@ -79,9 +79,11 @@ public class GrupoController {
     @PostMapping("/guardar")
     public String guardarGrupo(@ModelAttribute Grupo grupo,
             RedirectAttributes redirectAttributes,
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam("cuadernosSeleccionados") List<Long> cuadernosId
+            ) {
 
-        grupoService.guardarGrupo(grupo, userDetails.getUsername());
+        grupoService.guardarGrupo(grupo, userDetails.getUsername(),cuadernosId);
         redirectAttributes.addFlashAttribute("mensaje", "Grupo creado correctamente.");
         return "redirect:/grupos";
     }
