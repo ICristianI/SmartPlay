@@ -1,12 +1,33 @@
 {{> header}}
 
 <div class="container mt-5 text-center">
-    <h1 class="mb-4">{{ juego.nombre }}</h1>
 
-    <p><strong>Descripción:</strong> {{ juego.descripcion }}</p>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0 text-start">{{ juego.nombre }}</h1>
+      
+        {{#User}}
+        <!-- Botón de Me Gusta a la derecha -->
+        <form id="likeForm" onsubmit="return false;">
+          <input type="hidden" name="_csrf" value="{{token}}"/>
+          <input type="hidden" id="juegoId" value="{{juego.id}}">
+          <button id="likeButton" class="btn btn-link" onclick="darMeGusta()" style="text-decoration: none;">
+            <span 
+            id="corazon" 
+            style="font-size: 2rem;" 
+            data-liked="{{#tieneLike}}true{{/tieneLike}}{{^tieneLike}}false{{/tieneLike}}">
+            {{#tieneLike}}❤️{{/tieneLike}}{{^tieneLike}}🤍{{/tieneLike}}
+          </span>
+            <span id="contadorLikes" class="ms-2 text-danger" style="font-size: 1.5rem;">{{juego.meGusta}}</span>
+          </button>
+        </form>
+        {{/User}}
+        
+      </div>
+
 
     <!-- Espacios para la Sopa de Letras -->
-<div id="sopaContainerWrapper" class="d-flex justify-content-center flex-wrap">
+<div id="sopaContainerWrapper" class="d-flex justify-content-center flex-wrap mt-3">
     <div id="sopaDeLetras" class="mb-4"></div>
 </div>
 
@@ -51,5 +72,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="/js/sopaLetras.js"></script>
+<script src="/js/like.js"></script>
+
 
 {{> footer}}

@@ -3,7 +3,10 @@ package com.tfg.SmartPlay.controller;
 import com.tfg.SmartPlay.entity.Cuaderno;
 import com.tfg.SmartPlay.entity.Ficha;
 import com.tfg.SmartPlay.service.CuadernoService;
+import com.tfg.SmartPlay.service.FichaLikeService;
 import com.tfg.SmartPlay.service.FichaService;
+import com.tfg.SmartPlay.service.UserComponent;
+
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +20,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.data.domain.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +38,12 @@ public class FichaController {
 
     @Autowired
     private CuadernoService cuadernoService;
+
+    @Autowired
+    private FichaLikeService fichaLikeService;
+
+    @Autowired
+    private UserComponent userComponent;
 
     // Método para listar las fichas de un usuario
 
@@ -151,13 +159,12 @@ public class FichaController {
         return "Fichas/crearFichas";
     }
 
-     // Método para obtener la imagen de una ficha
+    // Método para obtener la imagen de una ficha
 
-     @GetMapping("/ficha/image/{id}")
-     public ResponseEntity<Object> downloadFichaImage(@PathVariable Long id) {
-         return fichaService.obtenerImagenFicha(id);
-     }
- 
+    @GetMapping("/ficha/image/{id}")
+    public ResponseEntity<Object> downloadFichaImage(@PathVariable Long id) {
+        return fichaService.obtenerImagenFicha(id);
+    }
 
     // Método para guardar una ficha
 
@@ -281,7 +288,8 @@ public class FichaController {
     }
 
     @GetMapping("/verFichaInteractiva")
-    public String verFichaInteractiva(Model model, HttpSession session) throws JsonProcessingException {
+    public String verFichaInteractiva(Model model, HttpSession session,
+            @AuthenticationPrincipal UserDetails userDetails) throws JsonProcessingException {
 
         Long fichaId = (Long) session.getAttribute("fichaId");
 
@@ -296,6 +304,19 @@ public class FichaController {
             model.addAttribute("ficha", ficha);
             model.addAttribute("elementosJson", elementosJson);
 
+            if (userDetails != null) {
+                boolean tieneLike = fichaLikeService.haDadoLike(userDetails.getUsername(), fichaId);
+                model.addAttribute("tieneLike", tieneLike);
+                model.addAttribute("esPropietario",
+                        ficha.getUsuario().getId().equals(userComponent.getUser().get().getId()));
+                model.addAttribute("User", true);
+
+            } else {
+                model.addAttribute("tieneLike", false);
+                model.addAttribute("esPropietario", false);
+                model.addAttribute("User", false);
+            }
+
             return "Fichas/verFichaInteractiva";
         } else {
             return "redirect:/f/listarFichas";
@@ -303,45 +324,58 @@ public class FichaController {
     }
 
     @GetMapping("/investigar")
-public String verFichasPublicas(
-        Model model,
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(required = false) String buscar,
-        @RequestParam(required = false, defaultValue = "fecha") String orden) {
+    public String verFichasPublicas(
+            Model model,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(required = false) String buscar,
+            @RequestParam(required = false, defaultValue = "fecha") String orden) {
 
-    int size = 24;
+        int size = 24;
 
-    Page<Ficha> fichasPage;
-    if ("popularidad".equalsIgnoreCase(orden)) {
-        fichasPage = fichaService.ordenarPorMeGusta(buscar, page, size);
-    } else {
-        fichasPage = fichaService.ordenarPorFecha(buscar, page, size);
+        Page<Ficha> fichasPage;
+        if ("popularidad".equalsIgnoreCase(orden)) {
+            fichasPage = fichaService.ordenarPorMeGusta(buscar, page, size);
+        } else {
+            fichasPage = fichaService.ordenarPorFecha(buscar, page, size);
+        }
+
+        List<Map<String, Object>> fichasProcesadas = fichasPage.getContent().stream().map(ficha -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", ficha.getId());
+            map.put("nombre", ficha.getNombre());
+            map.put("asignatura", ficha.getAsignatura());
+            map.put("meGusta", ficha.getMeGusta());
+            map.put("fechaFormateada", ficha.getFechaCreacionFormateada());
+            return map;
+        }).toList();
+
+        model.addAttribute("fichas", fichasProcesadas);
+        model.addAttribute("currentPage", page + 1);
+        model.addAttribute("totalPages", fichasPage.getTotalPages());
+        model.addAttribute("hasPrev", page > 0);
+        model.addAttribute("hasNext", page < fichasPage.getTotalPages() - 1);
+        model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
+        model.addAttribute("nextPage", page < fichasPage.getTotalPages() - 1 ? page + 1 : page);
+        model.addAttribute("pages", fichasPage.getTotalPages() > 0);
+        model.addAttribute("buscar", buscar != null ? buscar : "");
+        model.addAttribute("ordenFecha", "fecha".equalsIgnoreCase(orden));
+        model.addAttribute("ordenPopularidad", "popularidad".equalsIgnoreCase(orden));
+
+        return "investigar";
     }
 
-    List<Map<String, Object>> fichasProcesadas = fichasPage.getContent().stream().map(ficha -> {
-        Map<String, Object> map = new HashMap<>();
-        map.put("id", ficha.getId());
-        map.put("nombre", ficha.getNombre());
-        map.put("asignatura", ficha.getAsignatura());
-        map.put("meGusta", ficha.getMeGusta());
-        map.put("fechaFormateada", ficha.getFechaCreacionFormateada());
-        return map;
-    }).toList();
+    @PostMapping("/like")
+    @ResponseBody
+    public ResponseEntity<String> darMeGusta(
+            @RequestParam Long fichaId,
+            @AuthenticationPrincipal UserDetails userDetails) {
 
-    model.addAttribute("fichas", fichasProcesadas);
-    model.addAttribute("currentPage", page + 1);
-    model.addAttribute("totalPages", fichasPage.getTotalPages());
-    model.addAttribute("hasPrev", page > 0);
-    model.addAttribute("hasNext", page < fichasPage.getTotalPages() - 1);
-    model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
-    model.addAttribute("nextPage", page < fichasPage.getTotalPages() - 1 ? page + 1 : page);
-    model.addAttribute("pages", fichasPage.getTotalPages() > 0);
-    model.addAttribute("buscar", buscar != null ? buscar : "");
-    model.addAttribute("ordenFecha", "fecha".equalsIgnoreCase(orden));
-    model.addAttribute("ordenPopularidad", "popularidad".equalsIgnoreCase(orden));
-
-    return "investigar";
-}
-
+        try {
+            fichaLikeService.alternarLike(userDetails.getUsername(), fichaId);
+            return ResponseEntity.ok("Like registrado");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
 }

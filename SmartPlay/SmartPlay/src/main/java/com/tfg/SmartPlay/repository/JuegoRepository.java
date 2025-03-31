@@ -28,15 +28,16 @@ public interface JuegoRepository extends JpaRepository<Juego, Long> {
     @Query("SELECT j FROM Juego j WHERE j.usuario = :usuario")
     Page<Juego> obtenerJuegosPaginados(@Param("usuario") User usuario, Pageable pageable);
     
-    @Query("SELECT j FROM Juego j WHERE j.privada = false")
-    Page<Juego> findAll(Pageable pageable);
+    // Buscar por nombre (ignorando mayúsculas/minúsculas) y solo juegos públicos, ordenados por fecha
+    Page<Juego> findByPrivadaFalseAndNombreContainingIgnoreCaseOrderByFechaCreacionDesc(String nombre, Pageable pageable);
 
-    Page<Juego> findByNombreContainingIgnoreCaseAndPrivadaFalse(String nombre, Pageable pageable);
+    // Buscar por nombre (ignorando mayúsculas/minúsculas) y solo juegos públicos, ordenados por likes
+    Page<Juego> findByPrivadaFalseAndNombreContainingIgnoreCaseOrderByMeGustaDesc(String nombre, Pageable pageable);
 
-    Page<Juego> findAllByOrderByFechaCreacionDesc(Pageable pageable);
-    Page<Juego> findByNombreContainingIgnoreCaseOrderByFechaCreacionDesc(String nombre, Pageable pageable);
+    // Buscar todos los juegos públicos ordenados por fecha
+    Page<Juego> findByPrivadaFalseOrderByFechaCreacionDesc(Pageable pageable);
 
-    Page<Juego> findAllByOrderByMeGustaDesc(Pageable pageable);
-    Page<Juego> findByNombreContainingIgnoreCaseOrderByMeGustaDesc(String nombre, Pageable pageable);
+    // Buscar todos los juegos públicos ordenados por likes
+    Page<Juego> findByPrivadaFalseOrderByMeGustaDesc(Pageable pageable);
 
 }

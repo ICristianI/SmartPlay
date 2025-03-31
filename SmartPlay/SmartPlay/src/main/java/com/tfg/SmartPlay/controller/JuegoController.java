@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tfg.SmartPlay.entity.Juego;
 import com.tfg.SmartPlay.entity.JuegoAhorcado;
 import com.tfg.SmartPlay.entity.JuegoCrucigrama;
 import com.tfg.SmartPlay.entity.JuegoSopaLetras;
+import com.tfg.SmartPlay.service.JuegoLikeService;
 import com.tfg.SmartPlay.service.JuegoService;
 
 import org.springframework.data.domain.Page;
@@ -34,6 +36,9 @@ public class JuegoController {
 
     @Autowired
     JuegoService juegoService;
+
+    @Autowired
+    JuegoLikeService juegoLikeService;
 
     @PostMapping("/seleccionar")
     public String seleccionarJuego(@RequestParam("juegoId") Long juegoId,
@@ -100,17 +105,17 @@ public class JuegoController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(required = false) String buscar,
             @RequestParam(required = false, defaultValue = "fecha") String orden) {
-    
+
         int size = 24;
-    
+
         Page<Juego> juegosPage;
-    
+
         if ("popularidad".equalsIgnoreCase(orden)) {
             juegosPage = juegoService.ordenarPorMeGusta(buscar, page, size);
         } else {
             juegosPage = juegoService.ordenarPorFecha(buscar, page, size);
         }
-    
+
         List<Map<String, Object>> juegosProcesados = juegosPage.getContent().stream().map(juego -> {
             Map<String, Object> map = new HashMap<>();
             map.put("id", juego.getId());
@@ -120,7 +125,7 @@ public class JuegoController {
             map.put("fechaFormateada", juego.getFechaCreacionFormateada());
             return map;
         }).toList();
-    
+
         model.addAttribute("juegos", juegosProcesados);
         model.addAttribute("currentPage", page + 1);
         model.addAttribute("totalPages", juegosPage.getTotalPages());
@@ -132,10 +137,9 @@ public class JuegoController {
         model.addAttribute("buscar", buscar != null ? buscar : "");
         model.addAttribute("ordenFecha", "fecha".equalsIgnoreCase(orden));
         model.addAttribute("ordenPopularidad", "popularidad".equalsIgnoreCase(orden));
-    
+
         return "jugar";
     }
-    
 
     @GetMapping("/image/{id}")
     public ResponseEntity<Object> obtenerImagenJuego(@PathVariable Long id) {
@@ -149,6 +153,21 @@ public class JuegoController {
             }
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/like")
+    @ResponseBody
+    public ResponseEntity<String> darMeGusta(
+            @RequestParam Long juegoId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        try {
+            
+            juegoLikeService.alternarLike(userDetails.getUsername(),juegoId);
+            return ResponseEntity.ok("Me gusta registrado");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 }

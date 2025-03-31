@@ -3,6 +3,7 @@ package com.tfg.SmartPlay.controller;
 import com.tfg.SmartPlay.entity.Cuaderno;
 import com.tfg.SmartPlay.entity.JuegoAhorcado;
 import com.tfg.SmartPlay.service.JuegoAhorcadoService;
+import com.tfg.SmartPlay.service.JuegoLikeService;
 import com.tfg.SmartPlay.service.JuegoService;
 import com.tfg.SmartPlay.service.UserComponent;
 
@@ -31,6 +32,9 @@ public class JuegoAhorcadoController {
 
     @Autowired
     private JuegoAhorcadoService juegoAhorcadoService;
+
+    @Autowired
+    private JuegoLikeService juegoLikeService;
 
     @Autowired
     private UserComponent userComponent;
@@ -70,15 +74,27 @@ public class JuegoAhorcadoController {
         return "/Juegos/Ahorcado/verJuegosAhorcados";
     }
 
-
     @GetMapping("/jugar")
-    public String jugarAhorcado(Model model, HttpSession session) {
+    public String jugarAhorcado(Model model, HttpSession session, @AuthenticationPrincipal UserDetails userDetails) {
         Long juegoId = (Long) session.getAttribute("juegoId");
-        Optional<JuegoAhorcado> juegoOpt = juegoAhorcadoService.obtenerJuego(juegoId, userComponent.getUser().get().getEmail());
+    
+        String email = (userDetails != null) ? userDetails.getUsername() : null;
+        Optional<JuegoAhorcado> juegoOpt = juegoService.obtenerAhorcadoAccesible(juegoId, email);
     
         if (juegoOpt.isPresent()) {
             JuegoAhorcado juego = juegoOpt.get();
             model.addAttribute("juego", juego);
+    
+            if (userDetails != null) {
+                boolean tieneLike = juegoLikeService.haDadoLike(userDetails.getUsername(), juegoId);
+                model.addAttribute("tieneLike", tieneLike);
+                model.addAttribute("User", true);
+            } else {
+                model.addAttribute("tieneLike", false);
+                model.addAttribute("User", false);
+
+            }
+    
             return "Juegos/Ahorcado/JugarAhorcado";
         } else {
             model.addAttribute("error", "El juego no existe.");
@@ -107,26 +123,26 @@ public class JuegoAhorcadoController {
             model.addAttribute("juego", juego.get());
 
             int size = 3;
-            Page<Cuaderno> cuadernosPage = juegoAhorcadoService.obtenerCuadernosConJuegoPaginados(juego.get(), pageCuadernos,
+            Page<Cuaderno> cuadernosPage = juegoAhorcadoService.obtenerCuadernosConJuegoPaginados(juego.get(),
+                    pageCuadernos,
                     size);
 
-        boolean pages = cuadernosPage.getTotalPages() > 0;
-        int totalPagesCuadernos = cuadernosPage.getTotalPages();
-        boolean hasPrevCuadernos = pageCuadernos > 0;
-        boolean hasNextCuadernos = pageCuadernos < totalPagesCuadernos - 1;
-        int prevPageCuadernos = hasPrevCuadernos ? pageCuadernos - 1 : 0;
-        int nextPageCuadernos = hasNextCuadernos ? pageCuadernos + 1 : pageCuadernos;
+            boolean pages = cuadernosPage.getTotalPages() > 0;
+            int totalPagesCuadernos = cuadernosPage.getTotalPages();
+            boolean hasPrevCuadernos = pageCuadernos > 0;
+            boolean hasNextCuadernos = pageCuadernos < totalPagesCuadernos - 1;
+            int prevPageCuadernos = hasPrevCuadernos ? pageCuadernos - 1 : 0;
+            int nextPageCuadernos = hasNextCuadernos ? pageCuadernos + 1 : pageCuadernos;
 
-        model.addAttribute("pages", pages);
-        model.addAttribute("cuadernos", cuadernosPage.getContent());
-        model.addAttribute("currentPageCuadernos", pageCuadernos + 1);
-        model.addAttribute("totalPagesCuadernos", totalPagesCuadernos);
-        model.addAttribute("hasPrevCuadernos", hasPrevCuadernos);
-        model.addAttribute("hasNextCuadernos", hasNextCuadernos);
-        model.addAttribute("prevPageCuadernos", prevPageCuadernos);
-        model.addAttribute("nextPageCuadernos", nextPageCuadernos);
-        model.addAttribute("fechaFormateada", juego.get().getFechaCreacionFormateada());
-
+            model.addAttribute("pages", pages);
+            model.addAttribute("cuadernos", cuadernosPage.getContent());
+            model.addAttribute("currentPageCuadernos", pageCuadernos + 1);
+            model.addAttribute("totalPagesCuadernos", totalPagesCuadernos);
+            model.addAttribute("hasPrevCuadernos", hasPrevCuadernos);
+            model.addAttribute("hasNextCuadernos", hasNextCuadernos);
+            model.addAttribute("prevPageCuadernos", prevPageCuadernos);
+            model.addAttribute("nextPageCuadernos", nextPageCuadernos);
+            model.addAttribute("fechaFormateada", juego.get().getFechaCreacionFormateada());
 
             return "Juegos/Ahorcado/verJuegoAhorcado";
         } else {
@@ -160,17 +176,16 @@ public class JuegoAhorcadoController {
         return "Juegos/Ahorcado/crearJuegosAhorcados";
     }
 
-@PostMapping("/guardar")
-public String guardarJuego(@ModelAttribute JuegoAhorcado juego,
-                           @RequestParam("imagenJuego") MultipartFile imagenJuego,
-                           @AuthenticationPrincipal UserDetails userDetails,
-                           RedirectAttributes redirectAttributes) {
+    @PostMapping("/guardar")
+    public String guardarJuego(@ModelAttribute JuegoAhorcado juego,
+            @RequestParam("imagenJuego") MultipartFile imagenJuego,
+            @AuthenticationPrincipal UserDetails userDetails,
+            RedirectAttributes redirectAttributes) {
 
-    juegoAhorcadoService.guardarJuego(juego, userDetails.getUsername(), imagenJuego);
-    redirectAttributes.addFlashAttribute("mensaje", "Juego guardado correctamente.");
-    return "redirect:/ahorcado/listar";
-}
-
+        juegoAhorcadoService.guardarJuego(juego, userDetails.getUsername(), imagenJuego);
+        redirectAttributes.addFlashAttribute("mensaje", "Juego guardado correctamente.");
+        return "redirect:/ahorcado/listar";
+    }
 
     @PostMapping("/eliminar")
     public String eliminarJuego(@RequestParam("juegoId") Long juegoId,

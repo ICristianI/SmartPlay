@@ -2,9 +2,9 @@ package com.tfg.SmartPlay.controller;
 
 import com.tfg.SmartPlay.entity.Cuaderno;
 import com.tfg.SmartPlay.entity.JuegoSopaLetras;
+import com.tfg.SmartPlay.service.JuegoLikeService;
 import com.tfg.SmartPlay.service.JuegoService;
 import com.tfg.SmartPlay.service.JuegoSopaLetrasService;
-import com.tfg.SmartPlay.service.UserComponent;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +26,14 @@ import java.util.Optional;
 @RequestMapping("/sopaletras")
 public class JuegoSopaLetrasController {
 
-
     @Autowired
     private JuegoService juegoService;
-    
+
     @Autowired
     private JuegoSopaLetrasService juegoSopaLetrasService;
 
     @Autowired
-    private UserComponent userComponent;
+    private JuegoLikeService juegoLikeService;
 
     @GetMapping("/listar")
     public String listarJuegos(Model model,
@@ -48,8 +47,7 @@ public class JuegoSopaLetrasController {
 
         boolean pages = juegosPage.getTotalPages() > 0;
 
-
-         List<Map<String, Object>> juegosProcesados = juegosPage.getContent().stream().map(juego -> {
+        List<Map<String, Object>> juegosProcesados = juegosPage.getContent().stream().map(juego -> {
             Map<String, Object> map = new HashMap<>();
             map.put("id", juego.getId());
             map.put("nombre", juego.getNombre());
@@ -68,18 +66,30 @@ public class JuegoSopaLetrasController {
         model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
         model.addAttribute("nextPage", page < juegosPage.getTotalPages() - 1 ? page + 1 : page);
 
-
         return "/Juegos/Sopa/verJuegosSopaLetras";
     }
 
     @GetMapping("/jugar")
-    public String jugarSopaLetras(Model model, HttpSession session) {
+    public String jugarSopaLetras(Model model, HttpSession session,
+            @AuthenticationPrincipal UserDetails userDetails) {
         Long juegoId = (Long) session.getAttribute("juegoId");
-        Optional<JuegoSopaLetras> juegoOpt = juegoSopaLetrasService.obtenerJuego(juegoId, userComponent.getUser().get().getEmail());
+
+        String email = (userDetails != null) ? userDetails.getUsername() : null;
+        Optional<JuegoSopaLetras> juegoOpt = juegoService.obtenerSopaLetrasAccesible(juegoId, email);
 
         if (juegoOpt.isPresent()) {
             JuegoSopaLetras juego = juegoOpt.get();
             model.addAttribute("juego", juego);
+
+            if (userDetails != null) {
+                boolean tieneLike = juegoLikeService.haDadoLike(email, juegoId);
+                model.addAttribute("tieneLike", tieneLike);
+                model.addAttribute("User", true);
+            } else {
+                model.addAttribute("tieneLike", false);
+                model.addAttribute("User", false);
+            }
+
             return "Juegos/Sopa/JugarSopa";
         } else {
             model.addAttribute("error", "El juego no existe.");
@@ -107,7 +117,8 @@ public class JuegoSopaLetrasController {
             model.addAttribute("juego", juego.get());
 
             int size = 3;
-            Page<Cuaderno> cuadernosPage = juegoSopaLetrasService.obtenerCuadernosConJuegoPaginados(juego.get(), pageCuadernos, size);
+            Page<Cuaderno> cuadernosPage = juegoSopaLetrasService.obtenerCuadernosConJuegoPaginados(juego.get(),
+                    pageCuadernos, size);
 
             boolean pages = cuadernosPage.getTotalPages() > 0;
 
@@ -118,9 +129,9 @@ public class JuegoSopaLetrasController {
             model.addAttribute("hasPrevCuadernos", pageCuadernos > 0);
             model.addAttribute("hasNextCuadernos", pageCuadernos < cuadernosPage.getTotalPages() - 1);
             model.addAttribute("prevPageCuadernos", pageCuadernos > 0 ? pageCuadernos - 1 : 0);
-            model.addAttribute("nextPageCuadernos", pageCuadernos < cuadernosPage.getTotalPages() - 1 ? pageCuadernos + 1 : pageCuadernos);
+            model.addAttribute("nextPageCuadernos",
+                    pageCuadernos < cuadernosPage.getTotalPages() - 1 ? pageCuadernos + 1 : pageCuadernos);
             model.addAttribute("fechaFormateada", juego.get().getFechaCreacionFormateada());
-
 
             return "Juegos/Sopa/verJuegoSopaLetras";
         } else {
@@ -154,17 +165,16 @@ public class JuegoSopaLetrasController {
         return "Juegos/Sopa/crearJuegosSopaLetras";
     }
 
-@PostMapping("/guardar")
-public String guardarJuego(@ModelAttribute JuegoSopaLetras juego,
-                           @RequestParam("imagenJuego") MultipartFile imagenJuego,
-                           @AuthenticationPrincipal UserDetails userDetails,
-                           RedirectAttributes redirectAttributes) {
+    @PostMapping("/guardar")
+    public String guardarJuego(@ModelAttribute JuegoSopaLetras juego,
+            @RequestParam("imagenJuego") MultipartFile imagenJuego,
+            @AuthenticationPrincipal UserDetails userDetails,
+            RedirectAttributes redirectAttributes) {
 
-    juegoSopaLetrasService.guardarJuego(juego, userDetails.getUsername(), imagenJuego);
-    redirectAttributes.addFlashAttribute("mensaje", "Juego guardado correctamente.");
-    return "redirect:/sopaletras/listar";
-}
-
+        juegoSopaLetrasService.guardarJuego(juego, userDetails.getUsername(), imagenJuego);
+        redirectAttributes.addFlashAttribute("mensaje", "Juego guardado correctamente.");
+        return "redirect:/sopaletras/listar";
+    }
 
     @PostMapping("/eliminar")
     public String eliminarJuego(@RequestParam("juegoId") Long juegoId,

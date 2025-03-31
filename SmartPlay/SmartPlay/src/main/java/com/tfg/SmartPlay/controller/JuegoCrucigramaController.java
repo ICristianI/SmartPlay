@@ -2,8 +2,8 @@ package com.tfg.SmartPlay.controller;
 
 import com.tfg.SmartPlay.entity.Cuaderno;
 import com.tfg.SmartPlay.entity.JuegoCrucigrama;
-import com.tfg.SmartPlay.entity.JuegoSopaLetras;
 import com.tfg.SmartPlay.service.JuegoCrucigramaService;
+import com.tfg.SmartPlay.service.JuegoLikeService;
 import com.tfg.SmartPlay.service.JuegoService;
 import com.tfg.SmartPlay.service.UserComponent;
 
@@ -28,6 +28,9 @@ import java.util.Optional;
 @RequestMapping("/crucigrama")
 public class JuegoCrucigramaController {
 
+    @Autowired
+    private JuegoLikeService juegoLikeService;
+    
     @Autowired
     private JuegoService juegoService;
 
@@ -71,18 +74,35 @@ public class JuegoCrucigramaController {
     }
 
     @GetMapping("/jugar")
-    public String jugarCrucigrama(Model model, HttpSession session) {
+    public String jugarCrucigrama(Model model, HttpSession session,
+                                  @AuthenticationPrincipal UserDetails userDetails) {
         Long juegoId = (Long) session.getAttribute("juegoId");
-        Optional<JuegoCrucigrama> juegoOpt = juegoCrucigramaService.obtenerJuego(juegoId, userComponent.getUser().get().getEmail());
-        
+    
+        String email = (userDetails != null) ? userDetails.getUsername() : null;
+        Optional<JuegoCrucigrama> juegoOpt = juegoService.obtenerCrucigramaAccesible(juegoId, email);
+    
         if (juegoOpt.isPresent()) {
-            model.addAttribute("juego", juegoOpt.get());
+            JuegoCrucigrama juego = juegoOpt.get();
+            model.addAttribute("juego", juego);
+    
+            if (userDetails != null) {
+                boolean tieneLike = juegoLikeService.haDadoLike(userDetails.getUsername(), juegoId);
+                model.addAttribute("tieneLike", tieneLike);
+                model.addAttribute("User", true);
+            } else {
+                model.addAttribute("tieneLike", false);
+                model.addAttribute("User", false);
+            }
+    
             return "Juegos/Crucigrama/JugarCrucigrama";
         } else {
             model.addAttribute("error", "El juego no existe.");
             return "redirect:/crucigrama/listar";
         }
     }
+    
+
+
     @GetMapping("/ver")
     public String verJuego(HttpSession session,
                            @AuthenticationPrincipal UserDetails userDetails,

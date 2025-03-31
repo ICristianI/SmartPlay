@@ -178,17 +178,17 @@ public void eliminarFicha(Long fichaId, String email) {
     public Page<Ficha> ordenarPorFecha(String buscar, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         if (buscar != null && !buscar.trim().isEmpty()) {
-            return fichaRepository.findByNombreContainingIgnoreCaseOrderByFechaCreacionDesc(buscar, pageable);
+            return fichaRepository.findByPrivadaFalseAndNombreContainingIgnoreCaseOrderByFechaCreacionDesc(buscar, pageable);
         }
-        return fichaRepository.findAllByOrderByFechaCreacionDesc(pageable);
+        return fichaRepository.findByPrivadaFalseOrderByFechaCreacionDesc(pageable);
     }
     
     public Page<Ficha> ordenarPorMeGusta(String buscar, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         if (buscar != null && !buscar.trim().isEmpty()) {
-            return fichaRepository.findByNombreContainingIgnoreCaseOrderByMeGustaDesc(buscar, pageable);
+            return fichaRepository.findByPrivadaFalseAndNombreContainingIgnoreCaseOrderByMeGustaDesc(buscar, pageable);
         }
-        return fichaRepository.findAllByOrderByMeGustaDesc(pageable);
+        return fichaRepository.findByPrivadaFalseOrderByMeGustaDesc(pageable);
     }
     
     

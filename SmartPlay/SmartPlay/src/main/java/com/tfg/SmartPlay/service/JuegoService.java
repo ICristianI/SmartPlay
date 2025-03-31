@@ -1,6 +1,9 @@
 package com.tfg.SmartPlay.service;
 
 import com.tfg.SmartPlay.entity.Juego;
+import com.tfg.SmartPlay.entity.JuegoAhorcado;
+import com.tfg.SmartPlay.entity.JuegoCrucigrama;
+import com.tfg.SmartPlay.entity.JuegoSopaLetras;
 import com.tfg.SmartPlay.entity.User;
 import com.tfg.SmartPlay.repository.JuegoRepository;
 import com.tfg.SmartPlay.repository.UserRepository;
@@ -28,10 +31,9 @@ public class JuegoService {
     @Autowired
     private ImagenService imagenService;
 
-
     /**
- * Obtiene todos los juegos de un usuario sin paginación.
- */
+     * Obtiene todos los juegos de un usuario sin paginación.
+     */
     public List<Juego> obtenerTodosLosJuegosPorUsuario(String email) {
         User usuario = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -88,18 +90,18 @@ public class JuegoService {
     public void eliminarJuego(Long juegoId, String email) {
         Juego juego = obtenerJuego(juegoId, email)
                 .orElseThrow(() -> new RuntimeException("Juego no encontrado o sin permisos"));
-    
+
         for (var cuaderno : juego.getCuadernos()) {
             cuaderno.getJuegos().remove(juego);
             cuaderno.setNumeroJuegos(Math.max(0, cuaderno.getNumeroJuegos() - 1));
         }
-    
+
         juego.getCuadernos().clear();
         juegoRepository.save(juego);
-    
+
         juegoRepository.delete(juego);
     }
-    
+
     /**
      * Obtiene juegos no agregados a un cuaderno.
      */
@@ -117,7 +119,6 @@ public class JuegoService {
         return juegoRepository.obtenerJuegosPorCuaderno(cuadernoId, pageable);
     }
 
-
     public Optional<Juego> obtenerJuegoPorId(Long id) {
         return juegoRepository.findById(id);
     }
@@ -128,23 +129,47 @@ public class JuegoService {
     }
 
     public ResponseEntity<Object> obtenerImagenJuego(Blob imagenBlob) throws SQLException {
-    return imagenService.getImageResponse(imagenBlob);
-}
-
-public Page<Juego> ordenarPorFecha(String buscar, int page, int size) {
-    if (buscar != null && !buscar.trim().isEmpty()) {
-        return juegoRepository.findByNombreContainingIgnoreCaseOrderByFechaCreacionDesc(buscar, PageRequest.of(page, size));
+        return imagenService.getImageResponse(imagenBlob);
     }
-    return juegoRepository.findAllByOrderByFechaCreacionDesc(PageRequest.of(page, size));
-}
 
-public Page<Juego> ordenarPorMeGusta(String buscar, int page, int size) {
-    if (buscar != null && !buscar.trim().isEmpty()) {
-        return juegoRepository.findByNombreContainingIgnoreCaseOrderByMeGustaDesc(buscar, PageRequest.of(page, size));
+    public Page<Juego> ordenarPorFecha(String buscar, int page, int size) {
+        if (buscar != null && !buscar.trim().isEmpty()) {
+            return juegoRepository.findByPrivadaFalseAndNombreContainingIgnoreCaseOrderByFechaCreacionDesc(buscar,
+                    PageRequest.of(page, size));
+        }
+        return juegoRepository.findByPrivadaFalseOrderByFechaCreacionDesc(PageRequest.of(page, size));
     }
-    return juegoRepository.findAllByOrderByMeGustaDesc(PageRequest.of(page, size));
-}
 
+    public Page<Juego> ordenarPorMeGusta(String buscar, int page, int size) {
+        if (buscar != null && !buscar.trim().isEmpty()) {
+            return juegoRepository.findByPrivadaFalseAndNombreContainingIgnoreCaseOrderByMeGustaDesc(buscar,
+                    PageRequest.of(page, size));
+        }
+        return juegoRepository.findByPrivadaFalseOrderByMeGustaDesc(PageRequest.of(page, size));
+    }
+
+    public Optional<Juego> obtenerJuegoAccesible(Long juegoId, String email) {
+        Optional<Juego> juegoOpt = juegoRepository.findById(juegoId);
+
+        return juegoOpt.filter(j -> !j.isPrivada() || j.getUsuario().getEmail().equals(email));
+    }
+
+    public Optional<JuegoAhorcado> obtenerAhorcadoAccesible(Long juegoId, String email) {
+        return obtenerJuegoAccesible(juegoId, email)
+                .filter(j -> j instanceof JuegoAhorcado)
+                .map(j -> (JuegoAhorcado) j);
+    }
+
+    public Optional<JuegoCrucigrama> obtenerCrucigramaAccesible(Long juegoId, String email) {
+        return obtenerJuegoAccesible(juegoId, email)
+                .filter(j -> j instanceof JuegoCrucigrama)
+                .map(j -> (JuegoCrucigrama) j);
+    }
+
+    public Optional<JuegoSopaLetras> obtenerSopaLetrasAccesible(Long juegoId, String email) {
+        return obtenerJuegoAccesible(juegoId, email)
+                .filter(j -> j instanceof JuegoSopaLetras)
+                .map(j -> (JuegoSopaLetras) j);
+    }
 
 }
-    

@@ -427,6 +427,39 @@ h1 {
 }
 
 
+/* Estilo para el botón de like */
+
+#likeButton:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+#corazon {
+  display: inline-block;
+}
+
+
+#likeButton:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.like-animation {
+  animation: likeBounce 0.3s ease;
+}
+
+@keyframes likeBounce {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 
 
 

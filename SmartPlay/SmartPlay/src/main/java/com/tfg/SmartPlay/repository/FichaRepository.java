@@ -42,21 +42,13 @@ public interface FichaRepository extends JpaRepository<Ficha, Long> {
     @Query("SELECT f FROM Ficha f WHERE f.usuario = :usuario")
     Page<Ficha> findByUsuario(@Param("usuario") User usuario, Pageable pageable);
 
-    
-    @Query("SELECT f FROM Ficha f WHERE f.privada = false")
-    Page<Ficha> findAll(Pageable pageable);
+    Page<Ficha> findByPrivadaFalseAndNombreContainingIgnoreCaseOrderByFechaCreacionDesc(String nombre,
+            Pageable pageable);
 
-     // Buscar por nombre y ordenar por fecha de creación descendente
-     Page<Ficha> findByNombreContainingIgnoreCaseOrderByFechaCreacionDesc(String nombre, Pageable pageable);
+    Page<Ficha> findByPrivadaFalseAndNombreContainingIgnoreCaseOrderByMeGustaDesc(String nombre, Pageable pageable);
 
-     // Buscar por nombre y ordenar por número de me gusta descendente
-     Page<Ficha> findByNombreContainingIgnoreCaseOrderByMeGustaDesc(String nombre, Pageable pageable);
- 
-     // Obtener todas las fichas ordenadas por fecha de creación descendente
-     Page<Ficha> findAllByOrderByFechaCreacionDesc(Pageable pageable);
- 
-     // Obtener todas las fichas ordenadas por número de me gusta descendente
-     Page<Ficha> findAllByOrderByMeGustaDesc(Pageable pageable);
-    
+    Page<Ficha> findByPrivadaFalseOrderByFechaCreacionDesc(Pageable pageable);
+
+    Page<Ficha> findByPrivadaFalseOrderByMeGustaDesc(Pageable pageable);
 
 }

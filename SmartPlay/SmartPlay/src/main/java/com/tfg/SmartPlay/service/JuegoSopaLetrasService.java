@@ -23,6 +23,9 @@ import java.util.Optional;
 public class JuegoSopaLetrasService {
 
     @Autowired
+    private JuegoService juegoService;
+
+    @Autowired
     private JuegoSopaLetrasRepository juegoSopaLetrasRepository;
 
     @Autowired
@@ -59,13 +62,8 @@ public class JuegoSopaLetrasService {
     juegoSopaLetrasRepository.save(juego);
 }
 
-
-    public Optional<JuegoSopaLetras> obtenerJuego(Long juegoId, String email) {
-        return juegoSopaLetrasRepository.findById(juegoId);
-    }
-
     public void editarJuego(Long juegoId, JuegoSopaLetras juegoEditado, String email) {
-        JuegoSopaLetras juego = obtenerJuego(juegoId, email)
+        JuegoSopaLetras juego = (JuegoSopaLetras) juegoService.obtenerJuego(juegoId, email)
                 .orElseThrow(() -> new RuntimeException("Juego no encontrado o sin permisos"));
 
         juego.setNombre(juegoEditado.getNombre());
@@ -91,4 +89,12 @@ public class JuegoSopaLetrasService {
         Pageable pageable = PageRequest.of(page, size);
         return juegoSopaLetrasRepository.findByUsuario(usuario, pageable);
     }
+
+    public Optional<JuegoSopaLetras> obtenerJuego(Long juegoId, String email) {
+        User usuario = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        Optional<JuegoSopaLetras> juego = juegoSopaLetrasRepository.findById(juegoId);
+        return juego.filter(j -> j.getUsuario().getId().equals(usuario.getId()));
+    }
+    
 }

@@ -62,7 +62,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/error", "/login", "/signup", "/css/**", "/js/**", "/images/**",
                                 "/users/register", "/json/**", "/config", "/msj", "/regin", "/verify",
-                                "/users/verificar", "/users/verificar/**", "/users/resend")
+                                "/users/verificar", "/users/verificar/**",
+                                "/f/investigar","/juegos/investigar","/f/ficha/image/**","/f/conseguirFicha","/f/verFichaInteractiva",
+                                "/juegos/explorador","/juegos/image/**", "/ahorcado/jugar","/crucigrama/jugar", "/sopa/jugar")
                         .permitAll()
                         .requestMatchers("/f/**", "/creacion", "/juegos", "/fichas",
                                 "/verFichas", "/crearCuadernos", "/f/listarFichas", "/f/ficha/image/**",

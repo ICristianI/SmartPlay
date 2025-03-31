@@ -1,6 +1,7 @@
 package com.tfg.SmartPlay.service;
 
 import com.tfg.SmartPlay.entity.Cuaderno;
+import com.tfg.SmartPlay.entity.Juego;
 import com.tfg.SmartPlay.entity.JuegoCrucigrama;
 import com.tfg.SmartPlay.entity.User;
 import com.tfg.SmartPlay.repository.CuadernoRepository;
@@ -19,6 +20,9 @@ import java.util.Optional;
 
 @Service
 public class JuegoCrucigramaService {
+
+    @Autowired
+    private JuegoService juegoService;
 
     @Autowired
     private JuegoCrucigramaRepository juegoCrucigramaRepository;
@@ -60,12 +64,8 @@ public class JuegoCrucigramaService {
 }
 
 
-    public Optional<JuegoCrucigrama> obtenerJuego(Long juegoId, String email) {
-        return juegoCrucigramaRepository.findById(juegoId);
-    }
-
     public void editarJuego(Long juegoId, JuegoCrucigrama juegoEditado, String email) {
-        JuegoCrucigrama juego = obtenerJuego(juegoId, email)
+        JuegoCrucigrama juego = (JuegoCrucigrama) juegoService.obtenerJuego(juegoId, email)
                 .orElseThrow(() -> new RuntimeException("Juego no encontrado o sin permisos"));
 
         juego.setNombre(juegoEditado.getNombre());
@@ -92,4 +92,12 @@ public class JuegoCrucigramaService {
         Pageable pageable = PageRequest.of(page, size);
         return juegoCrucigramaRepository.findByUsuario(usuario, pageable);
     }
+
+    public Optional<JuegoCrucigrama> obtenerJuego(Long juegoId, String email) {
+        User usuario = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        Optional<JuegoCrucigrama> juego = juegoCrucigramaRepository.findById(juegoId);
+        return juego.filter(j -> j.getUsuario().getId().equals(usuario.getId()));
+    }
+    
 }

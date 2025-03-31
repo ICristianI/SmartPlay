@@ -3,6 +3,21 @@
 <div class="container mt-4">
   <div class="d-flex align-items-center justify-content-between mb-4">
     <h1 class="mb-0">Vista de Ficha Interactiva</h1>
+
+    {{#User}}
+    <!-- Botón de Me Gusta -->
+<form id="likeForm" onsubmit="return false;" class="ms-auto">
+  <input type="hidden" name="_csrf" value="{{token}}" />
+  <input type="hidden" id="fichaId" value="{{ficha.id}}" />
+  <button id="likeButton" class="btn btn-link p-0" onclick="darMeGusta()" style="text-decoration: none;">
+    <span id="corazon" data-liked="{{tieneLike}}" style="font-size: 2rem;">
+      {{#tieneLike}}❤️{{/tieneLike}}{{^tieneLike}}🤍{{/tieneLike}}
+    </span>
+    <span id="contadorLikes" class="ms-2 text-danger">{{ficha.meGusta}}</span>
+  </button>
+</form>
+    {{/User}}
+
   </div>
 
   <!-- Área principal con imagen de fondo y elementos superpuestos -->
@@ -41,6 +56,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script src="/js/verFicha.js"></script>
+<script src="/js/like.js"></script>
 
 
 {{> footer}}
