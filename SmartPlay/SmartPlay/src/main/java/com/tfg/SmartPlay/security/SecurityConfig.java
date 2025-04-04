@@ -64,14 +64,20 @@ public class SecurityConfig {
                                 "/users/register", "/json/**", "/config", "/msj", "/regin", "/verify",
                                 "/users/verificar", "/users/verificar/**",
                                 "/f/investigar","/juegos/investigar","/f/ficha/image/**","/f/conseguirFicha","/f/verFichaInteractiva",
-                                "/juegos/explorador","/juegos/image/**", "/ahorcado/jugar","/crucigrama/jugar", "/sopa/jugar")
+                                "/juegos/redirigirJuego","/juegos/image/**", "/ahorcado/jugar","/crucigrama/jugar", "/sopa/jugar")
                         .permitAll()
                         .requestMatchers("/f/**", "/creacion", "/juegos", "/fichas",
                                 "/verFichas", "/crearCuadernos", "/f/listarFichas", "/f/ficha/image/**",
                                 "/Fichas/verFichas", "/investigar","/grupo", "/crearGrupos", "/verGrupos", "/grupos/**",
                                 "/juegos/**","/ahorcado/**", "/Cuadernos", "/users/**", "/cuadernos/**",
                                 "/sopa/**", "/sopaletras/**", "/crucigrama/**")
-                        .hasAnyRole("ALUMNO", "PROFESOR"))
+                        .hasAnyRole("PROFESOR")
+                        .requestMatchers("/", "/error", "/login", "/signup", "/css/**", "/js/**", "/images/**",
+                                "/users/register", "/json/**", "/config", "/msj", "/regin", "/verify",
+                                "/users/verificar", "/users/verificar/**",
+                                "/f/investigar","/juegos/investigar","/f/ficha/image/**","/f/conseguirFicha","/f/verFichaInteractiva",
+                                "/juegos/redirigirJuego","/juegos/image/**", "/ahorcado/jugar","/crucigrama/jugar", "/sopa/jugar")
+                        .hasAnyRole("ALUMNO"))
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .usernameParameter("email")

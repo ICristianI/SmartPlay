@@ -9,7 +9,7 @@
       <input type="text" name="buscar" class="form-control" placeholder="Buscar por nombre de ficha..." value="{{buscar}}">
       <button type="submit" class="btn btn-primary navbar-custom">Buscar</button>
     </div>
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center flex-wrap" style="gap: 1.5rem;">
       <a href="/f/investigar?orden=fecha{{#buscar}}&buscar={{buscar}}{{/buscar}}" class="btn btn-outline-primary me-2 {{#ordenFecha}}active{{/ordenFecha}}">
         Más recientes
       </a>

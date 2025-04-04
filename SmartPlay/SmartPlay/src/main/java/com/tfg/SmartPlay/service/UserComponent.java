@@ -56,4 +56,26 @@ public class UserComponent {
             return opUser.get().getRoles().contains("ADMIN");
         }
     }
+
+    // Devuelve si el usuario es profesor
+    public boolean isProfesor() {
+        Optional<User> opUser = getUser();
+        if (opUser.isEmpty()) {
+            return false;
+        } else {
+            return opUser.get().getRoles().contains("PROFESOR");
+        }
+    }
+
+    // Devuelve si el usuario es alumno
+    public boolean isAlumno() {
+        Optional<User> opUser = getUser();
+        if (opUser.isEmpty()) {
+            return false;
+        } else {
+            return opUser.get().getRoles().contains("ALUMNO");
+        }
+    }
+
+
 }

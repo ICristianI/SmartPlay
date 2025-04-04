@@ -122,21 +122,43 @@ window.reiniciarCrucigrama = function () {
 
 window.descargarCrucigramaPDF = function () {
     const { jsPDF } = window.jspdf;
-    const elemento = document.querySelector(".container");
+    const contenedor = document.querySelector(".container");
+  
+    // Ocultar botones
     document.querySelectorAll(".btn").forEach(btn => btn.style.display = "none");
-
-    html2canvas(elemento).then(canvas => {
-        const imgData = canvas.toDataURL("image/png");
-        const pdf = new jsPDF();
-        const imgProps = pdf.getImageProperties(imgData);
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-        pdf.save(`${juego.nombre}_crucigrama.pdf`);
-        document.querySelectorAll(".btn").forEach(btn => btn.style.display = "");
+  
+    // Ocultar título, descripción y like
+    const likeSection = document.querySelector(".like-section");
+    const nombreJuego = document.querySelector(".nombre-juego");
+    const descripcion = document.querySelector(".descripcion-juego");
+    if (likeSection) likeSection.style.display = "none";
+    if (nombreJuego) nombreJuego.style.display = "none";
+    if (descripcion) descripcion.style.display = "none";
+  
+    // Ocultar inputs de respuesta
+    document.querySelectorAll("input[type='text']").forEach(input => input.style.display = "none");
+  
+    html2canvas(contenedor, { scale: 2 }).then(canvas => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+      const imgWidth = 210;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  
+      pdf.setFontSize(20);
+      pdf.text(juego.nombre, 10, 20);
+      pdf.addImage(imgData, "PNG", 0, 30, imgWidth, imgHeight);
+      pdf.save(`${juego.nombre}_crucigrama.pdf`);
+  
+      // Restaurar elementos
+      document.querySelectorAll(".btn").forEach(btn => btn.style.display = "");
+      if (likeSection) likeSection.style.display = "";
+      if (nombreJuego) nombreJuego.style.display = "";
+      if (descripcion) descripcion.style.display = "";
+      document.querySelectorAll("input[type='text']").forEach(input => input.style.display = "");
     });
-};
-
+  };
+  
+  
 function verificarRespuestas() {
     const inputs = document.querySelectorAll(".respuesta-input");
     let respuestasCorrectas = 0;

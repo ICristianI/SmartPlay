@@ -211,6 +211,38 @@ public class GrupoService {
         if (start >= usuarios.size()) return Page.empty();
         return new PageImpl<>(usuarios.subList(start, end), PageRequest.of(page, size), usuarios.size());
     }
+
+    public boolean isPropietario(Grupo grupo, String email) {
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isEmpty()) return false;
+    
+        User usuario = userOpt.get();
+        return grupo.getCreador().getId().equals(usuario.getId());
+    }
+
+    public boolean eliminarUsuarioDelGrupo(Long grupoId, Long usuarioId, String emailPropietario) {
+        Optional<Grupo> grupoOpt = grupoRepository.findById(grupoId);
+        Optional<User> usuarioEliminarOpt = userRepository.findById(usuarioId);
+        Optional<User> propietarioOpt = userRepository.findByEmail(emailPropietario);
+    
+        if (grupoOpt.isEmpty() || usuarioEliminarOpt.isEmpty() || propietarioOpt.isEmpty()) return false;
+    
+        Grupo grupo = grupoOpt.get();
+        User usuarioAEliminar = usuarioEliminarOpt.get();
+        User propietario = propietarioOpt.get();
+    
+        if (!grupo.getCreador().getId().equals(propietario.getId()) ||
+            grupo.getCreador().getId().equals(usuarioAEliminar.getId())) {
+            return false;
+        }
+    
+        boolean eliminado = grupo.getUsuarios().removeIf(u -> u.getId().equals(usuarioAEliminar.getId()));
+        if (eliminado) {
+            grupoRepository.save(grupo);
+        }
+    
+        return eliminado;
+    }
     
     
 

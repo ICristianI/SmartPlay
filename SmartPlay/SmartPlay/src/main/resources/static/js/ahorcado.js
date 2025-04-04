@@ -137,7 +137,15 @@ document.addEventListener("DOMContentLoaded", function () {
         const { jsPDF } = window.jspdf;
         const elementoJuego = document.querySelector(".container");
     
+        // Ocultar elementos
         document.querySelectorAll(".btn-primary, .btn-success, .btn-secondary").forEach(el => el.style.display = "none");
+        const likeSection = document.querySelector(".like-section");
+        const intentosRestantes = document.querySelector(".intentos-restantes");
+        const nombreJuego = document.querySelector(".nombre-juego");
+        
+        if (nombreJuego) nombreJuego.style.display = "none";
+        if (likeSection) likeSection.style.display = "none";
+        if (intentosRestantes) intentosRestantes.style.display = "none";
     
         const mensajeDiv = document.getElementById("mensaje");
         const mensajeOriginal = mensajeDiv.innerHTML;
@@ -163,9 +171,12 @@ document.addEventListener("DOMContentLoaded", function () {
             pdf.addImage(imgData, "PNG", 0, 30, imgWidth, imgHeight);
             pdf.save(`${juego.nombre}.pdf`);
     
+            // Restaurar elementos
             document.querySelectorAll(".btn-primary, .btn-success, .btn-secondary").forEach(el => el.style.display = "");
+            if (likeSection) likeSection.style.display = "";
+            if (intentosRestantes) intentosRestantes.style.display = "";
+            if (nombreJuego) nombreJuego.style.display = "";
             imagenJuego.classList.add("navbar-custom");
-    
             mensajeDiv.innerHTML = mensajeOriginal;
     
             document.querySelectorAll("#palabraAdivinada span").forEach(span => {
@@ -173,6 +184,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
     }
+    
     function activarEfectoMulticolor() {
         const teclasCorrectas = document.querySelectorAll(".btn-success");
         const palabraSpan = Array.from(document.querySelectorAll("#palabraAdivinada span")).filter(span => span.textContent !== " ");

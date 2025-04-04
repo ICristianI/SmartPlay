@@ -35,10 +35,10 @@
               <h5 class="card-title">{{nombre}}</h5>
               <p class="card-text text-muted">{{asignatura}}</p>
       
-              <form action="/juegos/seleccionar" method="post">
+              <form action="/juegos/redirigirJuego" method="post">
                 <input type="hidden" name="_csrf" value="{{token}}" />
                 <input type="hidden" name="juegoId" value="{{id}}" />
-                <input type="hidden" name="tipo" value="sopaletras" />
+                <input type="hidden" name="modo" value="ver" />
                 <button type="submit" class="btn btn-primary navbar-custom">Ver Juego</button>
               </form>
             </div>

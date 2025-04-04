@@ -3,6 +3,9 @@ package com.tfg.SmartPlay.controller;
 import com.tfg.SmartPlay.entity.Cuaderno;
 import com.tfg.SmartPlay.entity.Ficha;
 import com.tfg.SmartPlay.entity.Juego;
+import com.tfg.SmartPlay.entity.JuegoAhorcado;
+import com.tfg.SmartPlay.entity.JuegoCrucigrama;
+import com.tfg.SmartPlay.entity.JuegoSopaLetras;
 import com.tfg.SmartPlay.entity.User;
 import com.tfg.SmartPlay.service.CuadernoService;
 import com.tfg.SmartPlay.service.FichaService;
@@ -60,7 +63,6 @@ public class CuadernoController {
         int prevPage = hasPrev ? page - 1 : 0;
         int nextPage = hasNext ? page + 1 : page;
         boolean pagesC = cuadernosPage.getTotalPages() > 0;
-        
 
         model.addAttribute("pagesC", pagesC);
         model.addAttribute("cuadernos", cuadernosPage.getContent());
@@ -121,7 +123,6 @@ public class CuadernoController {
             boolean pagesF = fichasPage.getTotalPages() > 0;
             boolean pagesJ = juegosPage.getTotalPages() > 0;
 
-
             // Datos de paginación independientes para fichas y juegos
             model.addAttribute("cuaderno", cuadernoObj);
 
@@ -176,7 +177,7 @@ public class CuadernoController {
             @RequestParam("juegosSeleccionados") List<Long> juegosIds,
             @RequestParam(value = "imagenCuaderno", required = false) MultipartFile imagenCuaderno,
             RedirectAttributes redirectAttributes) {
-    
+
         try {
             cuadernoService.guardarCuaderno(cuaderno, fichasIds, juegosIds, imagenCuaderno);
         } catch (IOException e) {
@@ -185,12 +186,12 @@ public class CuadernoController {
         redirectAttributes.addFlashAttribute("mensaje", "Cuaderno guardado correctamente.");
         return "redirect:/cuadernos";
     }
-    
+
     @GetMapping("/image/{id}")
     public ResponseEntity<Object> downloadCuadernoImage(@PathVariable Long id) {
         return cuadernoService.obtenerImagenCuaderno(id);
     }
-    
+
     /**
      * Editar un cuaderno.
      */
@@ -288,6 +289,122 @@ public class CuadernoController {
         }
 
         return "redirect:/cuadernos";
+    }
+
+    @PostMapping("/resolver")
+    public String resolverCuadernoPost(@RequestParam("cuadernoId") Long cuadernoId, HttpSession session) {
+        session.setAttribute("cuadernoId", cuadernoId);
+        return "redirect:/cuadernos/resolver";
+    }
+
+    @GetMapping("/resolver")
+    public String resolverCuadernoGet(Model model,
+            HttpSession session,
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam(defaultValue = "0") int page) {
+
+        Long cuadernoId = (Long) session.getAttribute("cuadernoId");
+
+        if (cuadernoId == null) {
+            model.addAttribute("error", "No se encontró el cuaderno.");
+            return "redirect:/cuadernos";
+        }
+
+        Optional<Cuaderno> cuadernoOpt = cuadernoService.obtenerCuadernoPorId(cuadernoId);
+        if (cuadernoOpt.isEmpty()) {
+            model.addAttribute("error", "Cuaderno no encontrado.");
+            return "redirect:/cuadernos";
+        }
+
+        Cuaderno cuaderno = cuadernoOpt.get();
+        List<Ficha> fichas = cuaderno.getFichas();
+
+        if (fichas.isEmpty()) {
+            model.addAttribute("error", "Este cuaderno no tiene fichas.");
+            return "redirect:/cuadernos";
+        }
+
+        int totalFichas = fichas.size();
+        int paginaActual = Math.max(0, Math.min(page, totalFichas - 1));
+        Ficha fichaActual = fichas.get(paginaActual);
+
+        model.addAttribute("cuaderno", cuaderno);
+        model.addAttribute("ficha", fichaActual);
+        model.addAttribute("hasPrev", paginaActual > 0);
+        model.addAttribute("hasNext", paginaActual < totalFichas - 1);
+        model.addAttribute("prevPage", paginaActual - 1);
+        model.addAttribute("nextPage", paginaActual + 1);
+        model.addAttribute("paginaActual", paginaActual + 1);
+        model.addAttribute("totalFichas", totalFichas);
+
+        return "Cuadernos/resolverCuaderno";
+    }
+
+    @PostMapping("/resolverJuegos")
+    public String resolverJuegosPost(@RequestParam("cuadernoId") Long cuadernoId, HttpSession session) {
+        session.setAttribute("cuadernoId", cuadernoId);
+        return "redirect:/cuadernos/resolverJuegos";
+    }
+
+    @GetMapping("/resolverJuegos")
+    public String resolverJuegosGet(Model model,
+            HttpSession session,
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam(defaultValue = "0") int page,
+            RedirectAttributes redirectAttributes) {
+
+        Long cuadernoId = (Long) session.getAttribute("cuadernoId");
+
+        if (cuadernoId == null) {
+            redirectAttributes.addFlashAttribute("error", "No se encontró el cuaderno.");
+            return "redirect:/cuadernos";
+        }
+
+        Optional<Cuaderno> cuadernoOpt = cuadernoService.obtenerCuadernoPorId(cuadernoId);
+        if (cuadernoOpt.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Cuaderno no encontrado.");
+            return "redirect:/cuadernos";
+        }
+
+        Cuaderno cuaderno = cuadernoOpt.get();
+        List<Juego> juegos = cuaderno.getJuegos();
+
+        if (juegos.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Este cuaderno no tiene juegos.");
+            return "redirect:/cuadernos/ver";
+        }
+
+        int totalJuegos = juegos.size();
+        int paginaActual = Math.max(0, Math.min(page, totalJuegos - 1));
+        Juego juegoActual = juegos.get(paginaActual);
+
+        String tipo;
+        if (juegoActual instanceof JuegoAhorcado) {
+            tipo = "ahorcado";
+        } else if (juegoActual instanceof JuegoSopaLetras) {
+            tipo = "sopaletras";
+        } else if (juegoActual instanceof JuegoCrucigrama) {
+            tipo = "crucigrama";
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Tipo de juego no reconocido.");
+            return "redirect:/cuadernos/ver";
+        }
+
+        model.addAttribute("cuaderno", cuaderno);
+        model.addAttribute("juego", juegoActual);
+        model.addAttribute("tipoJuego", tipo);
+        model.addAttribute("paginaActual", paginaActual + 1);
+        model.addAttribute("totalJuegos", totalJuegos);
+        model.addAttribute("hasPrev", paginaActual > 0);
+        model.addAttribute("hasNext", paginaActual < totalJuegos - 1);
+        model.addAttribute("prevPage", paginaActual - 1);
+        model.addAttribute("nextPage", paginaActual + 1);
+        model.addAttribute("esAhorcado", juegoActual instanceof JuegoAhorcado);
+        model.addAttribute("esCrucigrama", juegoActual instanceof JuegoCrucigrama);
+        model.addAttribute("esSopaLetras", juegoActual instanceof JuegoSopaLetras);
+
+
+        return "Juegos/resolverJuego";
     }
 
 }

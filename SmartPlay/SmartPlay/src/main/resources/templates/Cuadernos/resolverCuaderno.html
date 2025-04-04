@@ -1,0 +1,79 @@
+{{> header}}
+
+<div class="container mt-4">
+  <h1 class="text-center mb-4">Resolver Cuaderno: {{cuaderno.nombre}}</h1>
+  <div class="text-start w-100">
+    <h5 class="mb-3 mt-3">Descripción: {{ ficha.descripcion }}</h5>
+</div>
+  
+  <!-- Área de la ficha -->
+  <div class="text-center mb-3">
+    <label for="tamanoFicha" class="form-label">Tamaño de visualización:</label>
+    <select id="tamanoFicha" class="form-select w-auto d-inline-block ms-2">
+      <option value="600">Pequeño (600px)</option>
+      <option value="800" selected>Mediano (800px)</option>
+      <option value="1000">Grande (1000px)</option>
+    </select>
+  </div>
+
+  <div id="contenedorFicha" class="border border-secondary rounded shadow-sm mx-auto"
+    style="width: 800px; position: relative;">
+    <img id="imagenFicha" src="/f/ficha/image/{{ficha.id}}" alt="Ficha" class="w-100 d-block rounded" />
+  </div>
+
+  <!-- Botones -->
+  <div class="text-center my-4">
+    <button class="btn btn-primary" id="btnCorregir">Corregir</button>
+    {{^hasNext}}
+            <a href="/grupos/ver" class="btn btn-success">Terminar</a>
+    {{/hasNext}}
+    
+  </div>
+
+  {{^hasNext}}
+<div class="text-center mt-4 mb-4">
+
+  <form action="/cuadernos/resolverJuegos" method="post">
+    <input type="hidden" name="_csrf" value="{{token}}" />
+    <input type="hidden" name="cuadernoId" value="{{cuaderno.id}}" />
+    <button type="submit" class="btn btn-warning">Jugar Juegos</button>
+  </form>
+
+</div>
+
+{{/hasNext}}
+
+  <!-- Paginación -->
+<nav aria-label="Paginación de Fichas">
+    <ul class="pagination justify-content-center">
+  
+      {{#hasPrev}}
+      <li class="page-item">
+        <a class="btn btn-secondary" href="/cuadernos/resolver?page={{prevPage}}">Anterior</a>
+      </li>
+      {{/hasPrev}}
+
+      {{#hasNext}}
+      <li class="page-item">
+        <a class="btn btn-secondary" href="/cuadernos/resolver?page={{nextPage}}">Siguiente</a>
+      </li>
+      {{/hasNext}}
+  
+    </ul>
+  </nav>
+  <p class="text-center text-muted">Ficha {{paginaActual}} de {{totalFichas}}</p>
+
+  
+
+
+
+
+</div>
+
+<script type="application/json" id="elementosSuperpuestosRaw">
+  {{{ficha.elementosSuperpuestos}}}
+</script>
+
+<script src="/js/verFicha.js"></script>
+
+{{> footer}}

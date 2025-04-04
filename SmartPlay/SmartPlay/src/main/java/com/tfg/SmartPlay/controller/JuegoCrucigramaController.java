@@ -1,7 +1,9 @@
 package com.tfg.SmartPlay.controller;
 
 import com.tfg.SmartPlay.entity.Cuaderno;
+import com.tfg.SmartPlay.entity.JuegoAhorcado;
 import com.tfg.SmartPlay.entity.JuegoCrucigrama;
+import com.tfg.SmartPlay.entity.JuegoSopaLetras;
 import com.tfg.SmartPlay.service.JuegoCrucigramaService;
 import com.tfg.SmartPlay.service.JuegoLikeService;
 import com.tfg.SmartPlay.service.JuegoService;
@@ -93,6 +95,11 @@ public class JuegoCrucigramaController {
                 model.addAttribute("tieneLike", false);
                 model.addAttribute("User", false);
             }
+
+            model.addAttribute("esAhorcado", false);
+            model.addAttribute("esCrucigrama", juego instanceof JuegoCrucigrama);
+            model.addAttribute("esSopaLetras",  false);
+
     
             return "Juegos/Crucigrama/JugarCrucigrama";
         } else {

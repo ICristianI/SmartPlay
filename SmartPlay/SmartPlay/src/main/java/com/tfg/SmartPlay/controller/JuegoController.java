@@ -40,10 +40,11 @@ public class JuegoController {
     @Autowired
     JuegoLikeService juegoLikeService;
 
-    @PostMapping("/seleccionar")
-    public String seleccionarJuego(@RequestParam("juegoId") Long juegoId,
+    @PostMapping("/redirigirJuego")
+    public String redirigirJuego(
+            @RequestParam("juegoId") Long juegoId,
+            @RequestParam(defaultValue = "jugar") String modo,
             HttpSession session,
-            @AuthenticationPrincipal UserDetails userDetails,
             RedirectAttributes redirectAttributes) {
 
         Optional<Juego> juego = juegoService.obtenerJuegoPorId(juegoId);
@@ -58,43 +59,14 @@ public class JuegoController {
             } else if (juego.get() instanceof JuegoCrucigrama) {
                 tipo = "crucigrama";
             } else {
-                redirectAttributes.addFlashAttribute("error", "Juego no encontrado o sin permiso.");
+                redirectAttributes.addFlashAttribute("error", "Tipo de juego no reconocido.");
                 return "redirect:/juegos";
             }
 
             session.setAttribute("juegoId", juegoId);
-            return "redirect:/" + tipo + "/ver";
+            return "redirect:/" + tipo + "/" + modo;
         } else {
-            redirectAttributes.addFlashAttribute("error", "Juego no encontrado o sin permiso.");
-            return "redirect:/juegos";
-        }
-    }
-
-    @PostMapping("/explorador")
-    public String postMethodName(@RequestParam("juegoId") Long juegoId,
-            HttpSession session,
-            @AuthenticationPrincipal UserDetails userDetails,
-            RedirectAttributes redirectAttributes) {
-        Optional<Juego> juego = juegoService.obtenerJuegoPorId(juegoId);
-
-        if (juego.isPresent()) {
-            String tipo;
-
-            if (juego.get() instanceof JuegoAhorcado) {
-                tipo = "ahorcado";
-            } else if (juego.get() instanceof JuegoSopaLetras) {
-                tipo = "sopaletras";
-            } else if (juego.get() instanceof JuegoCrucigrama) {
-                tipo = "crucigrama";
-            } else {
-                redirectAttributes.addFlashAttribute("error", "Juego no encontrado o sin permiso.");
-                return "redirect:/juegos";
-            }
-
-            session.setAttribute("juegoId", juegoId);
-            return "redirect:/" + tipo + "/jugar";
-        } else {
-            redirectAttributes.addFlashAttribute("error", "Juego no encontrado o sin permiso.");
+            redirectAttributes.addFlashAttribute("error", "Juego no encontrado.");
             return "redirect:/juegos";
         }
     }
@@ -162,8 +134,8 @@ public class JuegoController {
             @AuthenticationPrincipal UserDetails userDetails) {
 
         try {
-            
-            juegoLikeService.alternarLike(userDetails.getUsername(),juegoId);
+
+            juegoLikeService.alternarLike(userDetails.getUsername(), juegoId);
             return ResponseEntity.ok("Me gusta registrado");
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

@@ -251,6 +251,13 @@ window.descargarPDF = function () {
     const { jsPDF } = window.jspdf;
     const elementoJuego = document.querySelector(".container");
 
+    const titulo = document.querySelector(".nombre-juego");
+    const like = document.querySelector(".like-section");
+
+    if (titulo) titulo.style.display = "none";
+    if (like) like.style.display = "none";
+
+
     // Ocultar botones y mensajes para la captura
     document.querySelectorAll(".btn-primary, .btn-success, .btn-secondary, #mensaje").forEach(el => el.style.display = "none");
     document.getElementById("dificultadContainer").style.display = "none";
@@ -278,6 +285,9 @@ window.descargarPDF = function () {
         // Restaurar los elementos ocultos
         document.querySelectorAll(".btn-primary, .btn-success, .btn-secondary, #mensaje").forEach(el => el.style.display = "");
         document.getElementById("dificultadContainer").style.display = "";
+        if (titulo) titulo.style.display = "";
+        if (like) like.style.display = "";
+
 
         // Restaurar los colores originales de la sopa de letras
         document.querySelectorAll(".sopa-cell").forEach(cell => {

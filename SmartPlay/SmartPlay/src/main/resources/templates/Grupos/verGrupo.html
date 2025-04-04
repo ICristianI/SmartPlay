@@ -49,17 +49,18 @@
     </div>
   </div>
   
+  {{#isPropietario}}
+
       <!-- Botón editar -->
       <button class="btn btn-primary navbar-custom mt-3" onclick="toggleEditForm()">Editar Grupo</button>
 
       <!-- Botón eliminar grupo -->
-      {{#esCreador}}
       <form action="/grupos/eliminar" method="post" class="mt-3" onsubmit="return confirmarEliminacion();">
         <input type="hidden" name="_csrf" value="{{token}}" />
         <input type="hidden" name="grupoId" value="{{grupo.id}}" />
         <button type="submit" class="btn btn-danger">Eliminar Grupo</button>
       </form>
-      {{/esCreador}}
+      {{/isPropietario}}
 
       <!-- Formulario de edición -->
 <form id="editForm" action="/grupos/editar" method="post" style="display: none" class="mt-4">
@@ -110,7 +111,7 @@
     <div class="col-md-4">
       <div class="card h-100 shadow-sm position-relative">
         <img
-          src="/cuaderno/image/{{id}}"
+          src="/cuadernos/image/{{id}}"
           class="card-img-top"
           alt="Vista previa del cuaderno"
           style="height: 150px; object-fit: cover"
@@ -121,11 +122,13 @@
           <p class="card-text text-muted">{{numeroFichas}} fichas | {{numeroJuegos}} juegos</p>
       
           <!-- Botón Resolver -->
-          <form action="#" method="post" class="mb-2">
+          <form action="/cuadernos/resolver" method="post" class="mb-2">
             <input type="hidden" name="_csrf" value="{{token}}" />
             <input type="hidden" name="cuadernoId" value="{{id}}" />
             <button type="submit" class="btn btn-success w-100">Resolver</button>
           </form>
+
+          {{#isPropietario}}
       
           <!-- Botón Ver -->
           <form action="/cuadernos/ver" method="post" class="mb-2">
@@ -141,9 +144,12 @@
             <input type="hidden" name="cuadernoId" value="{{id}}" />
             <button type="submit" class="btn btn-danger w-100">Eliminar del Grupo</button>
           </form>
+
+          {{/isPropietario}}
+
         </div>
       </div>
-      
+
     </div>
     {{/cuadernosPage}}
   
@@ -190,17 +196,32 @@
   {{#usuariosPage}}
   <div class="col-md-4 text-center">
     <div class="card mb-4 shadow-sm p-3 text-center">
+
       <img src="/users/images/{{id}}" alt="Foto de {{nombre}}"
         class="rounded-circle mx-auto d-block mb-3"
         style="width: 120px; height: 120px; object-fit: cover;" />
       <h5 class="card-title mt-2">{{nombre}}</h5>
       <p class="card-text text-muted">{{roles}}</p>
-      <form action="/users/perfil/{{id}}" method="get">
+    
+      <!-- Botón Ver Perfil -->
+      <form action="/users/perfil/{{id}}" method="get" class="mb-2">
         <input type="hidden" name="_csrf" value="{{token}}" />
         <input type="hidden" name="usuarioId" value="{{id}}" />
-        <button type="submit" class="btn btn-outline-primary btn-sm mt-2 navbar-custom">Ver Perfil</button>
+        <button type="submit" class="btn btn-outline-primary btn-sm navbar-custom w-100">Ver Perfil</button>
       </form>
+    
+      <!-- Botón Eliminar Usuario (solo si es propietario) -->
+      {{#isPropietario}}
+      <form action="/grupos/eliminarUsuario" method="post" onsubmit="return confirmarEliminarUsuario('{{nombre}}');">
+        <input type="hidden" name="_csrf" value="{{token}}" />
+        <input type="hidden" name="grupoId" value="{{grupo.id}}" />
+        <input type="hidden" name="usuarioId" value="{{id}}" />
+        <button type="submit" class="btn btn-danger btn-sm w-100">Eliminar del Grupo</button>
+      </form>
+      {{/isPropietario}}
+    
     </div>
+    
   </div>
   {{/usuariosPage}}
   {{^usuariosPage}}
@@ -271,7 +292,6 @@
   
   </div>
 </div>
-
 
 <script src="/js/grupo.js"></script>
 <script src="/js/grupoAcciones.js"></script>

@@ -19,6 +19,10 @@
     {{/User}}
 
   </div>
+  <div class="text-start w-100">
+    <h5 class="mb-3 mt-3">Descripción: {{ ficha.descripcion }}</h5>
+</div>
+  
 
   <!-- Área principal con imagen de fondo y elementos superpuestos -->
   <div class="text-center mb-3">
@@ -38,11 +42,12 @@
 
   <!-- Botones de acción -->
   <div class="text-center my-4">
-    <div class="d-flex justify-content-center gap-4 flex-wrap">
-      <button class="btn btn-primary" id="btnCorregir">Corregir</button>
-      <button class="btn btn-secondary" onclick="descargarPDF()">Descargar en PDF</button>
-      <button class="btn btn-success" onclick="window.history.back();">Aceptar</button>
+    <div class="d-flex justify-content-center flex-wrap" style="gap: 0.5rem;">
+      <button class="btn btn-primary me-3 mb-2" id="btnCorregir">Corregir</button>
+      <button class="btn btn-secondary me-3 mb-2" onclick="descargarPDF()">Descargar en PDF</button>
+      <button class="btn btn-success mb-2" onclick="window.history.back();">Aceptar</button>
     </div>
+    
   </div>
   
 

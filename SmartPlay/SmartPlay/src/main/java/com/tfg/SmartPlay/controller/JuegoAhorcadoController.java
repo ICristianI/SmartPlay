@@ -2,6 +2,8 @@ package com.tfg.SmartPlay.controller;
 
 import com.tfg.SmartPlay.entity.Cuaderno;
 import com.tfg.SmartPlay.entity.JuegoAhorcado;
+import com.tfg.SmartPlay.entity.JuegoCrucigrama;
+import com.tfg.SmartPlay.entity.JuegoSopaLetras;
 import com.tfg.SmartPlay.service.JuegoAhorcadoService;
 import com.tfg.SmartPlay.service.JuegoLikeService;
 import com.tfg.SmartPlay.service.JuegoService;
@@ -94,6 +96,11 @@ public class JuegoAhorcadoController {
                 model.addAttribute("User", false);
 
             }
+
+            model.addAttribute("esAhorcado", juego instanceof JuegoAhorcado);
+            model.addAttribute("esCrucigrama", false);
+            model.addAttribute("esSopaLetras", false);
+
     
             return "Juegos/Ahorcado/JugarAhorcado";
         } else {

@@ -29,6 +29,16 @@ public class UserModelAttributes {
         return userComponent.isAdmin();
     }
 
+    @ModelAttribute("isProfesor")
+    public boolean isProfesor() {
+        return userComponent.isProfesor();
+    }
+
+    @ModelAttribute("isAlumno")
+    public boolean isAlumno() {
+        return userComponent.isAlumno();
+    }
+
     @ModelAttribute("currentUserName")
     public String userName() {
         Optional<User> user = userComponent.getUser();
@@ -37,8 +47,6 @@ public class UserModelAttributes {
         } else {
             return user.get().getNombre();
         }
-    }
-
-    
+    } 
 
 }

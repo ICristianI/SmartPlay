@@ -8,7 +8,6 @@ import com.tfg.SmartPlay.service.GrupoService;
 import com.tfg.SmartPlay.service.UserComponent;
 import jakarta.servlet.http.HttpSession;
 
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +20,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
 @RequestMapping("/grupos")
@@ -80,10 +82,9 @@ public class GrupoController {
     public String guardarGrupo(@ModelAttribute Grupo grupo,
             RedirectAttributes redirectAttributes,
             @AuthenticationPrincipal UserDetails userDetails,
-            @RequestParam("cuadernosSeleccionados") List<Long> cuadernosId
-            ) {
+            @RequestParam("cuadernosSeleccionados") List<Long> cuadernosId) {
 
-        grupoService.guardarGrupo(grupo, userDetails.getUsername(),cuadernosId);
+        grupoService.guardarGrupo(grupo, userDetails.getUsername(), cuadernosId);
         redirectAttributes.addFlashAttribute("mensaje", "Grupo creado correctamente.");
         return "redirect:/grupos";
     }
@@ -119,61 +120,63 @@ public class GrupoController {
 
     @GetMapping("/ver")
     public String verGrupoGet(Model model,
-        HttpSession session,
-        @AuthenticationPrincipal UserDetails userDetails,
-        @RequestParam(defaultValue = "0") int pageCuadernos,
-        @RequestParam(defaultValue = "0") int pageUsuarios,
-        @RequestParam(defaultValue = "3") int size,
-        RedirectAttributes redirectAttributes) {
+            HttpSession session,
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam(defaultValue = "0") int pageCuadernos,
+            @RequestParam(defaultValue = "0") int pageUsuarios,
+            @RequestParam(defaultValue = "3") int size,
+            RedirectAttributes redirectAttributes) {
 
-    Long grupoId = (Long) session.getAttribute("grupoId");
+        Long grupoId = (Long) session.getAttribute("grupoId");
 
-    if (grupoId == null) {
-        redirectAttributes.addFlashAttribute("error", "No se encontró el grupo.");
-        return "redirect:/grupos";
+        if (grupoId == null) {
+            redirectAttributes.addFlashAttribute("error", "No se encontró el grupo.");
+            return "redirect:/grupos";
+        }
+
+        Grupo grupo = grupoService.obtenerGrupo(grupoId, userDetails.getUsername());
+
+        if (grupo == null) {
+            redirectAttributes.addFlashAttribute("error", "No tienes acceso a este grupo.");
+            return "redirect:/grupos";
+        }
+
+        boolean esCreador = grupo.getCreador().getEmail().equals(userDetails.getUsername());
+        model.addAttribute("esCreador", esCreador);
+        model.addAttribute("fechaFormateada", grupo.getFechaCreacionFormateada());
+
+        // Cuadernos paginados
+        Page<Cuaderno> cuadernosPage = grupoService.obtenerCuadernosPaginados(grupoId, pageCuadernos, size);
+        model.addAttribute("cuadernosPage", cuadernosPage.getContent());
+        model.addAttribute("currentPageCuadernos", pageCuadernos + 1);
+        model.addAttribute("totalPagesCuadernos", cuadernosPage.getTotalPages());
+        model.addAttribute("hasPrevCuadernos", pageCuadernos > 0);
+        model.addAttribute("hasNextCuadernos", pageCuadernos < cuadernosPage.getTotalPages() - 1);
+        model.addAttribute("prevPageCuadernos", Math.max(pageCuadernos - 1, 0));
+        model.addAttribute("nextPageCuadernos", Math.min(pageCuadernos + 1, cuadernosPage.getTotalPages() - 1));
+        model.addAttribute("pagesC", cuadernosPage.getTotalPages() > 0);
+
+        // Usuarios paginados
+        Page<User> usuariosPage = grupoService.obtenerUsuariosPaginados(grupoId, pageUsuarios, size);
+        model.addAttribute("usuariosPage", usuariosPage.getContent());
+        model.addAttribute("currentPageUsuarios", pageUsuarios + 1);
+        model.addAttribute("totalPagesUsuarios", usuariosPage.getTotalPages());
+        model.addAttribute("hasPrevUsuarios", pageUsuarios > 0);
+        model.addAttribute("hasNextUsuarios", pageUsuarios < usuariosPage.getTotalPages() - 1);
+        model.addAttribute("prevPageUsuarios", Math.max(pageUsuarios - 1, 0));
+        model.addAttribute("nextPageUsuarios", Math.min(pageUsuarios + 1, usuariosPage.getTotalPages() - 1));
+        model.addAttribute("pagesU", usuariosPage.getTotalPages() > 0);
+
+        model.addAttribute("grupo", grupo);
+        model.addAttribute("cuadernosDisponibles",
+                grupoService.obtenerCuadernosNoAgregados(grupo, userDetails.getUsername()));
+        model.addAttribute("numUsuarios", grupo.getUsuarios().size());
+        model.addAttribute("numCuadernos", grupo.getCuadernos().size());
+
+        model.addAttribute("isPropietario", grupoService.isPropietario(grupo, userDetails.getUsername()));
+
+        return "Grupos/verGrupo";
     }
-
-    Grupo grupo = grupoService.obtenerGrupo(grupoId, userDetails.getUsername());
-
-    if (grupo == null) {
-        redirectAttributes.addFlashAttribute("error", "No tienes acceso a este grupo.");
-        return "redirect:/grupos";
-    }
-
-    boolean esCreador = grupo.getCreador().getEmail().equals(userDetails.getUsername());
-    model.addAttribute("esCreador", esCreador);
-    model.addAttribute("fechaFormateada", grupo.getFechaCreacionFormateada());
-
-    // Cuadernos paginados
-    Page<Cuaderno> cuadernosPage = grupoService.obtenerCuadernosPaginados(grupoId, pageCuadernos, size);
-    model.addAttribute("cuadernosPage", cuadernosPage.getContent());
-    model.addAttribute("currentPageCuadernos", pageCuadernos + 1);
-    model.addAttribute("totalPagesCuadernos", cuadernosPage.getTotalPages());
-    model.addAttribute("hasPrevCuadernos", pageCuadernos > 0);
-    model.addAttribute("hasNextCuadernos", pageCuadernos < cuadernosPage.getTotalPages() - 1);
-    model.addAttribute("prevPageCuadernos", Math.max(pageCuadernos - 1, 0));
-    model.addAttribute("nextPageCuadernos", Math.min(pageCuadernos + 1, cuadernosPage.getTotalPages() - 1));
-    model.addAttribute("pagesC", cuadernosPage.getTotalPages() > 0);
-
-    // Usuarios paginados
-    Page<User> usuariosPage = grupoService.obtenerUsuariosPaginados(grupoId, pageUsuarios, size);
-    model.addAttribute("usuariosPage", usuariosPage.getContent());
-    model.addAttribute("currentPageUsuarios", pageUsuarios + 1);
-    model.addAttribute("totalPagesUsuarios", usuariosPage.getTotalPages());
-    model.addAttribute("hasPrevUsuarios", pageUsuarios > 0);
-    model.addAttribute("hasNextUsuarios", pageUsuarios < usuariosPage.getTotalPages() - 1);
-    model.addAttribute("prevPageUsuarios", Math.max(pageUsuarios - 1, 0));
-    model.addAttribute("nextPageUsuarios", Math.min(pageUsuarios + 1, usuariosPage.getTotalPages() - 1));
-    model.addAttribute("pagesU", usuariosPage.getTotalPages() > 0);
-
-    model.addAttribute("grupo", grupo);
-    model.addAttribute("cuadernosDisponibles", grupoService.obtenerCuadernosNoAgregados(grupo, userDetails.getUsername()));
-    model.addAttribute("numUsuarios", grupo.getUsuarios().size());
-    model.addAttribute("numCuadernos", grupo.getCuadernos().size());
-
-    return "Grupos/verGrupo";
-}
-
 
     @PostMapping("/editar")
     public String editarGrupo(@RequestParam("grupoId") Long grupoId,
@@ -229,5 +232,24 @@ public class GrupoController {
 
         return "redirect:/grupos/ver";
     }
+
+    @PostMapping("/eliminarUsuario")
+    public String eliminarUsuarioDelGrupo(@RequestParam("grupoId") Long grupoId,
+            @RequestParam("usuarioId") Long usuarioId,
+            @AuthenticationPrincipal UserDetails userDetails,
+            RedirectAttributes redirectAttributes) {
+
+        boolean eliminado = grupoService.eliminarUsuarioDelGrupo(grupoId, usuarioId, userDetails.getUsername());
+
+        if (eliminado) {
+            redirectAttributes.addFlashAttribute("mensaje", "Usuario eliminado del grupo correctamente.");
+        } else {
+            redirectAttributes.addFlashAttribute("error",
+                    "No tienes permiso para modificar este grupo o el usuario no pertenece a él.");
+        }
+
+        return "redirect:/grupos/ver";
+    }
+
 
 }
