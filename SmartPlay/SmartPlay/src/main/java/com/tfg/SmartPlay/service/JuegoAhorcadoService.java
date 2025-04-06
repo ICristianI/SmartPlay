@@ -71,7 +71,7 @@ public void guardarJuego(JuegoAhorcado juego, String email, MultipartFile imagen
             juego.setImagen(imagen);
         } else {
 
-            InputStream defaultImgStream = getClass().getResourceAsStream("/static/images/generalImages/AhorcadoDefault.jpg");
+            InputStream defaultImgStream = getClass().getResourceAsStream("/static/images/generalImages/CREARAHORCADO.png");
             if (defaultImgStream != null) {
                 byte[] bytes = defaultImgStream.readAllBytes();
                 Blob defaultBlob = new javax.sql.rowset.serial.SerialBlob(bytes);

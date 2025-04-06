@@ -35,15 +35,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
             while (!colocada && intentos < 100) {
                 intentos++;
-                let dir = Math.floor(Math.random() * 3);
-                let row = Math.floor(Math.random() * (gridSize - palabra.length));
-                let col = Math.floor(Math.random() * (gridSize - palabra.length));
+                let dir = Math.floor(Math.random() * 3); // 0: horizontal, 1: vertical, 2: diagonal
+            
+                let maxRow = dir === 1 || dir === 2 ? gridSize - palabra.length : gridSize;
+                let maxCol = dir === 0 || dir === 2 ? gridSize - palabra.length : gridSize;
+            
+                let row = Math.floor(Math.random() * maxRow);
+                let col = Math.floor(Math.random() * maxCol);
+            
                 let puedeColocar = true;
-
+            
                 for (let i = 0; i < palabra.length; i++) {
                     let r = row + (dir === 1 ? i : dir === 2 ? i : 0);
                     let c = col + (dir === 0 ? i : dir === 2 ? i : 0);
-
+            
                     if (
                         r >= gridSize ||
                         c >= gridSize ||
@@ -53,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         break;
                     }
                 }
-
+            
                 if (puedeColocar) {
                     for (let i = 0; i < palabra.length; i++) {
                         let r = row + (dir === 1 ? i : dir === 2 ? i : 0);
@@ -63,6 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     colocada = true;
                 }
             }
+            
         });
     }
 

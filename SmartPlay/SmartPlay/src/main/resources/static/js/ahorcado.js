@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
         doc.text(`Palabra: ${"_ ".repeat(juego.palabra.length)}`, 10, 60);
 
         const img = new Image();
-        img.src = "/images/generalImages/imagenAhorcado.png";
+        img.src = "/images/generalImages/CREARAHORCADO.png";
         img.onload = function () {
             doc.addImage(img, "PNG", 10, 70, 60, 60);
             doc.save(`${juego.nombre}.pdf`);

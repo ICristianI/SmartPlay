@@ -314,18 +314,19 @@ window.agregarTexto = function () {
   function abrirModalEdicion(input) {
     elementoEditando = input;
     document.getElementById("textoEditable").value = input.value;
-
-    const fondo = input.style.backgroundColor || "";
-    const esTransparente = fondo === "transparent" || fondo === "" || fondo === "rgba(0, 0, 0, 0)";
-    document.getElementById("colorFondoTextoEditable").value = rgbToHex(fondo || "#ffffff");
+  
+    const fondo = getComputedStyle(input).backgroundColor;
+    const esTransparente = fondo === "transparent" || fondo === "rgba(0, 0, 0, 0)";
+    document.getElementById("colorFondoTextoEditable").value = rgbToHex(fondo);
     document.getElementById("sinFondoTextoEditable").checked = esTransparente;
-
-    document.getElementById("colorTextoEditable").value = rgbToHex(input.style.color || "#000000");
-
+  
+    const texto = getComputedStyle(input).color;
+    document.getElementById("colorTextoEditable").value = rgbToHex(texto);
+  
     const modal = new bootstrap.Modal(document.getElementById("modalEditarTexto"));
-    
     modal.show();
   }
+  
   
 
   window.guardarTextoEditado = function () {
@@ -561,7 +562,6 @@ window.agregarJoin = function () {
 };
 
 
-
 function abrirModalJoin(wrapper) {
   joinEditando = wrapper;
   document.getElementById("joinIdEditable").value = wrapper.dataset.joinId || "";
@@ -591,11 +591,15 @@ window.agregarDesplegable = function () {
   wrapper.style.zIndex = 10;
 
   const opcionesDiv = document.createElement("div");
-  opcionesDiv.className = "seleccion-unica editable-div";
-  opcionesDiv.style.resize = "both";
-  opcionesDiv.style.overflow = "auto";
+  opcionesDiv.className = "editable-div";
+  opcionesDiv.style.display = "flex";
+  opcionesDiv.style.alignItems = "center";
+  opcionesDiv.style.justifyContent = "center";
   opcionesDiv.style.minWidth = "150px";
-  opcionesDiv.style.minHeight = "60px";
+  opcionesDiv.style.minHeight = "50px";
+  opcionesDiv.style.resize = "both";
+  opcionesDiv.style.overflow = "hidden";
+  
 
   const opciones = [
     { texto: "Opción A", correcta: true },
@@ -642,8 +646,9 @@ window.agregarDesplegable = function () {
 function renderizarOpcionesDesplegable(contenedor, opciones) {
   contenedor.innerHTML = "";
   const select = document.createElement("select");
-  select.className = "form-select";
-  select.disabled = true;
+    select.style.width = "100%";
+    select.style.height = "100%";
+    select.disabled = true;
 
   opciones.forEach(op => {
     const option = document.createElement("option");
@@ -654,7 +659,6 @@ function renderizarOpcionesDesplegable(contenedor, opciones) {
 
   contenedor.appendChild(select);
 }
-
 
 
 function abrirModalDesplegable(opciones, contenedorOpciones) {

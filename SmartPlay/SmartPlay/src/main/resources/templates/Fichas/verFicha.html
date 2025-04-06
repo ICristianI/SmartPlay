@@ -15,14 +15,15 @@
       <p class="text-break"><strong>Idioma:</strong> {{ficha.idioma}}</p>
       <p class="text-break"><strong>Asignatura:</strong> {{ficha.asignatura}}</p>
       <p class="text-break"><strong>Descripción:</strong></p>
-      <div class="descripcion-cuadro p-3 border rounded bg-light">
+      <div class="descripcion-cuadro p-3 border rounded bg-light word-wrap-break">
         {{ficha.descripcion}}
       </div>
-
-      <p class="mt-3"><strong>Contenido:</strong></p>
-      <div class="descripcion-cuadro p-3 border rounded bg-light mb-3">
+      
+      <p class="text-break"><strong>Contenido:</strong></p>
+      <div class="descripcion-cuadro p-3 border rounded bg-light mb-3 word-wrap-break">
         {{ficha.contenido}}
       </div>
+      
 
       <p class="text-break">
         <strong>Privacidad:</strong>
@@ -63,12 +64,12 @@
 
         <div class="mt-3">
           <label for="idioma" class="form-label">Idioma</label>
-          <input type="text" class="form-control" id="idioma" name="idioma" maxlength="30" value="{{ficha.idioma}}" required />
+          <input type="text" class="form-control" id="idioma" name="idioma" maxlength="20" value="{{ficha.idioma}}" required />
         </div>
 
         <div class="mt-3">
           <label for="asignatura" class="form-label">Asignatura</label>
-          <input type="text" class="form-control" id="asignatura" name="asignatura" maxlength="50" value="{{ficha.asignatura}}" required />
+          <input type="text" class="form-control" id="asignatura" name="asignatura" maxlength="30" value="{{ficha.asignatura}}" required />
         </div>
 
         <div class="mt-3">

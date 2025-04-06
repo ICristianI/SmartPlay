@@ -15,7 +15,7 @@
     <div class="mb-3">
       <label for="nombre" class="form-label">Nombre del Juego</label>
       <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Escribe el nombre del juego"
-        maxlength="30" required />
+        maxlength="40" required />
     </div>
 
     <!-- Idioma -->
@@ -36,14 +36,14 @@
     <div class="mb-3">
       <label for="contenido" class="form-label">Contenido</label>
       <textarea class="form-control" id="contenido" name="contenido" rows="3"
-        placeholder="Describe el contenido del juego" maxlength="100" required></textarea>
+        placeholder="Describe el contenido del juego" maxlength="500" required></textarea>
     </div>
 
     <!-- Descripción -->
     <div class="mb-3">
       <label for="descripcion" class="form-label">Descripción</label>
       <textarea class="form-control" id="descripcion" name="descripcion" rows="3"
-        placeholder="Breve descripción del juego" maxlength="100" required></textarea>
+        placeholder="Breve descripción del juego" maxlength="150" required></textarea>
     </div>
 
     <!-- Privacidad del juego -->
@@ -56,7 +56,7 @@
       <label class="form-label">Imagen del Juego</label>
       <div class="d-flex flex-column align-items-center">
         <div class="border border-secondary rounded mb-3" style="width: 200px; height: 150px; overflow: hidden">
-          <img id="previewImagen" src="/images/generalImages/AhorcadoDefault.jpg" alt="Vista previa"
+          <img id="previewImagen" src="/images/generalImages/CREARAHORCADO.png" alt="Vista previa"
             class="w-100 h-100 object-cover" />
         </div>
         <label for="imagenJuego" class="btn btn-primary navbar-custom">
@@ -71,7 +71,7 @@
 
     <!-- Palabra para el juego -->
     <div class="mb-3">
-      <label for="palabra" class="form-label">Palabra Secreta</label>
+      <label for="palabra" class="form-label">Palabra Secreta (Max 15 Letras)</label>
 
       <input type="text" class="form-control" id="palabra" name="palabra"
         placeholder="Escribe la palabra que se debe adivinar" pattern="[A-Za-z]+" maxlength="15" required />

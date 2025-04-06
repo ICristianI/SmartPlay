@@ -49,7 +49,7 @@ public class JuegoCrucigramaService {
             Blob imagen = imagenService.saveImage(imagenJuego);
             juego.setImagen(imagen);
         } else {
-            InputStream defaultImgStream = getClass().getResourceAsStream("/static/images/generalImages/CrucigramaDefault.jpg");
+            InputStream defaultImgStream = getClass().getResourceAsStream("/static/images/generalImages/CREARCRUCIGRAMA.png");
             if (defaultImgStream != null) {
                 byte[] bytes = defaultImgStream.readAllBytes();
                 Blob defaultBlob = new javax.sql.rowset.serial.SerialBlob(bytes);

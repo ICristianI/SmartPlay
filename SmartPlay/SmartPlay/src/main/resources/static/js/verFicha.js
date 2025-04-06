@@ -27,11 +27,21 @@ document.addEventListener("DOMContentLoaded", () => {
       input.style.height = `${elemento.height}px`;
       input.dataset.tipo = "evaluado";
     
-      if (elemento.colorFondo) input.style.backgroundColor = elemento.colorFondo;
+      if (elemento.colorFondo) {
+        input.style.backgroundColor = elemento.colorFondo;
+    
+        const transparente = elemento.colorFondo === "transparent" || elemento.colorFondo === "rgba(0, 0, 0, 0)";
+        if (transparente) {
+          input.style.border = "none";
+          input.style.boxShadow = "none";
+        }
+      }
+    
       if (elemento.colorTexto) input.style.color = elemento.colorTexto;
     
       div.appendChild(input);
     }
+    
     
 
     if (elemento.tipo === "decorativo") {
@@ -43,11 +53,21 @@ document.addEventListener("DOMContentLoaded", () => {
       textarea.style.width = `${elemento.width}px`;
       textarea.style.height = `${elemento.height}px`;
     
-      if (elemento.colorFondo) textarea.style.backgroundColor = elemento.colorFondo;
+      if (elemento.colorFondo) {
+        textarea.style.backgroundColor = elemento.colorFondo;
+    
+        const transparente = elemento.colorFondo === "transparent" || elemento.colorFondo === "rgba(0, 0, 0, 0)";
+        if (transparente) {
+          textarea.style.border = "none";
+          textarea.style.boxShadow = "none";
+        }
+      }
+    
       if (elemento.colorTexto) textarea.style.color = elemento.colorTexto;
     
       div.appendChild(textarea);
     }
+    
     
 
     if (elemento.tipo === "seleccion") {
@@ -67,12 +87,20 @@ document.addEventListener("DOMContentLoaded", () => {
         opt.appendChild(input);
         opt.appendChild(label);
         div.appendChild(opt);
-        div.style.backgroundColor = elemento.colorFondo || "";
-        div.style.color = elemento.colorTexto || "";
-
       });
+    
+      if (elemento.colorFondo) {
+        div.style.backgroundColor = elemento.colorFondo;
+    
+        const transparente = elemento.colorFondo === "transparent" || elemento.colorFondo === "rgba(0, 0, 0, 0)";
+        if (transparente) {
+          div.style.border = "none";
+        }
+      }
+    
+      if (elemento.colorTexto) div.style.color = elemento.colorTexto;
     }
-
+    
     if (elemento.tipo === "desplegable") {
       const select = document.createElement("select");
       select.className = "form-select";
@@ -88,11 +116,32 @@ document.addEventListener("DOMContentLoaded", () => {
       select.style.width = `${elemento.width}px`;
       select.style.height = `${elemento.height}px`;
     
+      if (elemento.colorFondo) {
+        div.style.backgroundColor = elemento.colorFondo;
+    
+        const transparente = elemento.colorFondo === "transparent" || elemento.colorFondo === "rgba(0, 0, 0, 0)";
+        if (transparente) {
+          div.style.setProperty("border", "none", "important");
+          div.style.setProperty("box-shadow", "none", "important");
+          select.style.setProperty("background-color", "transparent", "important");
+          select.style.setProperty("appearance", "none", "important");
+          select.style.setProperty("-webkit-appearance", "none", "important");
+          select.style.setProperty("-moz-appearance", "none", "important");
+          select.style.setProperty("border", "none", "important");
+          select.style.setProperty("box-shadow", "none", "important");
+        } else {
+          select.style.backgroundColor = elemento.colorFondo;
+        }
+      }
+    
+      if (elemento.colorTexto) {
+        div.style.color = elemento.colorTexto;
+        select.style.color = elemento.colorTexto;
+      }
+    
       div.appendChild(select);
-      div.style.backgroundColor = elemento.colorFondo || "";
-      div.style.color = elemento.colorTexto || "";
-
     }
+    
     
 
     if (elemento.tipo === "checkbox") {
@@ -130,16 +179,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
       joinBox.addEventListener("click", () => {
         if (joinSeleccionado === joinBox) {
+          // Deseleccionar si haces clic en el mismo
           joinBox.style.borderColor = "#aaa";
           joinSeleccionado = null;
         } else if (!joinSeleccionado) {
+          // Seleccionar el primero
           joinSeleccionado = joinBox;
           joinBox.style.borderColor = "blue";
         } else {
+          // Si ya hay una conexión entre ellos, eliminarla
           const parExistente = conexiones.find(c =>
             (c[0] === joinSeleccionado && c[1] === joinBox) ||
             (c[0] === joinBox && c[1] === joinSeleccionado)
           );
+      
           if (parExistente) {
             conexiones = conexiones.filter(c =>
               !( (c[0] === joinSeleccionado && c[1] === joinBox) ||
@@ -148,13 +201,23 @@ document.addEventListener("DOMContentLoaded", () => {
             clearLines();
             drawAllLines();
           } else {
-            conexiones.push([joinSeleccionado, joinBox]);
-            drawLineBetween(joinSeleccionado, joinBox);
+            // Verificar si alguno ya está conectado
+            const yaConectadoA = conexiones.some(c => c[0] === joinSeleccionado || c[1] === joinSeleccionado);
+            const yaConectadoB = conexiones.some(c => c[0] === joinBox || c[1] === joinBox);
+      
+            if (!yaConectadoA && !yaConectadoB) {
+              conexiones.push([joinSeleccionado, joinBox]);
+              drawLineBetween(joinSeleccionado, joinBox);
+            }
+            // Si alguno ya está conectado, no hacemos nada (no se permite multiconexión)
           }
+      
+          // Siempre deseleccionar el primero
           joinSeleccionado.style.borderColor = "#aaa";
           joinSeleccionado = null;
         }
       });
+      
     }
 
     contenedor.appendChild(div);
@@ -304,35 +367,41 @@ document.addEventListener("DOMContentLoaded", () => {
     const selectTamano = document.getElementById("tamanoFicha");
     const btnCorregir = document.getElementById("btnCorregir");
     const btnAceptar = document.getElementById("btnAceptar");
-
+  
     if (selectTamano) selectTamano.style.display = "none";
     if (btnCorregir) btnCorregir.style.display = "none";
     if (btnAceptar) btnAceptar.style.display = "none";
-
-    ficha.querySelectorAll("input, textarea, .join-box, .checkbox-cuadro").forEach(el => {
-      el.style.backgroundColor = "white";
-      el.style.color = "black";
-      el.style.border = "1px solid #000";
-    });
-
+  
+    // 🔸 Guardar estilos originales
+    const elementos = ficha.querySelectorAll("input, textarea, .join-box, .checkbox-cuadro");
+    const estilosOriginales = Array.from(elementos).map(el => ({
+      el,
+      backgroundColor: el.style.backgroundColor,
+      color: el.style.color,
+      border: el.style.border,
+      boxShadow: el.style.boxShadow,
+    }));
+  
     const canvas = await html2canvas(ficha, { scale: 2 });
     const imgData = canvas.toDataURL("image/png");
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF("p", "mm", "a4");
     const imgWidth = 210;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
+  
     pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
     pdf.save("ficha_interactiva.pdf");
-
+  
+    estilosOriginales.forEach(({ el, backgroundColor, color, border, boxShadow }) => {
+      el.style.backgroundColor = backgroundColor;
+      el.style.color = color;
+      el.style.border = border;
+      el.style.boxShadow = boxShadow;
+    });
+  
     if (selectTamano) selectTamano.style.display = "";
     if (btnCorregir) btnCorregir.style.display = "";
     if (btnAceptar) btnAceptar.style.display = "";
-
-    ficha.querySelectorAll("input, textarea, .join-box, .checkbox-cuadro").forEach(el => {
-      el.style.backgroundColor = "";
-      el.style.color = "";
-      el.style.border = "";
-    });
   };
+  
 });

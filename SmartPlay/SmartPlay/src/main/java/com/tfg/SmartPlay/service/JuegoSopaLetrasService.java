@@ -48,7 +48,7 @@ public class JuegoSopaLetrasService {
             Blob imagen = imagenService.saveImage(imagenJuego);
             juego.setImagen(imagen);
         } else {
-            InputStream defaultImgStream = getClass().getResourceAsStream("/static/images/generalImages/SopaLetrasDefault.jpg");
+            InputStream defaultImgStream = getClass().getResourceAsStream("/static/images/generalImages/CREARSOPA.png");
             if (defaultImgStream != null) {
                 byte[] bytes = defaultImgStream.readAllBytes();
                 Blob defaultBlob = new javax.sql.rowset.serial.SerialBlob(bytes);

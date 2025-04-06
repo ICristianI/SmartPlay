@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SmartPlay</title>
     <link rel="icon" type="image/png" href="/images/generalImages/SMARTPLAY.png">
-
+    
     <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
@@ -17,6 +17,47 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
       rel="stylesheet"
     />
+
+
+    
+    
+    <script>
+
+    (function () {
+        try {
+          const theme = localStorage.getItem("theme");
+          if (theme === "dark") {
+            document.write('<body class="dark-mode d-flex flex-column min-vh-100">');
+          } else {
+            document.write('<body class="d-flex flex-column min-vh-100">');
+          }
+        } catch (e) {
+          document.write('<body class="d-flex flex-column min-vh-100">');
+        }
+      })();
+
+      (function () {
+        const root = document.documentElement;
+        const theme = localStorage.getItem("theme");
+        const gradient = localStorage.getItem("selectedGradient");
+    
+        if (gradient === "bluepurple") {
+          root.style.setProperty("--bg-navbar", "linear-gradient(to right, #5729e1, #9622d5)");
+          root.style.setProperty("--bg-dropdown-hover", "linear-gradient(to right, #4b1cba, #7f1d9f)");
+          root.style.setProperty("--bg-dropdown-item-hover", "linear-gradient(to right, #4b1cba, #7f1d9f)");
+        } else if (gradient === "redyellow") {
+          root.style.setProperty("--bg-navbar", "linear-gradient(to right, #f0381f, #f8b500)");
+          root.style.setProperty("--bg-dropdown-hover", "linear-gradient(to right, #c02e18, #c69300)");
+          root.style.setProperty("--bg-dropdown-item-hover", "linear-gradient(to right, #c02e18, #c69300)");
+        } else if (gradient === "greenTurquoise") {
+          root.style.setProperty("--bg-navbar", "linear-gradient(to right, #20c997, #007bff)");
+          root.style.setProperty("--bg-dropdown-hover", "linear-gradient(to right, #199874, #0056b3)");
+          root.style.setProperty("--bg-dropdown-item-hover", "linear-gradient(to right, #199874, #0056b3)");
+        }
+      })();
+    </script>
+    
+    
     <link href="/css/style.css" rel="stylesheet" />
   </head>
   <body class="d-flex flex-column min-vh-100">
@@ -54,8 +95,12 @@
 
       
       {{#isLogged}}
+      {{#isProfesor}}
       <li class="nav-item">
         <a class="nav-link btn" href="/grupo" style="margin-right: 15px;" id="grupos">Grupos</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link btn" href="/creacion" style="margin-right: 15px;" id="grupos">Creación</a>
       </li>
       <li class="nav-item">
         <a class="nav-link btn" href="/Cuadernos" style="margin-right: 15px;" id="cuadernos">Cuadernos</a>
@@ -66,6 +111,7 @@
       <li class="nav-item">
         <a class="nav-link btn" href="/fichas" style="margin-right: 15px;" id="files">Fichas</a>
       </li>
+      {{/isProfesor}}
       {{/isLogged}}
 
 
@@ -80,8 +126,10 @@
     <ul class="navbar-nav ml-auto" style="margin-right: 50px;">
       <li class="nav-item" style="border-right: 2px solid white;">
         <a class="nav-link" href="#" id="toggle-mode">
-          <i class="fas fa-moon"></i>
+          <span id="icono-modo"></span>
         </a>
+        
+        
       </li>
 
       <!-- Verificar si está logueado -->

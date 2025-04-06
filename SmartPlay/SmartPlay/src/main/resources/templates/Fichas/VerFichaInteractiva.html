@@ -2,7 +2,7 @@
 
 <div class="container mt-4">
   <div class="d-flex align-items-center justify-content-between mb-4">
-    <h1 class="mb-0">Vista de Ficha Interactiva</h1>
+    <h1 class="mb-0">{{ficha.nombre}}</h1>
 
     {{#User}}
     <!-- Botón de Me Gusta -->
@@ -20,8 +20,9 @@
 
   </div>
   <div class="text-start w-100">
-    <h5 class="mb-3 mt-3">Descripción: {{ ficha.descripcion }}</h5>
-</div>
+    <h5 class="mb-3 mt-3 word-wrap-break" style="max-width: 800px;">Descripción: {{ ficha.descripcion }}</h5>
+  </div>
+  
   
 
   <!-- Área principal con imagen de fondo y elementos superpuestos -->
@@ -45,7 +46,16 @@
     <div class="d-flex justify-content-center flex-wrap" style="gap: 0.5rem;">
       <button class="btn btn-primary me-3 mb-2" id="btnCorregir">Corregir</button>
       <button class="btn btn-secondary me-3 mb-2" onclick="descargarPDF()">Descargar en PDF</button>
-      <button class="btn btn-success mb-2" onclick="window.history.back();">Aceptar</button>
+      {{#esPropietario}}
+      <form action="/f/verFicha" method="GET">
+        <input type="hidden" name="_csrf" value="{{token}}" />
+        <input type="hidden" name="fichaId" value="{{ficha.id}}" />
+        <button type="submit" class="btn btn-success mb-2">Ver Ficha</button>
+      </form>
+      {{/esPropietario}}
+      {{^esPropietario}}
+      <button class="btn btn-warning mb-2" onclick="window.history.back();">Volver</button>
+      {{/esPropietario}}
     </div>
     
   </div>

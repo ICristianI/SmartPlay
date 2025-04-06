@@ -8,7 +8,7 @@
     <!-- Mostrar "Inicio" solo si no está logueado -->
     {{^isLogged}}
     <div class="card navbar-custom text-center">
-      <img src="/images/generalImages/Inicio.jpg" class="cardVertical card-img-top limited-img" alt="Inicio" />
+      <img src="/images/generalImages/INICIOTITULO.png" class="cardVertical card-img-top limited-img" alt="Inicio" />
       <div class="card-body">
         <h5 class="card-title" id="start-menu">Inicio</h5>
         <a href="/regin" class="stretched-link"></a>
@@ -22,7 +22,7 @@
     <!-- Carta de Creación -->
      {{#isProfesor}}
     <div class="card navbar-custom text-center">
-      <img src="/images/generalImages/fichas2.jpg" class="cardVertical limited-img" alt="Creación" />
+      <img src="/images/generalImages/CREACIONTITULO.png" class="cardVertical limited-img" alt="Creación" />
       <div class="card-body">
         <h5 class="card-title" id="creacion">Creación</h5>
         <a href="/creacion" class="stretched-link"></a>
@@ -32,7 +32,7 @@
 
     <!-- Carta de Grupo -->
     <div class="card navbar-custom text-center">
-      <img src="/images/generalImages/Grupo.png" class="cardVertical limited-img" alt="Grupo" />
+      <img src="/images/generalImages/GRUPOTITULO.png" class="cardVertical limited-img" alt="Grupo" />
       <div class="card-body">
         <h5 class="card-title" id="grupo">Grupo</h5>
         <a href="/grupo" class="stretched-link"></a>
@@ -48,7 +48,7 @@
       <form action="/f/investigar" method="get" class="h-100 w-100">
         <input type="hidden" name="_csrf" value="{{token}}" />
         <button type="submit" class="btn p-0 h-100 w-100 text-center" style="border: none; background: none; color: white;">
-          <img src="/images/generalImages/investigar.jpg" class="cardVertical limited-img card-img-top" alt="Investigar Fichas" />
+          <img src="/images/generalImages/FICHASTITULO.png" class="cardVertical limited-img card-img-top" alt="Investigar Fichas" />
           <div class="card-body">
             <h5 class="card-title" id="explore">Investigar Fichas</h5>
           </div>
@@ -61,7 +61,7 @@
   <form action="/juegos/investigar" method="get" class="h-100 w-100">
     <input type="hidden" name="_csrf" value="{{token}}" />
     <button type="submit" class="btn p-0 h-100 w-100 text-center" style="border: none; background: none; color: white;">
-      <img src="/images/generalImages/Estadisticas.jpg" class="cardVertical limited-img card-img-top" alt="Investigar Juegos" />
+      <img src="/images/generalImages/JUEGOSTITULO.png" class="cardVertical limited-img card-img-top" alt="Investigar Juegos" />
       <div class="card-body">
         <h5 class="card-title" id="juegos">Investigar Juegos</h5>
       </div>

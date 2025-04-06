@@ -13,35 +13,35 @@
     <!-- Nombre del juego -->
     <div class="mb-3">
       <label for="nombre" class="form-label">Nombre del Juego</label>
-      <input type="text" class="form-control" id="nombre" name="nombre" maxlength="30" required
+      <input type="text" class="form-control" id="nombre" name="nombre" maxlength="40" required
         placeholder="Ejemplo: Animales del Bosque" />
     </div>
 
     <!-- Idioma -->
     <div class="mb-3">
       <label for="idioma" class="form-label">Idioma</label>
-      <input type="text" class="form-control" id="idioma" name="idioma" maxlength="20" required
+      <input type="text" class="form-control" id="idioma" name="idioma" maxlength="30" required
         placeholder="Ejemplo: Español" />
     </div>
 
     <!-- Asignatura -->
     <div class="mb-3">
       <label for="asignatura" class="form-label">Asignatura</label>
-      <input type="text" class="form-control" id="asignatura" name="asignatura" maxlength="30" required
+      <input type="text" class="form-control" id="asignatura" name="asignatura" maxlength="50" required
         placeholder="Ejemplo: Ciencias Naturales" />
     </div>
 
     <!-- Contenido -->
     <div class="mb-3">
       <label for="contenido" class="form-label">Contenido</label>
-      <textarea class="form-control" id="contenido" name="contenido" rows="3" maxlength="100" required
+      <textarea class="form-control" id="contenido" name="contenido" rows="3" maxlength="500" required
         placeholder="Ejemplo: Animales que habitan en el bosque como el zorro, el búho y el oso."></textarea>
     </div>
 
     <!-- Descripción -->
     <div class="mb-3">
       <label for="descripcion" class="form-label">Descripción</label>
-      <textarea class="form-control" id="descripcion" name="descripcion" rows="3" maxlength="100" required
+      <textarea class="form-control" id="descripcion" name="descripcion" rows="3" maxlength="150" required
         placeholder="Ejemplo: Encuentra en la sopa de letras los nombres de animales que viven en el bosque."></textarea>
     </div>
 
@@ -55,7 +55,7 @@
       <label class="form-label">Imagen del Juego</label>
       <div class="d-flex flex-column align-items-center">
         <div class="border border-secondary rounded mb-3" style="width: 200px; height: 150px; overflow: hidden">
-          <img id="previewImagen" src="/images/generalImages/SopaLetrasDefault.jpg" alt="Vista previa"
+          <img id="previewImagen" src="/images/generalImages/CREARSOPA.png" alt="Vista previa"
             class="w-100 h-100 object-cover" />
         </div>
         <label for="imagenJuego" class="btn btn-primary navbar-custom">
@@ -70,13 +70,12 @@
 
     <!-- Palabras para la sopa de letras -->
     <div class="mb-3">
-      <label for="palabraInput" class="form-label">Agregar Palabras (Máx. 6 palabras, 10 letras c/u)</label>
+      <label for="palabraInput" class="form-label">Agregar Palabras (Max 6 Palabras, 8 Letras, No repetidas)</label>
       <div class="input-group">
-        <input type="text" class="form-control" id="palabraInput" placeholder="Ejemplo: Lobo" maxlength="10" />
+        <input type="text" class="form-control" id="palabraInput" placeholder="Ejemplo: Lobo" maxlength="8" />
         <button type="button" class="btn btn-outline-primary" onclick="agregarPalabra()">Agregar</button>
       </div>
     </div>
-
 
     <!-- Lista de palabras agregadas -->
     <ul id="listaPalabras" class="list-group mb-3"></ul>

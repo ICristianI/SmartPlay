@@ -24,7 +24,7 @@
         
     </div>
     <div class="text-start w-100">
-        <h5 class="mb-3 mt-3">Descripción: {{ juego.descripcion }}</h5>
+        <h5 class="mb-3 mt-3 word-wrap-break ">Descripción: {{ juego.descripcion }}</h5>
     </div>
       
       
@@ -43,13 +43,28 @@
     <div id="mensaje" class="mt-4"></div>
 
 <!-- Selección de dificultad -->
+<!-- Selección de dificultad -->
 <div class="mt-4" id="dificultadContainer">
-    <label for="dificultad" class="fw-bold">Selecciona la dificultad:</label>
+    <label for="dificultad" class="fw-bold">
+      Selecciona la dificultad:
+    </label>
     <select id="dificultad" class="form-select w-auto d-inline-block mx-2" onchange="seleccionarDificultad(this.value)">
-        <option value="normal" selected>Normal (10x10)</option>
-        <option value="dificil">Difícil (15x15)</option>
+      <option value="normal" selected>Normal (10x10)</option>
+      <option value="dificil">Difícil (15x15)</option>
     </select>
-</div>
+  
+    <!-- Icono con tooltip -->
+    <span 
+      class="ms-2" 
+      style="cursor: pointer;" 
+      data-bs-toggle="tooltip" 
+      data-bs-placement="right"
+      title="En dificultad normal (10x10), puede ser difícil colocar entre 5 y 6 palabras sin que compartan letras. 
+      Si notas que falta alguna palabra, intenta reiniciar el juego o cambia a dificultad difícil (15x15) para una mejor distribución.">
+      ❓
+    </span>
+  </div>
+  
 
 
     <!-- Botón para reiniciar -->
@@ -70,6 +85,13 @@
         descripcion: "{{ juego.descripcion }}"
     };
     console.log("Juego cargado:", juego);
+
+    document.addEventListener("DOMContentLoaded", function () {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+      new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  });
 </script>
 
 
