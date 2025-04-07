@@ -1,13 +1,10 @@
 package com.tfg.SmartPlay.controller;
 
 import com.tfg.SmartPlay.entity.Cuaderno;
-import com.tfg.SmartPlay.entity.JuegoAhorcado;
 import com.tfg.SmartPlay.entity.JuegoCrucigrama;
-import com.tfg.SmartPlay.entity.JuegoSopaLetras;
 import com.tfg.SmartPlay.service.JuegoCrucigramaService;
 import com.tfg.SmartPlay.service.JuegoLikeService;
 import com.tfg.SmartPlay.service.JuegoService;
-import com.tfg.SmartPlay.service.UserComponent;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +35,6 @@ public class JuegoCrucigramaController {
 
     @Autowired
     private JuegoCrucigramaService juegoCrucigramaService;
-
-    @Autowired
-    private UserComponent userComponent;
 
     @GetMapping("/listar")
     public String listarJuegos(Model model,

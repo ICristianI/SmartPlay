@@ -2,7 +2,6 @@ package com.tfg.SmartPlay.service;
 
 import com.tfg.SmartPlay.entity.Cuaderno;
 import com.tfg.SmartPlay.entity.Grupo;
-import com.tfg.SmartPlay.entity.Juego;
 import com.tfg.SmartPlay.entity.User;
 import com.tfg.SmartPlay.repository.CuadernoRepository;
 import com.tfg.SmartPlay.repository.GrupoRepository;
@@ -24,9 +23,6 @@ public class GrupoService {
 
     @Autowired
     private CuadernoRepository cuadernoRepository;
-
-    @Autowired
-    private UserComponent userComponent;
 
     /**
      * Lista todos los grupos de un usuario autenticado, paginados.

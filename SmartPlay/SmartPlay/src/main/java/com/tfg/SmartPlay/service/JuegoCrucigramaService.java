@@ -1,7 +1,6 @@
 package com.tfg.SmartPlay.service;
 
 import com.tfg.SmartPlay.entity.Cuaderno;
-import com.tfg.SmartPlay.entity.Juego;
 import com.tfg.SmartPlay.entity.JuegoCrucigrama;
 import com.tfg.SmartPlay.entity.User;
 import com.tfg.SmartPlay.repository.CuadernoRepository;

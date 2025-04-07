@@ -1,6 +1,5 @@
 package com.tfg.SmartPlay.repository;
 
-import com.tfg.SmartPlay.entity.Ficha;
 import com.tfg.SmartPlay.entity.Juego;
 import com.tfg.SmartPlay.entity.User;
 import org.springframework.data.domain.Page;
