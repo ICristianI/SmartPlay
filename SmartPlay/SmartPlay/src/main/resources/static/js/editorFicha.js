@@ -70,6 +70,8 @@ window.agregarTexto = function () {
   
     habilitarArrastreSoloSiActivo(wrapper);
     habilitarHoverBotones(wrapper);
+    limitarRedimension(wrapper);
+
   };
 
   window.agregarTextoDecorativo = function () {
@@ -127,6 +129,8 @@ window.agregarTexto = function () {
   
     habilitarArrastreSoloSiActivo(wrapper);
     habilitarHoverBotones(wrapper);
+    limitarRedimension(wrapper);
+
   };
 
   let seleccionActual = null;
@@ -155,6 +159,8 @@ window.agregarTexto = function () {
       { texto: "Opción 2", correcta: false },
     ];
     renderizarOpciones(opcionesDiv, opciones);
+    opcionesDiv.dataset.opciones = JSON.stringify(opciones);
+
   
     const botones = document.createElement("div");
     botones.className = "botones-edicion gap-1";
@@ -190,9 +196,11 @@ window.agregarTexto = function () {
   
     habilitarArrastreSoloSiActivo(wrapper);
     habilitarHoverBotones(wrapper);
+    limitarRedimension(wrapper);
+
   };
   
-  function renderizarOpciones(contenedor, opciones) {
+  function renderizarOpciones(contenedor, opciones, tamanoLetra = null) {
     contenedor.innerHTML = "";
     opciones.forEach((opcion, index) => {
       const div = document.createElement("div");
@@ -206,11 +214,16 @@ window.agregarTexto = function () {
       label.textContent = opcion.texto;
       label.style.marginLeft = "0.5rem";
   
+      if (tamanoLetra) {
+        label.style.fontSize = `${tamanoLetra}px`;
+      }
+  
       div.appendChild(input);
       div.appendChild(label);
       contenedor.appendChild(div);
     });
   }
+  
   
   function abrirModalSeleccionUnica(opciones, contenedorOpciones) {
     seleccionActual = { opciones, contenedorOpciones };
@@ -250,12 +263,27 @@ window.agregarTexto = function () {
     });
   
     const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("modalSeleccionUnica"));
-    const fondo = contenedorOpciones.style.backgroundColor || "";
-    const esTransparente = fondo === "transparent" || fondo === "" || fondo === "rgba(0, 0, 0, 0)";
-    document.getElementById("colorFondoSeleccionUnica").value = rgbToHex(fondo || "#ffffff");
+    const fondoReal = getComputedStyle(contenedorOpciones).backgroundColor;
+    const esTransparente = fondoReal === "transparent" || fondoReal === "rgba(0, 0, 0, 0)";
     document.getElementById("sinFondoSeleccionUnica").checked = esTransparente;
+    document.getElementById("colorFondoSeleccionUnica").value = rgbToHex(fondoReal);
+    
 
     document.getElementById("colorTextoSeleccionUnica").value = rgbToHex(contenedorOpciones.style.color || "#000000");
+
+    const label = contenedorOpciones.querySelector("label");
+    const tamanoLetra = parseInt(getComputedStyle(label).fontSize) || 16;
+
+    document.getElementById("tamanoTextoSeleccionUnica").value = tamanoLetra;
+    
+    seleccionActual.tamanoLetra = tamanoLetra;
+    
+
+    const tamanoInput = document.getElementById("tamanoTextoSeleccionUnica");
+      tamanoInput.value = tamanoLetra;
+      tamanoInput.addEventListener("input", function () {
+        limitarDosDigitos(this);
+      });
 
     modal.show();
     
@@ -268,10 +296,15 @@ window.agregarTexto = function () {
       const sinFondo = document.getElementById("sinFondoSeleccionUnica").checked;
 
       const contenedor = seleccionActual.contenedorOpciones;
+      const tamanoLetra = parseInt(document.getElementById("tamanoTextoSeleccionUnica").value) || 16;
+
       contenedor.style.backgroundColor = sinFondo ? "transparent" : fondo;
       contenedor.style.color = texto;
+      contenedor.style.fontSize = `${document.getElementById("tamanoTextoSeleccionUnica").value}px`;
+      contenedor.dataset.opciones = JSON.stringify(seleccionActual.opciones);
 
-      renderizarOpciones(seleccionActual.contenedorOpciones, seleccionActual.opciones);
+      renderizarOpciones(seleccionActual.contenedorOpciones, seleccionActual.opciones, tamanoLetra);
+
       bootstrap.Modal.getInstance(document.getElementById("modalSeleccionUnica")).hide();
     }
   };
@@ -314,6 +347,8 @@ window.agregarTexto = function () {
   function abrirModalEdicion(input) {
     elementoEditando = input;
     document.getElementById("textoEditable").value = input.value;
+    document.getElementById("tamanoTextoEditable").value = parseInt(getComputedStyle(input).fontSize);
+
   
     const fondo = getComputedStyle(input).backgroundColor;
     const esTransparente = fondo === "transparent" || fondo === "rgba(0, 0, 0, 0)";
@@ -335,8 +370,9 @@ window.agregarTexto = function () {
       const colorFondo = document.getElementById("colorFondoTextoEditable").value;
       const colorTexto = document.getElementById("colorTextoEditable").value;
       const sinFondo = document.getElementById("sinFondoTextoEditable").checked;
-      
-      
+      const tamanoLetra = document.getElementById("tamanoTextoEditable").value;
+
+      elementoEditando.style.fontSize = `${tamanoLetra}px`;
       elementoEditando.value = nuevoTexto.substring(0, 60);
       elementoEditando.style.backgroundColor = sinFondo ? "transparent" : colorFondo;
       elementoEditando.style.color = colorTexto;
@@ -352,7 +388,7 @@ window.agregarCheckbox = function () {
   
     const wrapper = document.createElement("div");
     wrapper.dataset.tipo = "checkbox";
-    wrapper.dataset.estado = "neutral"; // <- NUEVO
+    wrapper.dataset.estado = "neutral";
     wrapper.className = "elemento-editable";
     wrapper.style.position = "absolute";
     wrapper.style.left = "100px";
@@ -399,13 +435,18 @@ window.agregarCheckbox = function () {
   
     habilitarArrastreSoloSiActivo(wrapper);
     habilitarHoverBotones(wrapper);
+    limitarRedimension(wrapper);
+
   };
   
   
   function abrirModalCheckbox(checkbox) {
+    
   checkboxEditando = checkbox;
   const estado = checkbox.dataset.estado || "neutral";
   document.getElementById("checkboxEstado").value = estado;
+  const size = parseInt(checkbox.style.width) || 25;
+  document.getElementById("tamanoCheckbox").value = size;
 
   const modal = new bootstrap.Modal(document.getElementById("modalCheckbox"));
   modal.show();
@@ -424,8 +465,14 @@ window.guardarCheckbox = function () {
         wrapper.dataset.estado = estado;
       }
   
+      const tamano = document.getElementById("tamanoCheckbox").value;
+      checkboxEditando.style.width = `${tamano}px`;
+      checkboxEditando.style.height = `${tamano}px`;
+
       checkboxEditando = null;
     }
+
+
   
     bootstrap.Modal.getInstance(document.getElementById("modalCheckbox")).hide();
   };
@@ -463,10 +510,12 @@ function renderizarCheckboxes(contenedor, opciones) {
       fila.className = "d-flex align-items-center mb-2 gap-2";
   
       const input = document.createElement("input");
+      limitarDosDigitos(input);
       input.type = "text";
       input.value = op.texto;
       input.className = "form-control";
       input.oninput = e => op.texto = e.target.value;
+
   
       const check = document.createElement("input");
       check.type = "checkbox";
@@ -480,6 +529,7 @@ function renderizarCheckboxes(contenedor, opciones) {
         opciones.splice(i, 1);
         abrirModalCheckboxes(opciones, contenedor);
       };
+
   
       fila.appendChild(input);
       fila.appendChild(check);
@@ -487,6 +537,9 @@ function renderizarCheckboxes(contenedor, opciones) {
       editor.appendChild(fila);
     });
   
+    const size = parseInt(checkbox.style.width) || 25;
+    document.getElementById("tamanoCheckbox").value = size;
+
     const modal = new bootstrap.Modal(document.getElementById("modalEditarCheckboxes"));
     modal.show();
   }
@@ -496,6 +549,10 @@ function renderizarCheckboxes(contenedor, opciones) {
       renderizarCheckboxes(checkboxActual.contenedor, checkboxActual.opciones);
       bootstrap.Modal.getInstance(document.getElementById("modalEditarCheckboxes")).hide();
     }
+    const tamano = document.getElementById("tamanoCheckbox").value;
+    checkboxEditando.style.width = `${tamano}px`;
+    checkboxEditando.style.height = `${tamano}px`;
+
   };
   
   window.agregarCheckboxOpcion = function () {
@@ -522,8 +579,22 @@ window.agregarJoin = function () {
 
   const cuadro = document.createElement("div");
   cuadro.className = "editable-div";
-  cuadro.textContent = "Join";
+  cuadro.textContent = "";
+  cuadro.style.minWidth = "40px";
+  cuadro.style.minHeight = "30px";
+  cuadro.style.width = "auto";
+  cuadro.style.height = "auto";
+  cuadro.style.padding = "4px 8px";
+  cuadro.style.fontSize = "14px";
+  cuadro.style.border = "1px dashed #888";
+  cuadro.style.borderRadius = "6px";
+  cuadro.style.display = "flex";
+  cuadro.style.alignItems = "center";
+  cuadro.style.justifyContent = "center";
+  cuadro.style.backgroundColor = "#f2f2f2";
+  cuadro.style.whiteSpace = "nowrap";
   cuadro.style.textAlign = "center";
+
 
   const botones = document.createElement("div");
   botones.className = "botones-edicion gap-1";
@@ -559,21 +630,32 @@ window.agregarJoin = function () {
 
   habilitarArrastreSoloSiActivo(wrapper);
   habilitarHoverBotones(wrapper);
+  limitarRedimension(wrapper);
+
 };
 
 
 function abrirModalJoin(wrapper) {
   joinEditando = wrapper;
-  document.getElementById("joinIdEditable").value = wrapper.dataset.joinId || "";
+  const input = document.getElementById("joinIdEditable");
+  input.value = wrapper.dataset.joinId || "";
+
+  limitarDosDigitos(input);
+
+  input.addEventListener("input", function () {
+    limitarDosDigitos(this);
+  });
+
   const modal = new bootstrap.Modal(document.getElementById("modalJoin"));
   modal.show();
 }
+
 
 window.guardarJoin = function () {
   if (joinEditando) {
     const nuevoId = document.getElementById("joinIdEditable").value.trim();
     joinEditando.dataset.joinId = nuevoId;
-    joinEditando.querySelector(".editable-div").textContent = "Join: " + (nuevoId || "sin ID");
+    joinEditando.querySelector(".editable-div").textContent = nuevoId || "";
     bootstrap.Modal.getInstance(document.getElementById("modalJoin")).hide();
   }
 };
@@ -606,6 +688,8 @@ window.agregarDesplegable = function () {
     { texto: "Opción B", correcta: false },
   ];
   renderizarOpcionesDesplegable(opcionesDiv, opciones);
+  opcionesDiv.dataset.opciones = JSON.stringify(opciones);
+
 
   const botones = document.createElement("div");
   botones.className = "botones-edicion gap-1";
@@ -641,14 +725,20 @@ window.agregarDesplegable = function () {
 
   habilitarArrastreSoloSiActivo(wrapper);
   habilitarHoverBotones(wrapper);
+  limitarRedimension(wrapper);
+
 };
 
-function renderizarOpcionesDesplegable(contenedor, opciones) {
+function renderizarOpcionesDesplegable(contenedor, opciones, tamanoLetra = null) {
   contenedor.innerHTML = "";
   const select = document.createElement("select");
-    select.style.width = "100%";
-    select.style.height = "100%";
-    select.disabled = true;
+  select.style.width = "100%";
+  select.style.height = "100%";
+  select.disabled = true;
+
+  if (tamanoLetra) {
+    select.style.fontSize = `${tamanoLetra}px`;
+  }
 
   opciones.forEach(op => {
     const option = document.createElement("option");
@@ -659,6 +749,7 @@ function renderizarOpcionesDesplegable(contenedor, opciones) {
 
   contenedor.appendChild(select);
 }
+
 
 
 function abrirModalDesplegable(opciones, contenedorOpciones) {
@@ -699,12 +790,25 @@ function abrirModalDesplegable(opciones, contenedorOpciones) {
   });
 
   const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("modalDesplegable"));
-  const fondo = contenedorOpciones.style.backgroundColor || "";
-  const esTransparente = fondo === "transparent" || fondo === "" || fondo === "rgba(0, 0, 0, 0)";
-  document.getElementById("colorFondoDesplegable").value = rgbToHex(fondo || "#ffffff");
+  const fondoReal = getComputedStyle(contenedorOpciones).backgroundColor;
+  const esTransparente = fondoReal === "transparent" || fondoReal === "rgba(0, 0, 0, 0)";
   document.getElementById("sinFondoDesplegable").checked = esTransparente;
+  document.getElementById("colorFondoDesplegable").value = rgbToHex(fondoReal);
+
 
   document.getElementById("colorTextoDesplegable").value = rgbToHex(contenedorOpciones.style.color || "#000000");
+
+
+  const select = contenedorOpciones.querySelector("select");
+  document.getElementById("tamanoTextoDesplegable").value =
+    parseInt(getComputedStyle(select).fontSize) || 16;
+  
+    const tamanoInput = document.getElementById("tamanoTextoDesplegable");
+    tamanoInput.value = parseInt(getComputedStyle(select).fontSize) || 16;
+    tamanoInput.addEventListener("input", function () {
+      limitarDosDigitos(this);
+    });
+
 
   modal.show();
 }
@@ -716,9 +820,14 @@ window.guardarDesplegableEditado = function () {
     const sinFondo = document.getElementById("sinFondoDesplegable").checked;
 
     const contenedor = desplegableActual.contenedorOpciones;
+    const tamanoLetra = parseInt(document.getElementById("tamanoTextoDesplegable").value) || 16;
+    renderizarOpcionesDesplegable(contenedor, desplegableActual.opciones, tamanoLetra);
+
     contenedor.style.backgroundColor = sinFondo ? "transparent" : fondo;
     contenedor.style.color = texto;
+    contenedor.style.fontSize = `${document.getElementById("tamanoTextoDesplegable").value}px`;
 
+    desplegableActual.contenedorOpciones.dataset.opciones = JSON.stringify(desplegableActual.opciones);
     renderizarOpcionesDesplegable(contenedor, desplegableActual.opciones);
     bootstrap.Modal.getInstance(document.getElementById("modalDesplegable")).hide();
   }
@@ -809,52 +918,49 @@ document.querySelector("form").addEventListener("submit", function (e) {
         base.texto = textarea?.value || "";
         base.colorFondo = textarea?.style.backgroundColor || "";
         base.colorTexto = textarea?.style.color || "";
+        base.tamanoLetra = parseInt(textarea?.style.fontSize) || 16;
+
+
       }
       
       
   
       if (tipo === "seleccion") {
-        const opciones = [];
-        const inputs = el.querySelectorAll("input[type=radio]");
-        const labels = el.querySelectorAll("label");
-        inputs.forEach((input, i) => {
-          opciones.push({
-            texto: labels[i]?.textContent || "",
-            correcta: input.checked,
-          });
-        });
+        const contenedorOpciones = el.querySelector(".editable-div");
+        const opciones = JSON.parse(contenedorOpciones?.dataset.opciones || "[]");
         base.opciones = opciones;
+        base.tamanoLetra = parseInt(getComputedStyle(contenedorOpciones).fontSize) || 16;
+        base.colorFondo = contenedorOpciones?.style.backgroundColor || "";
+        base.colorTexto = contenedorOpciones?.style.color || "";
+        base.opcionesWidth = contenedorOpciones?.offsetWidth || 150;
+        base.opcionesHeight = contenedorOpciones?.offsetHeight || 60;
       }
       
+      
       if (tipo === "checkbox") {
+        const cuadro = el.querySelector(".checkbox-cuadro");
         base.estado = el.dataset.estado || "neutral";
+        base.width = cuadro?.offsetWidth || 25;
+        base.height = cuadro?.offsetHeight || 25;
       }
+      
   
       if (tipo === "join") {
         base.joinId = el.dataset.joinId || "";
       }
 
       if (tipo === "desplegable") {
-        const opciones = [];
-        const select = el.querySelector("select");
-        if (select) {
-          [...select.options].forEach((opt) => {
-            opciones.push({
-              texto: opt.textContent,
-              correcta: opt.selected
-            });
-          });
-        }
-        base.opciones = opciones;
-      }
-
-      if (tipo === "seleccion" || tipo === "desplegable") {
         const contenedorOpciones = el.querySelector(".editable-div");
+        const opciones = JSON.parse(contenedorOpciones?.dataset.opciones || "[]");
+      
+        base.opciones = opciones;
+        base.tamanoLetra = parseInt(getComputedStyle(contenedorOpciones).fontSize) || 16;
         base.colorFondo = contenedorOpciones?.style.backgroundColor || "";
         base.colorTexto = contenedorOpciones?.style.color || "";
+        base.opcionesWidth = contenedorOpciones?.offsetWidth || 150;
+        base.opcionesHeight = contenedorOpciones?.offsetHeight || 60;
       }
-      
-  
+
       elementos.push(base);
     });
   
@@ -874,5 +980,41 @@ document.querySelector("form").addEventListener("submit", function (e) {
         .join("")
     );
   }
+
+  function limitarDosDigitos(input) {
+    const valor = input.value;
+  
+    if (valor.length > 2 || parseInt(valor) > 72) {
+      input.value = Math.min(parseInt(valor.toString().slice(0, 2)), 72) || 16;
+    }
+
+  }
+
+  function limitarRedimension(wrapper) {
+    const contenedor = document.getElementById("contenedorFicha");
+    const editable = wrapper.querySelector(".editable-div");
+    if (!editable) return;
+  
+    const observer = new ResizeObserver(() => {
+      const contRect = contenedor.getBoundingClientRect();
+      const editRect = editable.getBoundingClientRect();
+  
+      const maxWidth = contRect.right - editRect.left;
+      const maxHeight = contRect.bottom - editRect.top;
+  
+      // Limita el tamaño máximo
+      if (editRect.right > contRect.right) {
+        editable.style.width = `${maxWidth}px`;
+      }
+      if (editRect.bottom > contRect.bottom) {
+        editable.style.height = `${maxHeight}px`;
+      }
+    });
+  
+    observer.observe(editable);
+  }
+  
+  
+  
   
   

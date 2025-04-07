@@ -38,6 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     
       if (elemento.colorTexto) input.style.color = elemento.colorTexto;
+      if (elemento.tamanoLetra) input.style.fontSize = `${elemento.tamanoLetra}px`;
+
     
       div.appendChild(input);
     }
@@ -55,7 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
     
       if (elemento.colorFondo) {
         textarea.style.backgroundColor = elemento.colorFondo;
-    
         const transparente = elemento.colorFondo === "transparent" || elemento.colorFondo === "rgba(0, 0, 0, 0)";
         if (transparente) {
           textarea.style.border = "none";
@@ -64,9 +65,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     
       if (elemento.colorTexto) textarea.style.color = elemento.colorTexto;
+      if (elemento.tamanoLetra) textarea.style.fontSize = `${elemento.tamanoLetra}px`; // ✅ aquí
     
       div.appendChild(textarea);
     }
+    
     
     
 
@@ -80,10 +83,12 @@ document.addEventListener("DOMContentLoaded", () => {
         input.value = op.texto;
         input.dataset.correcta = op.correcta ? "true" : "false";
         input.dataset.tipo = "seleccion";
+        
         const label = document.createElement("label");
         label.textContent = op.texto;
         label.style.marginLeft = "0.5rem";
         label.style.cursor = "pointer";
+        
         opt.appendChild(input);
         opt.appendChild(label);
         div.appendChild(opt);
@@ -99,6 +104,16 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     
       if (elemento.colorTexto) div.style.color = elemento.colorTexto;
+      if (elemento.tamanoLetra) {
+        div.style.fontSize = `${elemento.tamanoLetra}px`;
+        div.querySelectorAll("label").forEach(label => {
+          label.style.fontSize = `${elemento.tamanoLetra}px`;
+        });
+      }
+            if (elemento.opcionesWidth) div.style.width = `${elemento.opcionesWidth}px`;
+      if (elemento.opcionesHeight) div.style.height = `${elemento.opcionesHeight}px`;
+
+
     }
     
     if (elemento.tipo === "desplegable") {
@@ -112,9 +127,6 @@ document.addEventListener("DOMContentLoaded", () => {
         option.textContent = op.texto;
         select.appendChild(option);
       });
-    
-      select.style.width = `${elemento.width}px`;
-      select.style.height = `${elemento.height}px`;
     
       if (elemento.colorFondo) {
         div.style.backgroundColor = elemento.colorFondo;
@@ -138,7 +150,13 @@ document.addEventListener("DOMContentLoaded", () => {
         div.style.color = elemento.colorTexto;
         select.style.color = elemento.colorTexto;
       }
-    
+      if (elemento.tamanoLetra) {
+        select.style.fontSize = `${elemento.tamanoLetra}px`;
+      }
+      
+      if (elemento.opcionesWidth) select.style.width = `${elemento.opcionesWidth}px`;
+      if (elemento.opcionesHeight) select.style.height = `${elemento.opcionesHeight}px`;
+
       div.appendChild(select);
     }
     
@@ -150,8 +168,9 @@ document.addEventListener("DOMContentLoaded", () => {
       cuadrado.dataset.estado = elemento.estado;
       cuadrado.dataset.tipo = "checkbox";
       cuadrado.dataset.marcado = "false";
-      cuadrado.style.width = "25px";
-      cuadrado.style.height = "25px";
+      const size = elemento.width || 25;
+      cuadrado.style.width = `${size}px`;
+      cuadrado.style.height = `${elemento.height || size}px`;          
       cuadrado.style.border = "2px solid #000";
       cuadrado.style.borderRadius = "4px";
       cuadrado.style.backgroundColor = "#fff";
@@ -179,15 +198,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       joinBox.addEventListener("click", () => {
         if (joinSeleccionado === joinBox) {
-          // Deseleccionar si haces clic en el mismo
           joinBox.style.borderColor = "#aaa";
           joinSeleccionado = null;
         } else if (!joinSeleccionado) {
-          // Seleccionar el primero
           joinSeleccionado = joinBox;
           joinBox.style.borderColor = "blue";
         } else {
-          // Si ya hay una conexión entre ellos, eliminarla
           const parExistente = conexiones.find(c =>
             (c[0] === joinSeleccionado && c[1] === joinBox) ||
             (c[0] === joinBox && c[1] === joinSeleccionado)
@@ -201,7 +217,6 @@ document.addEventListener("DOMContentLoaded", () => {
             clearLines();
             drawAllLines();
           } else {
-            // Verificar si alguno ya está conectado
             const yaConectadoA = conexiones.some(c => c[0] === joinSeleccionado || c[1] === joinSeleccionado);
             const yaConectadoB = conexiones.some(c => c[0] === joinBox || c[1] === joinBox);
       
@@ -209,10 +224,8 @@ document.addEventListener("DOMContentLoaded", () => {
               conexiones.push([joinSeleccionado, joinBox]);
               drawLineBetween(joinSeleccionado, joinBox);
             }
-            // Si alguno ya está conectado, no hacemos nada (no se permite multiconexión)
           }
       
-          // Siempre deseleccionar el primero
           joinSeleccionado.style.borderColor = "#aaa";
           joinSeleccionado = null;
         }

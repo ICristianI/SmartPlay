@@ -46,6 +46,8 @@ document.addEventListener("DOMContentLoaded", () => {
     input.style.height = `${elemento.height}px`;
     if (elemento.colorFondo) input.style.backgroundColor = elemento.colorFondo;
     if (elemento.colorTexto) input.style.color = elemento.colorTexto;
+    if (elemento.tamanoLetra) input.style.fontSize = `${elemento.tamanoLetra}px`;
+
 
   
     const botones = crearBotonesEdicion(wrapper, input);
@@ -74,6 +76,8 @@ document.addEventListener("DOMContentLoaded", () => {
     input.readOnly = true;
     input.style.width = `${elemento.width}px`;
     input.style.height = `${elemento.height}px`;
+    if (elemento.tamanoLetra) input.style.fontSize = `${elemento.tamanoLetra}px`;
+
   
     const botones = crearBotonesEdicion(wrapper, input);
     wrapper.appendChild(botones);
@@ -104,10 +108,17 @@ document.addEventListener("DOMContentLoaded", () => {
     opcionesDiv.style.minHeight = "60px";
     if (elemento.colorFondo) opcionesDiv.style.backgroundColor = elemento.colorFondo;
     if (elemento.colorTexto) opcionesDiv.style.color = elemento.colorTexto;
-    
+    if (elemento.opcionesWidth) opcionesDiv.style.width = `${elemento.opcionesWidth}px`;
+    if (elemento.opcionesHeight) opcionesDiv.style.height = `${elemento.opcionesHeight}px`;
 
-  
-    renderizarOpciones(opcionesDiv, elemento.opciones);
+    renderizarOpciones(opcionesDiv, elemento.opciones, elemento.tamanoLetra);
+    if (elemento.tamanoLetra) {
+      opcionesDiv.style.fontSize = `${elemento.tamanoLetra}px`; // <--- ESTA LÍNEA
+    }
+    
+    
+    opcionesDiv.dataset.opciones = JSON.stringify(elemento.opciones || []);
+
   
     const botones = crearBotonesSeleccion(wrapper, opcionesDiv, elemento.opciones);
     wrapper.appendChild(botones);
@@ -134,6 +145,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const checkbox = document.createElement("div");
     checkbox.className = `checkbox-cuadro ${elemento.estado}`;
     checkbox.dataset.estado = elemento.estado;
+    if (elemento.width) checkbox.style.width = `${elemento.width}px`;
+    if (elemento.height) checkbox.style.height = `${elemento.height}px`;
+
   
     const botones = crearBotonesCheckbox(wrapper, checkbox);
     wrapper.appendChild(botones);
@@ -159,8 +173,22 @@ document.addEventListener("DOMContentLoaded", () => {
   
     const cuadro = document.createElement("div");
     cuadro.className = "editable-div";
-    cuadro.textContent = "Join: " + (elemento.joinId || "sin ID");
+    cuadro.textContent = elemento.joinId || "";
+    cuadro.style.minWidth = "40px";
+    cuadro.style.minHeight = "30px";
+    cuadro.style.width = "auto";
+    cuadro.style.height = "auto";
+    cuadro.style.padding = "4px 8px";
+    cuadro.style.fontSize = "14px";
+    cuadro.style.border = "1px dashed #888";
+    cuadro.style.borderRadius = "6px";
+    cuadro.style.display = "flex";
+    cuadro.style.alignItems = "center";
+    cuadro.style.justifyContent = "center";
+    cuadro.style.backgroundColor = "#f2f2f2";
+    cuadro.style.whiteSpace = "nowrap";
     cuadro.style.textAlign = "center";
+    
   
     const botones = crearBotonesJoin(wrapper);
     wrapper.appendChild(botones);
@@ -190,9 +218,17 @@ document.addEventListener("DOMContentLoaded", () => {
     opcionesDiv.style.minHeight = "60px";
     if (elemento.colorFondo) opcionesDiv.style.backgroundColor = elemento.colorFondo;
     if (elemento.colorTexto) opcionesDiv.style.color = elemento.colorTexto;
-
+    if (elemento.opcionesWidth) opcionesDiv.style.width = `${elemento.opcionesWidth}px`;
+    if (elemento.opcionesHeight) opcionesDiv.style.height = `${elemento.opcionesHeight}px`;
+    
   
-    renderizarOpcionesDesplegable(opcionesDiv, elemento.opciones);
+    renderizarOpcionesDesplegable(opcionesDiv, elemento.opciones, elemento.tamanoLetra);
+    if (elemento.tamanoLetra) {
+      opcionesDiv.style.fontSize = `${elemento.tamanoLetra}px`; // <--- ESTA LÍNEA
+    }
+    
+    opcionesDiv.dataset.opciones = JSON.stringify(elemento.opciones || []);
+
   
     const botones = crearBotonesDesplegable(wrapper, opcionesDiv, elemento.opciones);
     wrapper.appendChild(botones);
