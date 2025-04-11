@@ -53,43 +53,54 @@ public class SecurityConfig {
 
     // Configuración de seguridad para web
     @Bean
-    public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
+public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
 
-        http.authenticationProvider(authenticationProvider());
+    http.authenticationProvider(authenticationProvider());
 
-        http.addFilterBefore(verificationFilter, UsernamePasswordAuthenticationFilter.class)
+    http.addFilterBefore(verificationFilter, UsernamePasswordAuthenticationFilter.class)
 
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/error", "/login", "/signup", "/css/**", "/js/**", "/images/**",
-                                "/users/register", "/json/**", "/config", "/msj", "/regin", "/verify",
-                                "/users/verificar", "/users/verificar/**",
-                                "/f/investigar","/juegos/investigar","/f/ficha/image/**","/f/conseguirFicha","/f/verFichaInteractiva",
-                                "/juegos/redirigirJuego","/juegos/image/**", "/ahorcado/jugar","/crucigrama/jugar", "/sopa/jugar")
-                        .permitAll()
-                        .requestMatchers("/f/**", "/creacion", "/juegos", "/fichas",
-                                "/verFichas", "/crearCuadernos", "/f/listarFichas", "/f/ficha/image/**",
-                                "/Fichas/verFichas", "/investigar","/grupo", "/crearGrupos", "/verGrupos", "/grupos/**",
-                                "/juegos/**","/ahorcado/**", "/Cuadernos", "/users/**", "/cuadernos/**",
-                                "/sopa/**", "/sopaletras/**", "/crucigrama/**")
-                        .hasAnyRole("PROFESOR")
-                        .requestMatchers("/", "/error", "/login", "/signup", "/css/**", "/js/**", "/images/**",
-                                "/users/register", "/json/**", "/config", "/msj", "/regin", "/verify",
-                                "/users/verificar", "/users/verificar/**",
-                                "/f/investigar","/juegos/investigar","/f/ficha/image/**","/f/conseguirFicha","/f/verFichaInteractiva",
-                                "/juegos/redirigirJuego","/juegos/image/**", "/ahorcado/jugar","/crucigrama/jugar", "/sopa/jugar")
-                        .hasAnyRole("ALUMNO"))
-                .formLogin(formLogin -> formLogin
-                        .loginPage("/login")
-                        .usernameParameter("email")
-                        .passwordParameter("password")
-                        .failureUrl("/loginerror")
-                        .defaultSuccessUrl("/", true)
-                        .permitAll())
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/")
-                        .permitAll());
+        .authorizeHttpRequests(authorize -> authorize
+            // 1. Rutas públicas
+            .requestMatchers(
+                "/", "/error", "/login", "/signup", "/css/**", "/js/**", "/images/**",
+                "/users/register", "/json/**", "/config", "/msj", "/regin", "/verify",
+                "/users/verificar", "/users/verificar/**",
+                "/f/investigar", "/juegos/investigar", "/f/ficha/image/**",
+                "/f/conseguirFicha", "/f/verFichaInteractiva",
+                "/juegos/redirigirJuego", "/juegos/image/**",
+                "/ahorcado/jugar", "/crucigrama/jugar", "/sopaletras/jugar", "/sopa/jugar"
+            ).permitAll()
 
-        return http.build();
-    }
+            // 2. Exclusivas para PROFESOR
+            .requestMatchers(
+                "/f/**", "/creacion", "/juegos", "/fichas",
+                "/verFichas", "/crearCuadernos", "/f/listarFichas", "/Fichas/verFichas",
+                "/investigar", "/crearGrupos", "/verGrupos",
+                "/juegos/**", "/ahorcado/**", "/Cuadernos", "/cuadernos/**",
+                "/sopa/**", "/sopaletras/**", "/crucigrama/**",
+                "/grupos/crear","/grupos/guardar", "/grupos/editar", "/grupos/eliminar", "/grupos/eliminarCuaderno", "/grupos/eliminarUsuario"
+            ).hasRole("PROFESOR")
+
+
+            // 3. Comunes para ALUMNO y PROFESOR
+            .requestMatchers(
+                "/grupo","/grupos/unirse","/grupos" , "/grupos/ver", "/users/**"
+            ).hasAnyRole("ALUMNO", "PROFESOR")
+
+        )
+        .formLogin(formLogin -> formLogin
+            .loginPage("/login")
+            .usernameParameter("email")
+            .passwordParameter("password")
+            .failureUrl("/loginerror")
+            .defaultSuccessUrl("/", true)
+            .permitAll())
+        .logout(logout -> logout
+            .logoutUrl("/logout")
+            .logoutSuccessUrl("/")
+            .permitAll());
+
+    return http.build();
+}
+
 }

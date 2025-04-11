@@ -13,7 +13,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public String handleMaxSizeException(MaxUploadSizeExceededException exc, Model model) {
-        model.addAttribute("error", "El archivo es demasiado grande. El tamaño máximo permitido es de 1MB.");
+        model.addAttribute("error", "El archivo es demasiado grande. El tamaño máximo permitido es de 5MB.");
         return "redirect:/users/perfil";
     }
 }

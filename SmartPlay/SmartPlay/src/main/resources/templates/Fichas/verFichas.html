@@ -1,7 +1,7 @@
 {{> header}}
 
 <div class="container mt-4">
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4" id="titulo-mis-fichas">
         <h1 class="text-center mt-5">Mis Fichas Interactivas</h1>
         <div class="text-center mt-4">
             <a href="/fichas" class="btn btn-secondary">Volver</a>
@@ -27,7 +27,7 @@
 
     <div class="row">
         {{#fichas}}
-        <div class="col-md-4 mb-4">
+        <div class="col-md-4 mb-4" id="zona-fichas">
           <div class="card h-100 shadow-sm position-relative">
             <img
               src="/f/ficha/image/{{id}}"
@@ -62,7 +62,7 @@
     {{^fichas}}
     <div class="text-center mt-5">
         <p class="text-muted">Aún no has creado ninguna ficha.</p>
-        <a href="/f/crearFichas" class="btn btn-success">Crear una ficha</a>
+        <a href="/f/crearFichas" class="btn btn-success" id="crear-ficha-nueva">Crear una ficha</a>
     </div>
     {{/fichas}}
 

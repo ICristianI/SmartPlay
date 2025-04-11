@@ -1,6 +1,6 @@
 {{> header}}
 
-<div class="container mt-4">
+<div class="container mt-4" >
     <div class="d-flex align-items-center justify-content-between mb-4">
         <h1 class="text-center mt-5">Cuaderno: {{cuaderno.nombre}}</h1>
         <div class="text-center mt-4">
@@ -8,7 +8,7 @@
         </div>
     </div>
 
-    <div class="row align-items-center">
+    <div class="row align-items-center" id="titulo-grupo">
         <div class="col-md-8">
             <p><strong>Propietario:</strong> {{cuaderno.usuario.nombre}}</p>
             <p><strong>Número de fichas:</strong> {{cuaderno.numeroFichas}}</p>
@@ -17,31 +17,25 @@
             {{#error}}
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <p>{{error}}</p>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                    Cerrar
-                </button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
             </div>
             {{/error}} {{#mensaje}}
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <p>{{mensaje}}</p>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                    Cerrar
-                </button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
             </div>
             {{/mensaje}}
 
-            <form action="/cuadernos/eliminar" method="post" onsubmit="return confirmarEliminacion();">
-                <input type="hidden" name="_csrf" value="{{token}}"/>
 
-                <input type="hidden" name="cuadernoId" value="{{cuaderno.id}}" />
-                <button type="submit" class="btn btn-danger mt-3">
-                    Eliminar Cuaderno
-                </button>
-            </form>
 
-            <button class="btn btn-primary navbar-custom mt-3" onclick="toggleEditForm()">
+            <button class="btn btn-primary navbar-custom mt-3" onclick="toggleEditForm()" id="editFormTutorial">
                 Editar Cuaderno
             </button>
+
 
             <form id="editForm" action="/cuadernos/editar" method="post" style="display: none">
                 <input type="hidden" name="_csrf" value="{{token}}"/>
@@ -56,8 +50,8 @@
                 <!-- Selección de fichas -->
                 <div class="mb-4 mt-4">
                     <label class="form-label">Seleccionar Fichas</label>
-                    <button type="button" class="btn btn-primary navbar-custom" data-bs-toggle="modal"
-                        data-bs-target="#fichaModal">
+                    <button type="button" class="btn btn-primary navbar-custom" data-toggle="modal"
+                        data-target="#fichaModal">
                         Elegir Fichas
                     </button>
                 </div>
@@ -71,8 +65,8 @@
                 <!-- Selección de juegos -->
                 <div class="mb-4 mt-4">
                     <label class="form-label">Seleccionar Juegos</label>
-                    <button type="button" class="btn btn-primary navbar-custom" data-bs-toggle="modal"
-                        data-bs-target="#juegoModal">
+                    <button type="button" class="btn btn-primary navbar-custom" data-toggle="modal"
+                        data-target="#juegoModal">
                         Elegir Juegos
                     </button>
                 </div>
@@ -87,6 +81,15 @@
                     Guardar Cambios
                 </button>
             </form>
+
+            <form action="/cuadernos/eliminar" method="post" onsubmit="return confirmarEliminacion();">
+                <input type="hidden" name="_csrf" value="{{token}}"/>
+
+                <input type="hidden" name="cuadernoId" value="{{cuaderno.id}}" />
+                <button type="submit" class="btn btn-danger mt-3" id="eliminarTutorial">
+                    Eliminar Cuaderno
+                </button>
+            </form>
         </div>
     </div>
 
@@ -98,7 +101,7 @@
     <div class="row" id="contenedorFichas">
 
         {{#fichasPage}}
-        <div class="col-md-4">
+        <div class="col-md-4" id="contenedorFichas">
             <div class="card mb-4">
                 <img src="/f/ficha/image/{{id}}" class="card-img-top" alt="Imagen de {{nombre}}" style="height: 150px; object-fit: cover" />
                 <div class="card-body">
@@ -165,7 +168,7 @@
 
     <div class="row" id="contenedorJuegos">
         {{#juegosPage}}
-        <div class="col-md-4">
+        <div class="col-md-4" id="contenedorJuegos">
             <div class="card mb-4">
               <img src="/juegos/image/{{id}}" class="card-img-top" alt="Imagen de {{nombre}}" style="height: 150px; object-fit: cover;" />
               <div class="card-body">
@@ -236,7 +239,9 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="fichaModalLabel">Seleccionar Fichas</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -263,9 +268,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Cerrar
-                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+
                 </div>
             </div>
         </div>
@@ -277,7 +281,9 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="juegoModalLabel">Seleccionar Juegos</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -304,9 +310,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Cerrar
-                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+
                 </div>
             </div>
         </div>

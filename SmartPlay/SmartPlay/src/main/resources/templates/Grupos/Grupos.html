@@ -9,9 +9,10 @@
 
   <!-- Categorías de Grupos -->
   <div class="card-deck">
-    
+    {{#isProfesor}}
+
     <!-- Crear Grupo -->
-    <div class="card mb-3 shadow-sm">
+    <div class="card mb-3 shadow-sm" id="card-crear-grupo">
       <img src="/images/generalImages/CREARGRUPO.png" class="card-img-top" alt="Crear Grupo" />
       <div class="card-body navbar-custom">
         <h5 class="card-title">Crear Grupo</h5>
@@ -19,8 +20,10 @@
       </div>
     </div>
 
+    {{/isProfesor}}
+
     <!-- Unirse a un Grupo -->
-    <div class="card mb-3 shadow-sm">
+    <div class="card mb-3 shadow-sm" id="card-unirse-grupo">
       <img src="/images/generalImages/CODIGO.png" class="card-img-top" alt="Unirse a Grupo" />
       <div class="card-body navbar-custom">
         <h5 class="card-title">Unirse a Grupo</h5>
@@ -29,7 +32,7 @@
     </div>
 
     <!-- Ver Grupos -->
-    <div class="card mb-3 shadow-sm">
+    <div class="card mb-3 shadow-sm" id="card-ver-grupo">
       <img src="/images/generalImages/VERGRUPO.png" class="card-img-top" alt="Ver Grupos" />
       <div class="card-body navbar-custom">
         <h5 class="card-title">Ver Grupos</h5>
@@ -39,6 +42,5 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 {{> footer}}

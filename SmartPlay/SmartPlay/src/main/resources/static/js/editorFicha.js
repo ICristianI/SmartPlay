@@ -2,14 +2,7 @@ let elementoEditando = null;
 let checkboxEditando = null;
 
 document.addEventListener("DOMContentLoaded", () => {
-  const selectTamano = document.getElementById("tamanoFicha");
   const contenedor = document.getElementById("contenedorFicha");
-
-  if (selectTamano && contenedor) {
-    selectTamano.addEventListener("change", function () {
-      contenedor.style.width = `${this.value}px`;
-    });
-  }
 });
 
 window.agregarTexto = function () {
@@ -262,7 +255,7 @@ window.agregarTexto = function () {
       lista.appendChild(item);
     });
   
-    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("modalSeleccionUnica"));
+    $('#modalSeleccionUnica').modal('show');
     const fondoReal = getComputedStyle(contenedorOpciones).backgroundColor;
     const esTransparente = fondoReal === "transparent" || fondoReal === "rgba(0, 0, 0, 0)";
     document.getElementById("sinFondoSeleccionUnica").checked = esTransparente;
@@ -285,7 +278,7 @@ window.agregarTexto = function () {
         limitarDosDigitos(this);
       });
 
-    modal.show();
+
     
   }
   
@@ -305,7 +298,8 @@ window.agregarTexto = function () {
 
       renderizarOpciones(seleccionActual.contenedorOpciones, seleccionActual.opciones, tamanoLetra);
 
-      bootstrap.Modal.getInstance(document.getElementById("modalSeleccionUnica")).hide();
+      $('#modalSeleccionUnica').modal('hide');
+
     }
   };
   
@@ -358,8 +352,8 @@ window.agregarTexto = function () {
     const texto = getComputedStyle(input).color;
     document.getElementById("colorTextoEditable").value = rgbToHex(texto);
   
-    const modal = new bootstrap.Modal(document.getElementById("modalEditarTexto"));
-    modal.show();
+    $('#modalEditarTexto').modal('show');
+
   }
   
   
@@ -377,7 +371,7 @@ window.agregarTexto = function () {
       elementoEditando.style.backgroundColor = sinFondo ? "transparent" : colorFondo;
       elementoEditando.style.color = colorTexto;
   
-      bootstrap.Modal.getInstance(document.getElementById("modalEditarTexto")).hide();
+      $('#modalEditarTexto').modal('hide');
     }
   };
   
@@ -448,8 +442,8 @@ window.agregarCheckbox = function () {
   const size = parseInt(checkbox.style.width) || 25;
   document.getElementById("tamanoCheckbox").value = size;
 
-  const modal = new bootstrap.Modal(document.getElementById("modalCheckbox"));
-  modal.show();
+  $('#modalCheckbox').modal('show');
+
 }
 
   
@@ -473,8 +467,8 @@ window.guardarCheckbox = function () {
     }
 
 
-  
-    bootstrap.Modal.getInstance(document.getElementById("modalCheckbox")).hide();
+    $('#modalCheckbox').modal('hide');
+
   };
   
   
@@ -540,14 +534,15 @@ function renderizarCheckboxes(contenedor, opciones) {
     const size = parseInt(checkbox.style.width) || 25;
     document.getElementById("tamanoCheckbox").value = size;
 
-    const modal = new bootstrap.Modal(document.getElementById("modalEditarCheckboxes"));
-    modal.show();
+    $('#modalEditarCheckboxes').modal('show');
+
   }
   
   window.guardarCheckboxes = function () {
     if (checkboxActual) {
       renderizarCheckboxes(checkboxActual.contenedor, checkboxActual.opciones);
-      bootstrap.Modal.getInstance(document.getElementById("modalEditarCheckboxes")).hide();
+      $('#modalEditarCheckboxes').modal('hide');
+
     }
     const tamano = document.getElementById("tamanoCheckbox").value;
     checkboxEditando.style.width = `${tamano}px`;
@@ -646,8 +641,8 @@ function abrirModalJoin(wrapper) {
     limitarDosDigitos(this);
   });
 
-  const modal = new bootstrap.Modal(document.getElementById("modalJoin"));
-  modal.show();
+  $('#modalJoin').modal('show');
+
 }
 
 
@@ -656,7 +651,8 @@ window.guardarJoin = function () {
     const nuevoId = document.getElementById("joinIdEditable").value.trim();
     joinEditando.dataset.joinId = nuevoId;
     joinEditando.querySelector(".editable-div").textContent = nuevoId || "";
-    bootstrap.Modal.getInstance(document.getElementById("modalJoin")).hide();
+    $('#modalJoin').modal('hide');
+
   }
 };
 
@@ -789,7 +785,7 @@ function abrirModalDesplegable(opciones, contenedorOpciones) {
     lista.appendChild(item);
   });
 
-  const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("modalDesplegable"));
+  $('#modalDesplegable').modal('show');
   const fondoReal = getComputedStyle(contenedorOpciones).backgroundColor;
   const esTransparente = fondoReal === "transparent" || fondoReal === "rgba(0, 0, 0, 0)";
   document.getElementById("sinFondoDesplegable").checked = esTransparente;
@@ -810,7 +806,6 @@ function abrirModalDesplegable(opciones, contenedorOpciones) {
     });
 
 
-  modal.show();
 }
 
 window.guardarDesplegableEditado = function () {
@@ -829,7 +824,8 @@ window.guardarDesplegableEditado = function () {
 
     desplegableActual.contenedorOpciones.dataset.opciones = JSON.stringify(desplegableActual.opciones);
     renderizarOpcionesDesplegable(contenedor, desplegableActual.opciones);
-    bootstrap.Modal.getInstance(document.getElementById("modalDesplegable")).hide();
+    $('#modalDesplegable').modal('hide');
+
   }
 };
 

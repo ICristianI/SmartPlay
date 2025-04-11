@@ -4,6 +4,7 @@ import com.tfg.SmartPlay.entity.Cuaderno;
 import com.tfg.SmartPlay.entity.Ficha;
 import com.tfg.SmartPlay.entity.User;
 import com.tfg.SmartPlay.repository.CuadernoRepository;
+import com.tfg.SmartPlay.repository.FichaLikeRepository;
 import com.tfg.SmartPlay.repository.FichaRepository;
 import com.tfg.SmartPlay.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Blob;
@@ -36,7 +38,10 @@ public class FichaService {
 
     @Autowired
     private CuadernoRepository cuadernoRepository;
-    
+
+    @Autowired
+    private FichaLikeRepository fichaLikeRepository;
+
     // Devuelve todas las fichas de un usuario.
 
     public List<Ficha> listarFichas(String email) {
@@ -75,38 +80,37 @@ public class FichaService {
     public void editarFicha(Long fichaId, Ficha fichaEditada, String email) {
         Ficha ficha = obtenerFicha(fichaId, email)
                 .orElseThrow(() -> new RuntimeException("Ficha no encontrada o sin permisos"));
-    
+
         ficha.setNombre(fichaEditada.getNombre());
         ficha.setIdioma(fichaEditada.getIdioma());
         ficha.setAsignatura(fichaEditada.getAsignatura());
         ficha.setContenido(fichaEditada.getContenido());
         ficha.setDescripcion(fichaEditada.getDescripcion());
         ficha.setPrivada(fichaEditada.isPrivada());
-    
+
         fichaRepository.save(ficha);
     }
-    
 
     // Elimina una ficha.
 
-public void eliminarFicha(Long fichaId, String email) {
-    Ficha ficha = obtenerFicha(fichaId, email)
-            .orElseThrow(() -> new RuntimeException("Ficha no encontrada o sin permisos"));
+    @Transactional
+    public void eliminarFicha(Long fichaId, String email) {
+        Ficha ficha = obtenerFicha(fichaId, email)
+                .orElseThrow(() -> new RuntimeException("Ficha no encontrada o sin permisos"));
 
-    // Eliminar la ficha de todos los cuadernos y actualizar el contador
-    for (Cuaderno cuaderno : ficha.getCuadernos()) {
-        cuaderno.getFichas().remove(ficha);
-        cuaderno.setNumeroFichas(cuaderno.getNumeroFichas() - 1);
-        cuadernoRepository.save(cuaderno);
+        // Eliminar la ficha de todos los cuadernos y actualizar el contador
+        for (Cuaderno cuaderno : ficha.getCuadernos()) {
+            cuaderno.getFichas().remove(ficha);
+            cuaderno.setNumeroFichas(cuaderno.getNumeroFichas() - 1);
+            cuadernoRepository.save(cuaderno);
+        }
+
+        fichaLikeRepository.deleteByFicha_Id(fichaId);
+        ficha.getCuadernos().clear();
+        fichaRepository.save(ficha);
+
+        fichaRepository.delete(ficha);
     }
-
-    ficha.getCuadernos().clear();
-    fichaRepository.save(ficha);
-
-    fichaRepository.delete(ficha);
-}
-
-    
 
     // Devuelve la imagen de una ficha.
 
@@ -169,7 +173,6 @@ public void eliminarFicha(Long fichaId, String email) {
         fichaRepository.save(ficha);
     }
 
-    
     public Page<Ficha> obtenerTodasLasFichas(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return fichaRepository.findAll(pageable);
@@ -178,11 +181,12 @@ public void eliminarFicha(Long fichaId, String email) {
     public Page<Ficha> ordenarPorFecha(String buscar, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         if (buscar != null && !buscar.trim().isEmpty()) {
-            return fichaRepository.findByPrivadaFalseAndNombreContainingIgnoreCaseOrderByFechaCreacionDesc(buscar, pageable);
+            return fichaRepository.findByPrivadaFalseAndNombreContainingIgnoreCaseOrderByFechaCreacionDesc(buscar,
+                    pageable);
         }
         return fichaRepository.findByPrivadaFalseOrderByFechaCreacionDesc(pageable);
     }
-    
+
     public Page<Ficha> ordenarPorMeGusta(String buscar, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         if (buscar != null && !buscar.trim().isEmpty()) {
@@ -190,8 +194,5 @@ public void eliminarFicha(Long fichaId, String email) {
         }
         return fichaRepository.findByPrivadaFalseOrderByMeGustaDesc(pageable);
     }
-    
-    
-    
 
 }

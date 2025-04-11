@@ -10,8 +10,8 @@
 
     <!-- Botones para añadir elementos -->
     <div class="row">
-        <div class="col-md-3 ">
-          <div class="bg-light p-3 rounded shadow-sm sticky-top">
+        <div class="col-md-3 " >
+          <div class="bg-light p-3 rounded shadow-sm sticky-top" id="botonesElementosTutorial">
             <h5 style="color: black;">Elementos</h5>
           
             <button class="btn btn-outline-primary w-100 mb-2" onclick="agregarTexto()">
@@ -67,7 +67,9 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="modalEditarTextoLabel">Editar Texto</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
         <div class="modal-body">
           <input type="text" id="textoEditable" class="form-control" />
@@ -94,7 +96,9 @@
           
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+
           <button type="button" class="btn btn-primary" onclick="guardarTextoEditado()">Guardar</button>
         </div>
       </div>
@@ -108,7 +112,9 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Editar Selección Única</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
       <div class="modal-body">
         <div id="listaOpciones">
@@ -135,7 +141,7 @@
       </div>
       
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
         <button type="button" class="btn btn-primary" onclick="guardarSeleccionUnicaEditada()">Guardar</button>
       </div>
     </div>
@@ -148,7 +154,9 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="modalCheckboxLabel">Editar Checkbox</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
         <div class="modal-body">
           
@@ -163,7 +171,7 @@
           </select>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
           <button type="button" class="btn btn-primary" onclick="guardarCheckbox()">Guardar</button>
         </div>
       </div>
@@ -176,13 +184,15 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="modalJoinLabel">Editar ID de Unión</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
         <div class="modal-body">
           <input type="text" id="joinIdEditable" class="form-control" placeholder="Escribe un ID (ej: grupo1)" />
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
           <button type="button" class="btn btn-primary" onclick="guardarJoin()">Guardar</button>
         </div>
       </div>
@@ -195,7 +205,9 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalDesplegableLabel">Editar Desplegable</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
       <div class="modal-body">
         <div id="listaOpcionesDesplegable">
@@ -223,7 +235,7 @@
         
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
         <button type="button" class="btn btn-primary" onclick="guardarDesplegableEditado()">Guardar</button>
       </div>
     </div>
@@ -234,24 +246,16 @@
   
     <!-- Área principal de edición -->
     <div class="col-md-9">
-      <!-- Selector de tamaño -->
-      <div class="mb-3">
-        <label for="tamanoFicha" class="form-label">Tamaño de visualización:</label>
-        <select id="tamanoFicha" class="form-select w-auto d-inline-block ms-2">
-          <option value="600">Pequeño (600px)</option>
-          <option value="800" selected>Mediano (800px)</option>
-          <option value="1000">Grande (1000px)</option>
-        </select>
-        
-      </div>
+
       
 
       <!-- Contenedor editable con imagen -->
+       <div id="imagenFichaTutorial">
       <div id="contenedorFicha" class="border border-secondary rounded shadow-sm mb-4 mx-auto" style="width: 800px; position: relative;">
         <img id="imagenFicha" src="/f/ficha/image/{{ficha.id}}" alt="Ficha" class="w-100 d-block rounded" />
         <!-- Aquí se agregarán los inputs superpuestos dinámicamente -->
       </div>
-
+    </div>
       <!-- Guardado de elementos superpuestos -->
       <form action="/f/guardarElementos" method="post">
         <input type="hidden" name="_csrf" value="{{token}}" />
@@ -259,7 +263,7 @@
         <input type="hidden" id="elementosSuperpuestos" name="elementosSuperpuestos" value="" />
 
         <div class="text-center">
-          <button type="submit" class="btn btn-primary navbar-custom">Guardar Cambios</button>
+          <button type="submit" class="btn btn-primary navbar-custom" id="guardarCambiosFichaTutorial">Guardar Cambios</button>
         </div>
       </form>
     </div>

@@ -6,7 +6,7 @@
     <a href="/grupo" class="btn btn-secondary">Volver</a>
   </div>
 
-  <form action="/grupos/guardar" method="POST" class="shadow p-4 rounded">
+  <form action="/grupos/guardar" method="POST" class="shadow p-4 rounded" id="crear-grupo">
     <input type="hidden" name="_csrf" value="{{token}}" />
 
     <!-- Nombre del grupo -->
@@ -24,9 +24,9 @@
     </div>
 
     <!-- Botón para abrir el modal de cuadernos -->
-    <div class="mb-3">
+    <div class="mb-3" id="btn-modal-cuadernos">
       <label class="form-label">Seleccionar Cuadernos</label>
-      <button type="button" class="btn btn-primary navbar-custom" data-bs-toggle="modal" data-bs-target="#cuadernoModal">
+      <button type="button" class="btn btn-primary navbar-custom" data-toggle="modal" data-target="#cuadernoModal">
         Elegir Cuadernos
       </button>
     </div>
@@ -46,7 +46,10 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="cuadernoModalLabel">Seleccionar Cuadernos</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+
+            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
           <div class="modal-body">
             <div class="row">
@@ -64,14 +67,15 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          </div>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+
+            </div>
         </div>
       </div>
     </div>
 
     <!-- Botón para guardar -->
-    <div class="text-center">
+    <div class="text-center" id="btn-crear-grupo">
       <button type="submit" class="btn btn-primary navbar-custom">
         Crear Grupo
       </button>

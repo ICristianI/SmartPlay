@@ -33,6 +33,13 @@ public class Grupo {
     @Column(nullable = false, unique = true)
     private String codigoAcceso;
 
+    @Column(nullable = false)
+    private int intentosMaximosFicha = 1;
+
+    @Column(nullable = false)
+    private int intentosMaximosCuaderno = 1;
+
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime fechaCreacion;
 

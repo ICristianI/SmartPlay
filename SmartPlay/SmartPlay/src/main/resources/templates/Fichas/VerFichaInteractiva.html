@@ -4,73 +4,113 @@
   <div class="d-flex align-items-center justify-content-between mb-4">
     <h1 class="mb-0">{{ficha.nombre}}</h1>
 
-    {{#User}}
-    <!-- Botón de Me Gusta -->
-<form id="likeForm" onsubmit="return false;" class="ms-auto">
-  <input type="hidden" name="_csrf" value="{{token}}" />
-  <input type="hidden" id="fichaId" value="{{ficha.id}}" />
-  <button id="likeButton" class="btn btn-link p-0" onclick="darMeGusta()" style="text-decoration: none;">
-    <span id="corazon" data-liked="{{tieneLike}}" style="font-size: 2rem;">
-      {{#tieneLike}}❤️{{/tieneLike}}{{^tieneLike}}🤍{{/tieneLike}}
-    </span>
-    <span id="contadorLikes" class="ms-2 text-danger">{{ficha.meGusta}}</span>
-  </button>
-</form>
-    {{/User}}
+        {{#User}}
+        <!-- Botón de Me Gusta -->
+         <div id="likeFormTutorial">
+    <form id="likeForm" onsubmit="return false;" class="ms-auto">
+      <input type="hidden" name="_csrf" value="{{token}}" />
+      <input type="hidden" id="fichaId" value="{{ficha.id}}" />
+      <button id="likeButton" class="btn btn-link p-0" onclick="darMeGusta()" style="text-decoration: none;">
+        <span id="corazon" data-liked="{{tieneLike}}" style="font-size: 2rem;">
+          {{#tieneLike}}❤️{{/tieneLike}}{{^tieneLike}}🤍{{/tieneLike}}
+        </span>
+        <span id="contadorLikes" class="ms-2 text-danger">{{ficha.meGusta}}</span>
+      </button>
+    </form>
+  </div>
+        {{/User}}
 
   </div>
   <div class="text-start w-100">
-    <h5 class="mb-3 mt-3 word-wrap-break" style="max-width: 800px;">Descripción: {{ ficha.descripcion }}</h5>
+    <h5 class="mb-5 mt-3 word-wrap-break" style="max-width: 800px;">Descripción: {{ ficha.descripcion }}</h5>
   </div>
   
   
 
   <!-- Área principal con imagen de fondo y elementos superpuestos -->
-  <div class="text-center mb-3">
-    <label for="tamanoFicha" class="form-label">Tamaño de visualización:</label>
-    <select id="tamanoFicha" class="form-select w-auto d-inline-block ms-2">
-      <option value="600">Pequeño (600px)</option>
-      <option value="800" selected>Mediano (800px)</option>
-      <option value="1000">Grande (1000px)</option>
-    </select>
-  </div>
 
+  <div id="contenedorFichaTutorial">
   <div id="contenedorFicha" class="border border-secondary rounded shadow-sm mx-auto"
     style="width: 800px; position: relative;">
     <img id="imagenFicha" src="/f/ficha/image/{{ficha.id}}" alt="Ficha" class="w-100 d-block rounded" />
   </div>
-
+  </div>
 
   <!-- Botones de acción -->
   <div class="text-center my-4">
     <div class="d-flex justify-content-center flex-wrap" style="gap: 0.5rem;">
+      {{#isLogged}}
+      <div id="btnCorregir">
       <button class="btn btn-primary me-3 mb-2" id="btnCorregir">Corregir</button>
-      <button class="btn btn-secondary me-3 mb-2" onclick="descargarPDF()">Descargar en PDF</button>
+      </div>
+      <span id="notaResultado" class="ms-3 fw-bold text-primary" style="font-size: 1.2rem;"></span>
+      {{/isLogged}}
+      <button class="btn btn-danger me-3 mb-2" onclick="reiniciarFicha()" id="btnReiniciarFicha">🔁 Reiniciar ficha</button>
+      <button class="btn btn-secondary me-3 mb-2" onclick="descargarPDF()" id="btnDescargarPDF">Descargar en PDF</button>
       {{#esPropietario}}
       <form action="/f/verFicha" method="GET">
         <input type="hidden" name="_csrf" value="{{token}}" />
         <input type="hidden" name="fichaId" value="{{ficha.id}}" />
-        <button type="submit" class="btn btn-success mb-2">Ver Ficha</button>
+        <button type="submit" class="btn btn-success mb-2" id="btnVerFicha">Ver Ficha</button>
       </form>
       {{/esPropietario}}
       {{^esPropietario}}
-      <button class="btn btn-warning mb-2" onclick="window.history.back();">Volver</button>
+      <button class="btn btn-warning mb-2" onclick="window.history.back();" id="btnVolverFicha">Volver</button>
       {{/esPropietario}}
     </div>
     
   </div>
+
+  <!-- Modal de nota -->
+<div class="modal fade" id="modalNota" tabindex="-1" aria-labelledby="modalNotaLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-sm">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalNotaLabel">Resultado</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center fs-4">
+        <span id="textoNotaModal"></span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
   
 
 
 </div>
 <script type="application/json" id="elementosSuperpuestosRaw">
   {{{ficha.elementosSuperpuestos}}}
-  
 </script>
+
+<script id="respuestasUsuarioRaw" type="application/json">
+  {{#fichaUsuario.respuestas}}{{{fichaUsuario.respuestas}}}{{/fichaUsuario.respuestas}}
+  {{^fichaUsuario.respuestas}}[]{{/fichaUsuario.respuestas}}
+</script>
+
+
+
+<script>
+  window.fichaData = {
+    fichaId: "{{ficha.id}}",
+    csrfToken: '{{token}}',
+    respuestas: JSON.parse(document.getElementById("respuestasUsuarioRaw")?.textContent || "null")
+  };
+</script>
+
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
+<script src="/js/cargarRespuestaFicha.js"></script>
+<script src="/js/correccion.js"></script>
 <script src="/js/verFicha.js"></script>
 <script src="/js/like.js"></script>
 

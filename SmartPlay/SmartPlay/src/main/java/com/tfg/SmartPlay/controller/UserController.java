@@ -171,10 +171,10 @@ public class UserController {
     public String guardarFotoUser(@RequestParam("photo") MultipartFile photo, Model model,
             RedirectAttributes redirectAttributes) throws Exception {
         // Verificar si la imagen excede el tamaño máximo de 1 MB
-        long maxSize = 1 * 1024 * 1024; // 1 MB
+        long maxSize = 5 * 1024 * 1024; // 5 MB
         if (photo.getSize() > maxSize) {
             // Si es mayor a 1 MB, mostrar un mensaje de error
-            redirectAttributes.addFlashAttribute("error", "La imagen no puede ser mayor a 1 MB.");
+            redirectAttributes.addFlashAttribute("error", "La imagen no puede ser mayor a 5 MB.");
 
             return "redirect:/users/perfil";
         }

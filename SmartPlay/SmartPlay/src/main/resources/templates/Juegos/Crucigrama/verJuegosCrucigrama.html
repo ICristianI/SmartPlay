@@ -1,7 +1,7 @@
 {{> header}}
 
-<div class="container mt-4">
-    <div class="d-flex align-items-center justify-content-between mb-4">
+<div class="container mt-4" >
+    <div class="d-flex align-items-center justify-content-between mb-4" id="titulo-crucigrama">
         <h1 class="text-center mt-5">Mis Juegos de Crucigrama</h1>
         <div class="text-center mt-4">
             <a href="/crucigrama" class="btn btn-secondary">Volver</a>
@@ -12,19 +12,23 @@
     {{#error}}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <p>{{error}}</p>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar">Cerrar</button>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+        </button>    
     </div>
     {{/error}} 
     {{#mensaje}}
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <p>{{mensaje}}</p>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar">Cerrar</button>
-    </div>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
     {{/mensaje}}
 
     <div class="row">
         {{#juegos}}
-        <div class="col-md-4 mb-4">
+        <div class="col-md-4 mb-4" id="zona-juegos-crucigrama">
           <div class="card h-100 shadow-sm position-relative">
             <img src="/juegos/image/{{id}}" 
               class="card-img-top"
@@ -54,7 +58,7 @@
       
 
     {{^juegos}}
-    <div class="text-center mt-5">
+    <div class="text-center mt-5" id="crear-crucigrama">
         <p class="text-muted">Aún no has creado ningún juego de crucigrama.</p>
         <a href="/crucigrama/crear" class="btn btn-success">Crear un juego</a>
     </div>

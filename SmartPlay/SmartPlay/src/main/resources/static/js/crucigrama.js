@@ -115,6 +115,7 @@ function renderizarPistas() {
 }
 
 window.reiniciarCrucigrama = function () {
+    mensaje.innerHTML = "";
     colocarPalabras();
     renderizarCrucigrama();
     renderizarPistas();
@@ -194,7 +195,7 @@ function verificarRespuestas() {
 
 
     if (respuestasCorrectas === respuestas.length) {
-        mensaje.innerHTML = `<span class="text-success fw-bold">🎉 ¡Has completado el crucigrama!</span>`;
+        mensaje.innerHTML = `<span class="text-success fw-bold">¡Has completado el crucigrama!</span>`;
         efectoVictoriaMulticolor();
     }
 }

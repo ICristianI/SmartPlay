@@ -2,7 +2,7 @@
 
 <div class="container mt-4">
     <div class="d-flex align-items-center justify-content-between mb-4">
-        <h1 class="text-center mt-5">Mis Grupos</h1>
+        <h1 class="text-center mt-5" id="titulo-ver-grupos">Mis Grupos</h1>
         <div class="text-center mt-4">
             <a href="/grupo" class="btn btn-secondary">Volver</a>
         </div>
@@ -12,18 +12,22 @@
     {{#error}}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <p>{{error}}</p>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar">Cerrar</button>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+      </button>
     </div>
     {{/error}}
 
     {{#mensaje}}
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <p>{{mensaje}}</p>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar">Cerrar</button>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+      </button>
     </div>
     {{/mensaje}}
 
-    <div class="row">
+    <div class="row" id="zona-grupos">
         {{#grupos}}
         <div class="col-md-4">
             <div class="card mb-4 shadow-sm position-relative">
@@ -60,7 +64,9 @@
     {{^grupos}}
     <div class="text-center mt-5">
         <p class="text-muted">Aún no perteneces a ningún grupo.</p>
-        <a href="/grupos/crear" class="btn btn-success">Crear un grupo</a>
+        {{#isProfesor}}
+        <a href="/grupos/crear" class="btn btn-success" id="crear-grupo-ver">Crear un grupo</a>
+        {{/isProfesor}}
     </div>
     {{/grupos}}
 

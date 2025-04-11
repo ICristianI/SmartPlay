@@ -3,7 +3,7 @@
 <div class="container mt-5">
   <div class="row align-items-center">
     <!-- Columna izquierda -->
-    <div class="col-md-8">
+    <div class="col-md-8" id="Contenido">
 
       <div class="d-flex justify-content-between align-items-center mt-4 px-2">
         <small class="text-muted"><strong>Creada el:</strong> {{fechaFormateada}}</small>
@@ -25,7 +25,7 @@
       </div>
       
 
-      <p class="text-break">
+      <p class="text-break" id="Privacidad">
         <strong>Privacidad:</strong>
         {{#ficha.privada}}<span class="badge bg-danger">Privada</span>{{/ficha.privada}}
         {{^ficha.privada}}<span class="badge bg-success">Pública</span>{{/ficha.privada}}
@@ -36,19 +36,23 @@
       {{#error}}
       <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <p>{{error}}</p>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">Cerrar</button>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
       {{/error}}
 
       {{#mensaje}}
       <div class="alert alert-success alert-dismissible fade show" role="alert">
         <p>{{mensaje}}</p>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">Cerrar</button>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
       {{/mensaje}}
 
       <!-- Botones -->
-      <button class="btn btn-primary navbar-custom mt-3" id="btnEditarFicha" onclick="toggleEditForm()">Editar Ficha</button>
+      <button class="btn btn-primary navbar-custom mt-3" id="EditForm" onclick="toggleEditForm()">Editar Ficha</button>
 
       <!-- Formulario de edición -->
       <form id="editForm" action="/f/editar" method="post" style="display: none;">
@@ -93,24 +97,24 @@
       <form action="/f/irModificarFicha" method="post">
         <input type="hidden" name="_csrf" value="{{token}}" />
         <input type="hidden" name="fichaId" value="{{ficha.id}}" />
-        <button type="submit" class="btn btn-warning mt-3">Añadir Elementos a la Ficha</button>
+        <button type="submit" class="btn btn-warning mt-3" id="anadirElementos">Añadir Elementos a la Ficha</button>
       </form>
 
       <form action="/f/verFichaInteractiva" method="get">
         <input type="hidden" name="fichaId" value="{{ficha.id}}" />
-        <button type="submit" class="btn btn-primary mt-3">Ver Ficha Interactiva</button>
+        <button type="submit" class="btn btn-primary mt-3" id="resolverFicha">Resolver Ficha</button>
       </form>
 
       <!-- Eliminar ficha -->
       <form action="/f/eliminar" method="post" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta ficha? Esta acción no se puede deshacer.');">
         <input type="hidden" name="_csrf" value="{{token}}" />
         <input type="hidden" name="fichaId" value="{{ficha.id}}" />
-        <button type="submit" class="btn btn-danger mt-3">Eliminar Ficha</button>
+        <button type="submit" class="btn btn-danger mt-3" id="btnEliminarFicha">Eliminar Ficha</button>
       </form>
 
       <!-- Volver -->
       <form action="/f/listarFichas" method="get">
-        <button type="submit" class="btn btn-secondary mt-3">Volver</button>
+        <button type="submit" class="btn btn-secondary mt-3" id="btnVolverListado">Volver</button>
       </form>
     </div>
 
@@ -128,12 +132,12 @@
   <h3 class="mt-5 mb-4">Esta ficha pertenece a los siguientes cuadernos:</h3>
   <div class="row" id="contenedorCuadernos">
     {{#cuadernos}}
-    <div class="col-md-4">
+    <div class="col-md-4" id="contenedorCuadernos">
       <div class="card h-100 shadow-sm position-relative">
         <img
-          src="/cuaderno/image/{{id}}"
+          src="/cuadernos/image/{{id}}"
           class="card-img-top"
-          alt="Imagen del cuaderno"
+          alt="Vista previa del cuaderno"
           style="height: 150px; object-fit: cover"
           onerror="this.onerror=null; this.src='/images/generalImages/CuadernoDefault.jpg';"
         />

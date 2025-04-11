@@ -9,31 +9,24 @@
       {{#message}}
       <div class="alert alert-success alert-dismissible fade show" role="alert">
         <p>{{message}}</p>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">Cerrar</button>
-      </div>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+              </div>
       {{/message}}
 
       <!-- Mostrar error si existe -->
       {{#error}}
       <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <p>{{error}}</p>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">Cerrar</button>
-      </div>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+              </div>
       {{/error}}
-<!--
-      <form action="/users/resend" method="get">
-        <div class="mb-3">
-          <p>Si tienes algún problema reenvía la verificación escribiendo tu correo</p>
-          <label for="email" class="form-label">Correo electrónico</label>
-          <input type="email" class="form-control" id="email" name="email" placeholder="Introduce tu correo" required>
-        </div>
 
-        <div class="d-grid">
-          <button type="submit" class="btn btn-primary navbar-custom">Reenviar Correo</button>
-        </div>
-      </form>
--->
-      <p class="text-center mt-3">Ya verificaste tu cuenta?
+      <p class="text-center mt-3" id="verificacion-link">
+        Ya verificaste tu cuenta?
         <a href="/login">Ir al inicio de sesión</a>
       </p>
     </div>

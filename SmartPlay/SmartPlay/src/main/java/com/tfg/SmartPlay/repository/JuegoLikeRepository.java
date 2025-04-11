@@ -12,4 +12,6 @@ public interface JuegoLikeRepository extends JpaRepository<JuegoLike, Long> {
     boolean existsByJuegoAndUsuario(Juego juego, User usuario);
     long countByJuego(Juego juego);
     void deleteByJuegoAndUsuario(Juego juego, User usuario);
+    void deleteByJuego_Id(Long juegoId);
+
 }

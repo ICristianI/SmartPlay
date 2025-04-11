@@ -2,10 +2,14 @@ package com.tfg.SmartPlay.controller;
 
 import com.tfg.SmartPlay.entity.Cuaderno;
 import com.tfg.SmartPlay.entity.Ficha;
+import com.tfg.SmartPlay.entity.FichaUsuario;
+import com.tfg.SmartPlay.entity.User;
 import com.tfg.SmartPlay.service.CuadernoService;
 import com.tfg.SmartPlay.service.FichaLikeService;
 import com.tfg.SmartPlay.service.FichaService;
+import com.tfg.SmartPlay.service.FichaUsuarioService;
 import com.tfg.SmartPlay.service.UserComponent;
+import com.tfg.SmartPlay.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.data.domain.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +46,12 @@ public class FichaController {
 
     @Autowired
     private FichaLikeService fichaLikeService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private FichaUsuarioService fichaUsuarioService;
 
     @Autowired
     private UserComponent userComponent;
@@ -69,7 +80,7 @@ public class FichaController {
             map.put("nombre", ficha.getNombre());
             map.put("asignatura", ficha.getAsignatura());
             map.put("meGusta", ficha.getMeGusta());
-            map.put("fechaFormateada", ficha.getFechaCreacionFormateada()); // aquí sí tiene contexto
+            map.put("fechaFormateada", ficha.getFechaCreacionFormateada());
             return map;
         }).toList();
 
@@ -175,7 +186,7 @@ public class FichaController {
 
         fichaService.guardarFicha(ficha, imagenFondo, userDetails.getUsername());
         redirectAttributes.addFlashAttribute("mensaje", "Ficha guardada correctamente.");
-        return "Fichas/ModificarFicha";
+        return "redirect:/f/listarFichas";
     }
 
     // Método para editar una ficha
@@ -310,6 +321,14 @@ public class FichaController {
                 model.addAttribute("esPropietario",
                         ficha.getUsuario().getId().equals(userComponent.getUser().get().getId()));
                 model.addAttribute("User", true);
+                
+                Optional<FichaUsuario> fichaUsuarioOpt = fichaUsuarioService.obtenerNota(
+                    ficha.getId(),
+                    userComponent.getUser().get().getId()
+                );
+                model.addAttribute("fichaUsuario", fichaUsuarioOpt.orElse(new FichaUsuario()));
+            
+            
 
             } else {
                 model.addAttribute("tieneLike", false);
@@ -377,5 +396,31 @@ public class FichaController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @PostMapping("/guardarNota")
+    @ResponseBody
+    public ResponseEntity<?> guardarNota(
+        @RequestBody Map<String, Object> datos,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) throws JsonProcessingException {
+
+        Object fichaIdRaw = datos.get("fichaId");
+        Long fichaId = fichaIdRaw instanceof Number
+        ? ((Number) fichaIdRaw).longValue()
+        : Long.parseLong(fichaIdRaw.toString());
+        Object notaRaw = datos.get("nota");
+        Double nota = notaRaw instanceof Number
+                ? ((Number) notaRaw).doubleValue()
+                : Double.parseDouble(notaRaw.toString());
+        List<Map<String, Object>> respuestas = (List<Map<String, Object>>) datos.get("respuestas");
+
+        System.out.println("Respuestas recibidas: " + respuestas);
+
+        Optional<User> user = userService.findUserByEmail(userDetails.getUsername());
+        fichaUsuarioService.guardarNotaYRespuestas(fichaId, user, nota, respuestas);
+    
+        return ResponseEntity.ok().build();
+    }
+    
 
 }

@@ -6,6 +6,8 @@
     <button class="btn btn-secondary" onclick="window.history.back();">Volver</button>
   </div>
 
+  <div id="crear-crucigrama-container">
+
   <form action="/crucigrama/guardar" method="POST" enctype="multipart/form-data" class="shadow p-4 rounded" onsubmit="return validarMinimoPistas()">
     <input type="hidden" name="_csrf" value="{{token}}"/>
 
@@ -51,9 +53,9 @@
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Imagen del Juego</label>
+      <label class="form-label">Imagen del Juego. Max 5 Mb</label>
       <div class="d-flex flex-column align-items-center">
-        <div class="border border-secondary rounded mb-3" style="width: 200px; height: 150px; overflow: hidden">
+        <div id="imagen-juego-crucigrama" class="border border-secondary rounded mb-3" style="width: 200px; height: 150px; overflow: hidden">
           <img id="previewImagen" src="/images/generalImages/CREARCRUCIGRAMA.png" alt="Vista previa"
             class="w-100 h-100 object-cover" />
         </div>
@@ -68,7 +70,7 @@
     </div>
 
     <!-- Pistas y Respuestas -->
-    <div class="mb-3">
+    <div class="mb-3" id="lista-pistas-crucigrama">
       <label for="pistaInput" class="form-label">Agregar Pista y Respuesta (Mín. 3, Máx. 10 pares, 10 letras por respuesta)</label>
       <div class="input-group mb-2">
         <input type="text" class="form-control" id="pistaInput" placeholder="Ejemplo: Capital de Francia" maxlength="50" />
@@ -89,8 +91,10 @@
       <button type="submit" class="btn btn-primary navbar-custom">Guardar Juego</button>
     </div>
   </form>
+  </div>
 </div>
 
+<script src="/js/size.js"></script>
 <script src="/js/validacionCrucigrama.js"></script>
 <script src="/js/ImagenPreview.js"></script>
 

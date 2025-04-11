@@ -77,6 +77,10 @@ document.addEventListener("DOMContentLoaded", () => {
     input.style.width = `${elemento.width}px`;
     input.style.height = `${elemento.height}px`;
     if (elemento.tamanoLetra) input.style.fontSize = `${elemento.tamanoLetra}px`;
+    if (elemento.colorFondo) input.style.backgroundColor = elemento.colorFondo;
+    if (elemento.colorTexto) input.style.color = elemento.colorTexto;
+
+
 
   
     const botones = crearBotonesEdicion(wrapper, input);

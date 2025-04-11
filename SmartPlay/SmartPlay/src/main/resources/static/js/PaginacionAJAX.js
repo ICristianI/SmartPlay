@@ -38,47 +38,50 @@ function cargarPagina(button, tipo) {
 
   urlParams.set("size", size);
 
-  // ⚠️ Manejo especial para juegos tipo 'cuadernos2' (ahorcado, sopa, crucigrama)
   if (tipo === "cuadernos2") {
-    const juegoIdInput = document.querySelector('input[name="juegoId"]');
-    const juegoId = juegoIdInput?.value;
-
-    if (!juegoId) {
-      console.error("No se encontró el juegoId en la página.");
+    const juegoId = document.getElementById("juegoId")?.value;
+    const tipoJuego = document.getElementById("tipoJuegoActual")?.value;
+    const csrfToken = document.querySelector('input[name="_csrf"]')?.value;
+  
+    if (!juegoId || !tipoJuego) {
+      console.error("Faltan juegoId o tipoJuego");
       return;
     }
-
-    const formData = new FormData();
-    formData.append("juegoId", juegoId);
-
-    fetch("/juegos/seleccionar", {
-      method: "POST",
-      body: formData,
+  
+    urlParams.set("juegoId", juegoId);
+    const url = `/${tipoJuego}/ver?${urlParams.toString()}`;
+  
+    fetch(url, {
+      method: "GET",
       headers: {
         "X-Requested-With": "XMLHttpRequest",
-      },
+        "X-CSRF-TOKEN": csrfToken
+      }
     })
-      .then(() => {
-        // Después del redireccionamiento, cargamos la nueva URL con los parámetros
-        const newUrl = window.location.pathname + "?" + urlParams.toString();
-        return fetch(newUrl, {
-          method: "GET",
-          headers: { "X-Requested-With": "XMLHttpRequest" },
-        });
+      .then((response) => {
+        if (response.status === 403) {
+          throw new Error("Acceso denegado (403). ¿Falta el token CSRF?");
+        }
+        return response.text();
       })
-      .then((response) => response.text())
       .then((html) => {
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, "text/html");
+  
         actualizarContenido("#contenedorCuadernos", doc);
         actualizarContenido("#navPaginacionCuadernos", doc);
+        actualizarContenido("#navPaginacionCuadernos2", doc);
+
         actualizarBotonesPaginacion();
       })
-      .catch((error) => console.error("Error cargando la página de juego:", error));
+      .catch((error) => console.error("Error cargando cuadernos2:", error));
     
-    return; // Cortar ejecución aquí
+    return;
   }
-
+  
+  
+  
+  
   // Resto de tipos normales
   let url = "";
   if (tipo === "cuadernos") {

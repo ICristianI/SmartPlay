@@ -1,6 +1,6 @@
 {{> header}}
 
-<div class="container mt-4">
+<div class="container mt-4" >
   <div class="d-flex align-items-center justify-content-between mb-4">
     <h1 class="text-center mt-5">Grupo: {{grupo.nombre}}</h1>
     <div class="text-center mt-4">
@@ -12,18 +12,22 @@
   {{#error}}
   <div class="alert alert-danger alert-dismissible fade show" role="alert">
     {{error}}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar">Cerrar</button>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+      <span aria-hidden="true">&times;</span>
+  </button>
   </div>
   {{/error}}
 
   {{#mensaje}}
   <div class="alert alert-success alert-dismissible fade show" role="alert">
     {{mensaje}}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar">Cerrar</button>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+      <span aria-hidden="true">&times;</span>
+  </button>
   </div>
   {{/mensaje}}
 
-  <div class="row">
+  <div class="row" id="titulo-grupo">
     <div class="col-md-8">
       <p><strong>Propietario:</strong> {{grupo.creador.nombre}}</p>
       <p><strong>Descripción:</strong> {{grupo.descripcion}}</p>
@@ -33,7 +37,7 @@
 
 
       <!-- Botón para mostrar el código del grupo -->
-<div class="mb-3">
+  <div class="mb-3" id="codigoGrupoTutorial">
     <label class="form-label">Código de acceso para unirse:</label>
     <div class="input-group position-relative">
       <input type="text" class="form-control" id="codigoGrupo" value="{{grupo.codigoAcceso}}" readonly title="Código de acceso del grupo" placeholder="Código de acceso">
@@ -52,15 +56,17 @@
   {{#isPropietario}}
 
       <!-- Botón editar -->
-      <button class="btn btn-primary navbar-custom mt-3" onclick="toggleEditForm()">Editar Grupo</button>
+      <button class="btn btn-primary navbar-custom mt-3" onclick="toggleEditForm()" id="editFormTutorial">Editar Grupo</button>
 
       <!-- Botón eliminar grupo -->
+       <div id="eliminarTutorial">
       <form action="/grupos/eliminar" method="post" class="mt-3" onsubmit="return confirmarEliminacion();">
         <input type="hidden" name="_csrf" value="{{token}}" />
         <input type="hidden" name="grupoId" value="{{grupo.id}}" />
         <button type="submit" class="btn btn-danger">Eliminar Grupo</button>
       </form>
-      {{/isPropietario}}
+    </div>
+  {{/isPropietario}}
       
 
       <!-- Formulario de edición -->
@@ -81,9 +87,10 @@
     <!-- Botón y modal para seleccionar cuadernos -->
     <div class="mb-3">
       <label class="form-label">Seleccionar Cuadernos</label>
-      <button type="button" class="btn btn-primary navbar-custom" data-bs-toggle="modal" data-bs-target="#cuadernoModal">
+      <button type="button" class="btn btn-primary navbar-custom" data-toggle="modal" data-target="#cuadernoModal">
         Elegir Cuadernos
       </button>
+      
     </div>
   
     <!-- Cuadernos seleccionados -->
@@ -109,7 +116,7 @@
 
   <div class="row" id="contenedorCuadernos">
     {{#cuadernosPage}}
-    <div class="col-md-4">
+    <div class="col-md-4" id="contenedorCuadernosTutorial">
       <div class="card h-100 shadow-sm position-relative">
         <img
           src="/cuadernos/image/{{id}}"
@@ -195,7 +202,7 @@
 <h3 class="mt-5 mb-3">Usuarios del Grupo</h3>
 <div class="row" id="contenedorUsuarios">
   {{#usuariosPage}}
-  <div class="col-md-4 text-center">
+  <div class="col-md-4 text-center" id="contenedorUsuariosTutorial">
     <div class="card mb-4 shadow-sm p-3 text-center">
 
       <img src="/users/images/{{id}}" alt="Foto de {{nombre}}"
@@ -259,7 +266,10 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="cuadernoModalLabel">Seleccionar Cuadernos</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+
+          <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
   
         <div class="modal-body">
@@ -285,7 +295,7 @@
         </div>
   
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
         </div>
       </div>
     </div>

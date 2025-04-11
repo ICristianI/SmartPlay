@@ -13,4 +13,5 @@ public interface FichaLikeRepository extends JpaRepository<FichaLike, Long> {
     boolean existsByFichaAndUsuario(Ficha ficha, User usuario);
     Optional<FichaLike> findByFichaAndUsuario(Ficha ficha, User usuario);
     int countByFicha(Ficha ficha);
+    void deleteByFicha_Id(Long fichaId);
 }

@@ -8,6 +8,8 @@
     </button>
   </div>
 
+  <div id="crear-ahorcado-container">
+
   <form action="/ahorcado/guardar" method="POST" enctype="multipart/form-data" class="shadow p-4 rounded">
     <input type="hidden" name="_csrf" value="{{token}}"/>
 
@@ -53,9 +55,9 @@
     </div>
     <!-- Imagen del juego -->
     <div class="mb-3">
-      <label class="form-label">Imagen del Juego</label>
+      <label class="form-label">Imagen del Juego. Max 5 Mb</label>
       <div class="d-flex flex-column align-items-center">
-        <div class="border border-secondary rounded mb-3" style="width: 200px; height: 150px; overflow: hidden">
+        <div id="imagen-juego-ahorcado" class="border border-secondary rounded mb-3" style="width: 200px; height: 150px; overflow: hidden">
           <img id="previewImagen" src="/images/generalImages/CREARAHORCADO.png" alt="Vista previa"
             class="w-100 h-100 object-cover" />
         </div>
@@ -70,7 +72,7 @@
     </div>
 
     <!-- Palabra para el juego -->
-    <div class="mb-3">
+    <div class="mb-3" id="palabra-secreta">
       <label for="palabra" class="form-label">Palabra Secreta (Max 15 Letras)</label>
 
       <input type="text" class="form-control" id="palabra" name="palabra"
@@ -78,7 +80,7 @@
     </div>
 
     <!-- Número máximo de intentos -->
-    <div class="mb-3">
+    <div class="mb-3" id="input-intentos">
       <label for="maxIntentos" class="form-label">Número Máximo de Intentos</label>
       <div class="input-group">
         <button type="button" class="btn btn-outline-secondary" onclick="cambiarIntentos(-1)">
@@ -99,8 +101,10 @@
       </button>
     </div>
   </form>
+  </div>
 </div>
 
+<script src="/js/size.js"></script>
 <script src="/js/validacionAhorcado.js"></script>
 <script src="/js/ImagenPreview.js"></script>
 

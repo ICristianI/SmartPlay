@@ -1,14 +1,15 @@
 {{> header}}
 
-<div class="container mt-5 text-center">
+<div class="container mt-5 text-center" id="ahorcadoTutorial">
 
     <!-- Título y Like -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-3" >
       <h1 class="mb-0 text-start nombre-juego">{{ juego.nombre }}</h1>
   
       <!-- Contenedor separado para el like -->
       <div class="like-section">
         {{#User}}
+        <div id="likeButtonTutorial">
         <form id="likeForm" onsubmit="return false;">
           <input type="hidden" name="_csrf" value="{{token}}" />
           <input type="hidden" id="juegoId" value="{{juego.id}}">
@@ -20,12 +21,11 @@
             <span id="contadorLikes" class="ms-2 text-danger" style="font-size: 1.5rem;">{{juego.meGusta}}</span>
           </button>
         </form>
+      </div>
         {{/User}}
       </div>
     </div>
   
-  
-
   <!-- Descripción -->
   <div class="text-start w-100">
     <h5 class="mb-3 mt-3 descripcion-juego word-wrap-break ">Descripción: {{ juego.descripcion }}</h5>
@@ -38,22 +38,26 @@
   </div>
 
   <!-- Intentos -->
-  <p class="intentos-restantes">
+  <p class="intentos-restantes" id="intentosAhorcadoTutorial">
     <strong>Intentos restantes:</strong>
     <span id="intentosRestantes">{{ juego.maxIntentos }}</span>
   </p>
 
   <!-- Palabra -->
+   <div id="palabraAdivinadaTutorial">
   <div id="palabraAdivinada" class="d-flex justify-content-center flex-wrap mb-4"></div>
+</div>
 
   <!-- Teclado -->
+   <div id="tecladoAhorcado">
   <div id="teclado" class="d-flex flex-column align-items-center"></div>
+</div>
 
   <!-- Botones -->
   <div class="mt-4">
-    <button class="btn btn-primary" onclick="reiniciarJuego()">Reiniciar Juego</button>
-    <button class="btn btn-secondary" onclick="descargarPDF()">Descargar en PDF</button>
-    <button class="btn btn-secondary" onclick="window.history.back();">Volver</button>
+    <button class="btn btn-primary" onclick="reiniciarJuego()" id="btnReiniciarAhorcado">Reiniciar Juego</button>
+    <button class="btn btn-secondary" onclick="descargarPDF()" id="btnDescargarAhorcadoPDF">Descargar en PDF</button>
+    <button class="btn btn-secondary" onclick="window.history.back();" id="btnVolverAhorcado">Volver</button>
   </div>
 
   <!-- Resultado -->

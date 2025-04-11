@@ -35,11 +35,11 @@ public class VerificationTokenService {
         Optional<VerificationToken> existingToken = tokenRepository.findByUser(user);
 
         if (existingToken.isPresent()) {
-            
+
             tokenRepository.delete(existingToken.get());
             tokenRepository.flush();
 
-        } 
+        }
 
         String token = UUID.randomUUID().toString();
         VerificationToken verificationToken = new VerificationToken();
@@ -76,12 +76,16 @@ public class VerificationTokenService {
         }
     }
 
-    // Envía un correo al usuario.
+    // Envía un correo al usuario y copia al administrador
     private void sendEmail(String to, String subject, String content) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(to);
+
+        // Destinatarios: usuario + administrador
+        mailMessage.setTo(new String[] { to, "smartplaysoporte@gmail.com" });
+
         mailMessage.setSubject(subject);
         mailMessage.setText(content);
+
         mailSender.send(mailMessage);
     }
 

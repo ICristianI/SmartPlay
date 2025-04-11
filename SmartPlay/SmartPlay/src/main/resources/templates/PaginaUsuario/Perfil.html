@@ -4,30 +4,34 @@
     <div class="row align-items-center">
         <!-- Columna para los datos -->
         <div class="col-md-8">
+            <div id="perfil-usuario">
             <h1>Bienvenido, {{user.nombre}}!</h1>
             <p><strong>Correo:</strong> {{user.email}}</p>
             <p><strong>Rol:</strong> {{user.roles}}</p>
             <p><strong>Edad:</strong> {{user.edad}}</p>
+            </div>
 
             <!-- Mostrar error si existe -->
             {{#error}}
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <p>{{error}}</p>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">Cerrar</button>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
             </div>
             {{/error}}
 
             {{#mensaje}}
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <p>{{mensaje}}</p>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                    Cerrar
+                <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             {{/mensaje}}
 
             <!-- Botón para abrir el formulario de edición -->
-            <button class="btn btn-primary navbar-custom mt-3" onclick="toggleEditForm()">Editar Perfil</button>
+            <button class="btn btn-primary navbar-custom mt-3 " id="editFormButton"  onclick="toggleEditForm()">Editar Perfil</button>
 
             <!-- Formulario para editar los datos (oculto por defecto) -->
             <form id="editForm" action="/users/edit" method="post" style="display: none;">
@@ -49,25 +53,25 @@
 
 
             <!-- Botón para eliminar la cuenta -->
-            <form action="/users/delete" method="post"
+            <form action="/users/delete" method="post" 
                 onsubmit="return confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.');">
                 <input type="hidden" name="_csrf" value="{{token}}"/>
 
-                <button type="submit" class="btn btn-danger mt-3">Eliminar Cuenta</button>
+                <button type="submit" class="btn btn-danger mt-3" id="eliminar-cuenta">Eliminar Cuenta</button>
             </form>
 
             <form id="logout-form" action="/logout" method="post" style="display: none;">
                 <input type="hidden" name="_csrf" value="{{token}}">
-            </form>
-
-            <!-- Botón de logout -->
-            <button class="btn btn-warning mt-3" onclick="document.getElementById('logout-form').submit();">
+              </form>
+              
+              <button  id="logout-form-tutorial" class="btn btn-warning mt-3" onclick="document.getElementById('logout-form').submit();">
                 Cerrar sesión
-            </button>
+              </button>
+              
         </div>
 
         <!-- Columna para la imagen -->
-        <div class="col-md-4 text-center">
+        <div class="col-md-4 text-center" id="profilePhotoForm">
             <form id="profilePhotoForm" action="/users/upload" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="_csrf" value="{{token}}"/>
                 <img src="/users/image" alt="Foto de perfil" class="img-thumbnail rounded-circle"

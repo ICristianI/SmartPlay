@@ -8,6 +8,7 @@
       
         <div class="like-section">
             {{#User}}
+            <div id="likeButton">
             <form id="likeForm" onsubmit="return false;">
               <input type="hidden" name="_csrf" value="{{token}}" />
               <input type="hidden" id="juegoId" value="{{juego.id}}">
@@ -19,6 +20,7 @@
                 <span id="contadorLikes" class="ms-2 text-danger" style="font-size: 1.5rem;">{{juego.meGusta}}</span>
               </button>
             </form>
+          </div>
             {{/User}}
         </div>
         
@@ -31,10 +33,11 @@
 
 
     <!-- Espacios para la Sopa de Letras -->
-<div id="sopaContainerWrapper" class="d-flex justify-content-center flex-wrap mt-3">
-    <div id="sopaDeLetras" class="mb-4"></div>
-</div>
-
+     <div id="sopaLetrasTutorial">
+      <div id="sopaContainerWrapper" class="d-flex justify-content-center flex-wrap mt-3">
+          <div id="sopaDeLetras" class="mb-4"></div>
+      </div>
+    </div>
     <!-- Palabras a encontrar -->
     <h4 class="mt-5">Palabras a encontrar:</h4>
     <ul id="listaPalabras" class="list-group list-group-horizontal justify-content-center"></ul>
@@ -43,7 +46,7 @@
     <div id="mensaje" class="mt-4"></div>
 
 <!-- Selección de dificultad -->
-<!-- Selección de dificultad -->
+ <div id="dificultadTutorial">
 <div class="mt-4" id="dificultadContainer">
     <label for="dificultad" class="fw-bold">
       Selecciona la dificultad:
@@ -64,17 +67,18 @@
       ❓
     </span>
   </div>
+</div>
   
 
 
     <!-- Botón para reiniciar -->
-    <button class="btn btn-primary mt-4" onclick="reiniciarJuego()">Reiniciar Juego</button>
+    <button class="btn btn-primary mt-4" onclick="reiniciarJuego()" id="btnReiniciarJuego">Reiniciar Juego</button>
 
     <!-- Botón para descargar PDF -->
-    <button class="btn btn-success mt-4" onclick="descargarPDF()">Descargar en PDF</button>
+    <button class="btn btn-success mt-4" onclick="descargarPDF()" id="btnDescargarPDF">Descargar en PDF</button>
 
     <!-- Volver -->
-    <button class="btn btn-secondary mt-4" onclick="window.history.back();">
+    <button class="btn btn-secondary mt-4" onclick="window.history.back();" id="btnVolverJuego">
         Volver
     </button>
 </div>

@@ -1,11 +1,6 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   const contenedor = document.getElementById("contenedorFicha");
-  const tamano = document.getElementById("tamanoFicha");
-
-  tamano.addEventListener("change", function () {
-    contenedor.style.width = `${this.value}px`;
-  });
 
   const elementosRaw = JSON.parse(document.getElementById("elementosSuperpuestosRaw").textContent);
 
@@ -14,6 +9,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   elementosRaw.forEach((elemento, i) => {
     const div = document.createElement("div");
+    div.classList.add("elemento-editable");
+    div.dataset.tipo = elemento.tipo;
     div.style.position = "absolute";
     div.style.left = `${elemento.x}px`;
     div.style.top = `${elemento.y}px`;
@@ -120,8 +117,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const select = document.createElement("select");
       select.className = "form-select";
       select.dataset.tipo = "desplegable";
-      select.dataset.correcto = (elemento.opciones.find(op => op.correcta) || {}).texto?.trim().toLowerCase() || "";
-    
+      const correcta = (elemento.opciones.find(op => op.correcta) || {}).texto;
+      select.dataset.correcto = (correcta ?? "").toString().trim().toLowerCase();
+          
       (elemento.opciones || []).forEach(op => {
         const option = document.createElement("option");
         option.textContent = op.texto;
@@ -288,7 +286,7 @@ document.addEventListener("DOMContentLoaded", () => {
       total++;
       input.style.backgroundColor = "";
       const esperado = input.dataset.correcto;
-      const valor = input.value.trim().toLowerCase();
+      const valor = (input?.value ?? "").toString().trim().toLowerCase();
       if (valor === esperado) {
         input.style.backgroundColor = "lightgreen";
         correctos++;
@@ -335,9 +333,9 @@ document.addEventListener("DOMContentLoaded", () => {
       total++;
       select.style.backgroundColor = "";
     
-      const correcto = select.dataset.correcto;
-      const valor = (select.value || "").trim().toLowerCase();
-    
+      const correcto = (select?.dataset.correcto ?? "").toString().trim().toLowerCase();
+      const valor = (select?.value ?? "").toString().trim().toLowerCase();
+
       if (valor === correcto) {
         select.style.backgroundColor = "lightgreen";
         correctos++;
@@ -372,49 +370,126 @@ document.addEventListener("DOMContentLoaded", () => {
     total += document.querySelectorAll('.join-box').length / 2;
 
     const nota = total > 0 ? ((correctos / total) * 10).toFixed(1) : "0.0";
-    alert(`Tu nota es: ${nota} / 10`);
-  });
 
+    // Mostrar nota al lado del botón
+    document.getElementById("notaResultado").textContent = `Nota: ${nota} / 10`;
+    
+    // Mostrar modal con la nota
+    document.getElementById("textoNotaModal").textContent = `Tu nota es: ${nota} / 10`;
+    const modalNota = new bootstrap.Modal(document.getElementById("modalNota"));
+    modalNota.show();
+    // Obtener respuestas actuales del usuario
+const respuestas = window.obtenerRespuestasUsuario();
+
+// Guardar respuestas y nota en el backend
+fetch('/f/guardarNota', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'X-CSRF-TOKEN': window.fichaData.csrfToken
+  },
+  body: JSON.stringify({
+    fichaId: window.fichaData.fichaId,
+    nota: nota,
+    respuestas: respuestas
+  })
+})
+.then(res => {
+  if (!res.ok) throw new Error("Error al guardar nota y respuestas");
+  console.log("Nota y respuestas guardadas");
+})
+.catch(err => {
+  console.error("Error al guardar nota y respuestas", err);
+});
+
+  });
+  
   window.descargarPDF = async function () {
-    const ficha = document.getElementById("contenedorFicha");
-    const selectTamano = document.getElementById("tamanoFicha");
-    const btnCorregir = document.getElementById("btnCorregir");
-    const btnAceptar = document.getElementById("btnAceptar");
+    const contenedor = document.getElementById("contenedorFicha");
+    const reemplazos = [];
   
-    if (selectTamano) selectTamano.style.display = "none";
-    if (btnCorregir) btnCorregir.style.display = "none";
-    if (btnAceptar) btnAceptar.style.display = "none";
+    // Reemplazar solo inputs de texto
+    contenedor.querySelectorAll("input[type='text']").forEach(input => {
+      const div = document.createElement("div");
+      div.textContent = input.value;
+      copiarEstilos(input, div);
+      div.style.whiteSpace = "nowrap";
+      div.style.overflow = "hidden";
+      div.style.textOverflow = "ellipsis";
   
-    // 🔸 Guardar estilos originales
-    const elementos = ficha.querySelectorAll("input, textarea, .join-box, .checkbox-cuadro");
-    const estilosOriginales = Array.from(elementos).map(el => ({
-      el,
-      backgroundColor: el.style.backgroundColor,
-      color: el.style.color,
-      border: el.style.border,
-      boxShadow: el.style.boxShadow,
-    }));
+      input.style.visibility = "hidden";
+      input.parentNode.appendChild(div);
+      reemplazos.push(() => {
+        div.remove();
+        input.style.visibility = "visible";
+      });
+    });
   
-    const canvas = await html2canvas(ficha, { scale: 2 });
+    // Reemplazar textareas (decorativos)
+    contenedor.querySelectorAll("textarea").forEach(textarea => {
+      const div = document.createElement("div");
+      div.textContent = textarea.value;
+      copiarEstilos(textarea, div);
+      div.style.whiteSpace = "pre-wrap";
+      div.style.wordBreak = "break-word";
+  
+      textarea.style.visibility = "hidden";
+      textarea.parentNode.appendChild(div);
+      reemplazos.push(() => {
+        div.remove();
+        textarea.style.visibility = "visible";
+      });
+    });
+  
+    await new Promise(resolve => setTimeout(resolve, 100));
+  
+    const canvas = await html2canvas(contenedor, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: null
+    });
+  
     const imgData = canvas.toDataURL("image/png");
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF("p", "mm", "a4");
+    const pdf = new window.jspdf.jsPDF("p", "mm", "a4");
     const imgWidth = 210;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
   
     pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
     pdf.save("ficha_interactiva.pdf");
   
-    estilosOriginales.forEach(({ el, backgroundColor, color, border, boxShadow }) => {
-      el.style.backgroundColor = backgroundColor;
-      el.style.color = color;
-      el.style.border = border;
-      el.style.boxShadow = boxShadow;
-    });
-  
-    if (selectTamano) selectTamano.style.display = "";
-    if (btnCorregir) btnCorregir.style.display = "";
-    if (btnAceptar) btnAceptar.style.display = "";
+    reemplazos.forEach(restore => restore());
   };
+  
+  
+
+  
+  function copiarEstilos(origen, destino) {
+    const estilos = window.getComputedStyle(origen);
+    destino.style.position = "absolute";
+    destino.style.left = "0";
+    destino.style.top = "0";
+    destino.style.width = estilos.width;
+    destino.style.height = estilos.height;
+    destino.style.fontSize = estilos.fontSize;
+    destino.style.fontFamily = estilos.fontFamily;
+    destino.style.color = estilos.color;
+    destino.style.backgroundColor = estilos.backgroundColor;
+    destino.style.border = estilos.border;
+    destino.style.padding = "0"; // ← ¡clave!
+    destino.style.margin = "0";
+    destino.style.lineHeight = estilos.lineHeight;
+    destino.style.boxSizing = estilos.boxSizing;
+    destino.style.zIndex = estilos.zIndex;
+    destino.style.whiteSpace = "pre-wrap";
+    destino.style.wordBreak = "break-word";
+    destino.style.display = "inline-block"; // ← ¡clave!
+    destino.style.verticalAlign = "top"; // ← ¡clave!
+  }
+  
+  
+  
+  
+  
+  
   
 });

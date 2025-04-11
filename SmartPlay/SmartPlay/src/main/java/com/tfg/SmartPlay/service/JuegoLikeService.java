@@ -66,12 +66,5 @@ public class JuegoLikeService {
         }
     }
 
-    /*public Long contarLikesPorJuego(List<Juego> content) {
-
-        
-        //long likes = juegoLikeRepository.countByJuego(juego);
-        
-       // return likes;
-    }
-       */
+    
 }

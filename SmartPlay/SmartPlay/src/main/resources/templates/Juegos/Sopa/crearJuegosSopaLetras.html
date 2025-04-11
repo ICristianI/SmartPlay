@@ -6,6 +6,8 @@
     <button class="btn btn-secondary" onclick="window.history.back();">Volver</button>
   </div>
 
+  <div id="crear-sopa-container">
+
   <form action="/sopaletras/guardar" method="POST" enctype="multipart/form-data" class="shadow p-4 rounded">
 
     <input type="hidden" name="_csrf" value="{{token}}" />
@@ -52,9 +54,9 @@
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Imagen del Juego</label>
+      <label class="form-label">Imagen del Juego. Maximo 5 Mb</label>
       <div class="d-flex flex-column align-items-center">
-        <div class="border border-secondary rounded mb-3" style="width: 200px; height: 150px; overflow: hidden">
+        <div id="imagen-juego-sopa" class="border border-secondary rounded mb-3" style="width: 200px; height: 150px; overflow: hidden">
           <img id="previewImagen" src="/images/generalImages/CREARSOPA.png" alt="Vista previa"
             class="w-100 h-100 object-cover" />
         </div>
@@ -69,7 +71,7 @@
     </div>
 
     <!-- Palabras para la sopa de letras -->
-    <div class="mb-3">
+    <div class="mb-3" id="lista-palabras-sopa">
       <label for="palabraInput" class="form-label">Agregar Palabras (Max 6 Palabras, 8 Letras, No repetidas)</label>
       <div class="input-group">
         <input type="text" class="form-control" id="palabraInput" placeholder="Ejemplo: Lobo" maxlength="8" />
@@ -89,8 +91,10 @@
         Juego</button>
     </div>
   </form>
+  </div>
 </div>
 
+<script src="/js/size.js"></script>
 <script src="/js/validacionSopaLetras.js"></script>
 <script src="/js/ImagenPreview.js"></script>
 

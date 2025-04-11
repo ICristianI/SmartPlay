@@ -48,8 +48,8 @@ body.dark-mode .lineas {
   min-height: 250px;
   max-height: 550px;
   transition: transform 0.3s ease, box-shadow 0.3s ease !important;
-  background-color: #171616 !important; /* Color oscuro */
-  color: white; /* Texto en blanco por defecto */
+  background-color: #f4f4f4 !important; /* Color oscuro */
+  color: #171616; /* Texto en blanco por defecto */
 }
 
 /* Estilos para tarjetas en modo oscuro */
@@ -84,17 +84,31 @@ body.dark-mode .card .card-text {
 
 /* Modales con fondo negro siempre */
 .modal-content {
-  background-color: #171616 !important; /* Negro personalizado */
-  color: white !important;
-  border: 1px solid #333; /* Borde oscuro para mejor visibilidad */
+  background-color: #fff; /* Fondo claro */
+  color: #000;            /* Texto oscuro */
+  border: 1px solid #ccc;
 }
 
-/* Estilos para los botones y texto dentro del modal */
+/* MODO OSCURO */
+body.dark-mode .modal-content {
+  background-color: #171616 !important; /* Fondo oscuro */
+  color: white !important;
+  border: 1px solid #333;
+}
+
+body.dark-mode .modal-header,
+body.dark-mode .modal-body,
+body.dark-mode .modal-footer {
+  background-color: #171616 !important;
+  color: white !important;
+}
+
+/* Modo claro (opcional, si quieres asegurar contraste) */
 .modal-header,
 .modal-body,
 .modal-footer {
-  background-color: #171616 !important;
-  color: white !important;
+  background-color: #fff;
+  color: #000;
 }
 
 /* Cambiar color de los botones del modal */
@@ -156,9 +170,13 @@ body.dark-mode .contenido-cuadro {
   border: 1px solid #555; /* Un borde más visible en modo oscuro */
 }
 
-
-
 /*Para el navbar*/
+
+.dropdown-menu {
+  z-index: 1100 !important;
+  position: absolute !important;
+}
+
 .navbar-custom .dropdown-menu .dropdown-item {
   color: white;
 }
@@ -465,6 +483,78 @@ h1 {
   overflow-wrap: break-word;
   white-space: pre-wrap;
 }
+
+/* Tutorial */
+
+/* Estilo por defecto del icono del tutorial */
+.tutorial-icon i {
+  color: white ;
+  transition: opacity 0.3s ease, color 0.3s ease;
+}
+
+/* Hover para que se vea más suave o distinto */
+.tutorial-icon:hover i {
+  opacity: 0.7;
+  color: #bdbdbd; /* o cualquier color que quieras al pasar el mouse */
+}
+
+
+/* Overlay gris */
+#tutorial-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 2000;
+  display: none;
+}
+
+/* Cuadro de enfoque */
+.tutorial-focus {
+  position: absolute;
+  border: 3px solid #fff;
+  border-radius: 10px;
+  z-index: 2001;
+  box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.5);
+  background: transparent;
+  pointer-events: none;
+}
+
+/* Tooltip con la explicación */
+.tutorial-tooltip {
+  position: absolute;
+  background: white;
+  color: black;
+  padding: 15px;
+  border-radius: 8px;
+  max-width: 300px;
+  z-index: 2002;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}
+
+
+.modal.fade .modal-dialog {
+  transform: translateY(-20px);
+  opacity: 0;
+  transition: transform 0.5s ease-out, opacity 0.3s ease-out;
+}
+
+.modal.fade.show .modal-dialog {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+
+#botonesElementosTutorial {
+  width: 100%;
+  min-width: 290px;
+  max-width: 290px;
+}
+
+
+
 
 
 
