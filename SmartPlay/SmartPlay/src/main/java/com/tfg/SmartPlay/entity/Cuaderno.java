@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Blob;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Entity
@@ -28,6 +30,9 @@ public class Cuaderno {
     @Column(nullable = false, unique = false)
     private Integer numeroJuegos;
 
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime fechaCreacion;
+
     @Lob
     @Column(columnDefinition = "LONGBLOB")
     private Blob imagen;
@@ -46,6 +51,18 @@ public class Cuaderno {
 
     @ManyToMany(mappedBy = "cuadernos")
     private List<Grupo> grupos;
+
+    
+    
+    @PrePersist
+    public void prePersist() {
+        this.fechaCreacion = LocalDateTime.now();
+    }
+    
+    public String getFechaCreacionFormateada() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return fechaCreacion.format(formatter);
+    }
 
 
 }

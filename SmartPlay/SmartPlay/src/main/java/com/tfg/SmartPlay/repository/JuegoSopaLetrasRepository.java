@@ -5,14 +5,13 @@ import com.tfg.SmartPlay.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface JuegoSopaLetrasRepository extends JpaRepository<JuegoSopaLetras, Long> {
 
-    // Buscar juegos por usuario
-    List<JuegoSopaLetras> findByUsuario(User usuario);
-
     // Buscar juegos por usuario con paginación
-    Page<JuegoSopaLetras> findByUsuario(User usuario, Pageable pageable);
+@Query("SELECT j FROM JuegoSopaLetras j WHERE j.usuario = :usuario ORDER BY j.fechaCreacion DESC")
+Page<JuegoSopaLetras> findByUsuario(@Param("usuario") User usuario, Pageable pageable);
+
 }

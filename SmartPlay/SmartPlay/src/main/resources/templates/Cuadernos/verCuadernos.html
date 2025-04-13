@@ -12,18 +12,18 @@
     {{#error}}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <p>{{error}}</p>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-            <span aria-hidden="true">&times;</span>
-          </button>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+      </button>
     </div>
     {{/error}}
 
     {{#mensaje}}
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <p>{{mensaje}}</p>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-            <span aria-hidden="true">&times;</span>
-          </button>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+      </button>
     </div>
     {{/mensaje}}
 
@@ -46,6 +46,9 @@
                   <input type="hidden" name="cuadernoId" value="{{id}}" />
                   <button type="submit" class="btn btn-primary navbar-custom">Ver Cuaderno</button>
                 </form>
+              </div>
+              <div class="card-footer d-flex justify-content-between align-items-center px-3 py-2">
+                <small class="text-muted">{{fechaFormateada}}</small>
               </div>
             </div>
           </div>

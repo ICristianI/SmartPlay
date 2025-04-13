@@ -6,11 +6,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface JuegoAhorcadoRepository extends JpaRepository<JuegoAhorcado, Long> {
 
-    List<JuegoAhorcado> findByUsuario(User usuario);
-
-    Page<JuegoAhorcado> findByUsuario(User usuario, Pageable pageable);
+    @Query("SELECT j FROM JuegoAhorcado j WHERE j.usuario = :usuario ORDER BY j.fechaCreacion DESC")
+    Page<JuegoAhorcado> findByUsuario(@Param("usuario") User usuario, Pageable pageable);
 }
+

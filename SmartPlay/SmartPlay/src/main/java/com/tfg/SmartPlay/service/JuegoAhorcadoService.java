@@ -37,11 +37,7 @@ public class JuegoAhorcadoService {
     @Autowired
     private ImagenService imagenService;
 
-    public List<JuegoAhorcado> listarJuegos(String email) {
-        User usuario = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        return juegoAhorcadoRepository.findByUsuario(usuario);
-    }
+
 
     public void editarJuego(Long juegoId, JuegoAhorcado juegoEditado, String email) {
         JuegoAhorcado juego = (JuegoAhorcado) juegoService.obtenerJuego(juegoId, email)

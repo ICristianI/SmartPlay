@@ -16,39 +16,28 @@ import com.tfg.SmartPlay.entity.User;
 @Repository
 public interface FichaRepository extends JpaRepository<Ficha, Long> {
 
-    List<Ficha> findByNombreContainingIgnoreCase(String nombre);
-
-    List<Ficha> findByAsignaturaContainingIgnoreCase(String asignatura);
-
-    List<Ficha> findByIdiomaContainingIgnoreCase(String idioma);
-
-    Optional<Ficha> findById(Long id);
-
-    List<Ficha> findByUsuario(User usuario);
-
-    @Query("SELECT f FROM Ficha f JOIN f.cuadernos c WHERE c.id = :cuadernoId")
+    @Query("SELECT f FROM Ficha f WHERE f.usuario = :usuario ORDER BY f.fechaCreacion DESC")
+    List<Ficha> findByUsuario(@Param("usuario") User usuario);
+    
+    @Query("SELECT f FROM Ficha f JOIN f.cuadernos c WHERE c.id = :cuadernoId ORDER BY f.fechaCreacion DESC")
     Page<Ficha> obtenerFichasPorCuaderno(@Param("cuadernoId") Long cuadernoId, Pageable pageable);
+    
+    @Query("SELECT f FROM Ficha f WHERE f.id NOT IN (SELECT cf.id FROM Cuaderno c JOIN c.fichas cf WHERE c.id = :cuadernoId) ORDER BY f.fechaCreacion DESC")
+    Page<Ficha> findFichasNoAgregadas(@Param("cuadernoId") Long cuadernoId, Pageable pageable);
 
-    @Query("""
-                SELECT f FROM Ficha f
-                WHERE f.id NOT IN (
-                    SELECT cf.id FROM Cuaderno c
-                    JOIN c.fichas cf
-                    WHERE c.id = :cuadernoId
-                )
-            """)
-    Page<Ficha> findFichasNoAgregadas(Long cuadernoId, Pageable pageable);
-
-    @Query("SELECT f FROM Ficha f WHERE f.usuario = :usuario")
+    @Query("SELECT f FROM Ficha f WHERE f.usuario = :usuario ORDER BY f.fechaCreacion DESC")
     Page<Ficha> findByUsuario(@Param("usuario") User usuario, Pageable pageable);
 
-    Page<Ficha> findByPrivadaFalseAndNombreContainingIgnoreCaseOrderByFechaCreacionDesc(String nombre,
-            Pageable pageable);
-
-    Page<Ficha> findByPrivadaFalseAndNombreContainingIgnoreCaseOrderByMeGustaDesc(String nombre, Pageable pageable);
-
-    Page<Ficha> findByPrivadaFalseOrderByFechaCreacionDesc(Pageable pageable);
-
-    Page<Ficha> findByPrivadaFalseOrderByMeGustaDesc(Pageable pageable);
-
+    @Query("SELECT f FROM Ficha f WHERE f.privada = false AND LOWER(f.nombre) LIKE LOWER(CONCAT('%', :nombre, '%')) ORDER BY f.fechaCreacion DESC")
+    Page<Ficha> buscarPublicasPorNombreOrdenFecha(@Param("nombre") String nombre, Pageable pageable);
+    
+    @Query("SELECT f FROM Ficha f WHERE f.privada = false AND LOWER(f.nombre) LIKE LOWER(CONCAT('%', :nombre, '%')) ORDER BY f.meGusta DESC")
+    Page<Ficha> buscarPublicasPorNombreOrdenLikes(@Param("nombre") String nombre, Pageable pageable);
+    
+    @Query("SELECT f FROM Ficha f WHERE f.privada = false ORDER BY f.fechaCreacion DESC")
+    Page<Ficha> buscarPublicasOrdenFecha(Pageable pageable);
+    
+    @Query("SELECT f FROM Ficha f WHERE f.privada = false ORDER BY f.meGusta DESC")
+    Page<Ficha> buscarPublicasOrdenLikes(Pageable pageable);
+    
 }

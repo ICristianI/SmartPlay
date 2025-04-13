@@ -162,11 +162,9 @@ public class GrupoService {
      */
     public Page<Cuaderno> obtenerCuadernosPaginados(Long grupoId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return cuadernoRepository.findByGrupos_Id(grupoId, pageable);
+        return cuadernoRepository.findByGrupoId(grupoId, pageable);
     }
     
-
-
     public List<Cuaderno> obtenerCuadernosNoAgregados(Grupo grupo, String email) {
         Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isEmpty()) return List.of();

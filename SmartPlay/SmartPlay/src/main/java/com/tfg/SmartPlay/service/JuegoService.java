@@ -134,18 +134,18 @@ public class JuegoService {
 
     public Page<Juego> ordenarPorFecha(String buscar, int page, int size) {
         if (buscar != null && !buscar.trim().isEmpty()) {
-            return juegoRepository.findByPrivadaFalseAndNombreContainingIgnoreCaseOrderByFechaCreacionDesc(buscar,
+            return juegoRepository.buscarPublicosPorNombreFecha(buscar,
                     PageRequest.of(page, size));
         }
-        return juegoRepository.findByPrivadaFalseOrderByFechaCreacionDesc(PageRequest.of(page, size));
+        return juegoRepository.buscarPublicosPorFecha(PageRequest.of(page, size));
     }
 
     public Page<Juego> ordenarPorMeGusta(String buscar, int page, int size) {
         if (buscar != null && !buscar.trim().isEmpty()) {
-            return juegoRepository.findByPrivadaFalseAndNombreContainingIgnoreCaseOrderByMeGustaDesc(buscar,
+            return juegoRepository.buscarPublicosPorNombreLikes(buscar,
                     PageRequest.of(page, size));
         }
-        return juegoRepository.findByPrivadaFalseOrderByMeGustaDesc(PageRequest.of(page, size));
+        return juegoRepository.buscarPublicosPorLikes(PageRequest.of(page, size));
     }
 
     public Optional<Juego> obtenerJuegoAccesible(Long juegoId, String email) {

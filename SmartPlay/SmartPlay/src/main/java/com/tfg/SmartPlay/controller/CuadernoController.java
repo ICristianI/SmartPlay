@@ -24,7 +24,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 // Controlador de cuadernos
@@ -72,6 +74,18 @@ public class CuadernoController {
         model.addAttribute("hasNext", hasNext);
         model.addAttribute("prevPage", prevPage);
         model.addAttribute("nextPage", nextPage);
+
+        List<Map<String, Object>> cuadernoProcesado = cuadernosPage.getContent().stream().map(ficha -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", ficha.getId());
+            map.put("nombre", ficha.getNombre());
+            map.put("numeroFichas", ficha.getNumeroFichas());
+            map.put("numeroJuegos", ficha.getNumeroJuegos());
+            map.put("fechaFormateada", ficha.getFechaCreacionFormateada());
+            return map;
+        }).toList();
+
+        model.addAttribute("cuadernos", cuadernoProcesado);
 
         return "Cuadernos/verCuadernos";
     }
@@ -151,6 +165,8 @@ public class CuadernoController {
             // Listas de fichas y juegos no agregados
             model.addAttribute("fichasNoAgregadas", fichasNoAgregadas);
             model.addAttribute("juegosNoAgregados", juegosNoAgregados);
+
+            model.addAttribute("fechaFormateada", cuaderno.get().getFechaCreacionFormateada());
 
             return "Cuadernos/verCuaderno";
         } else {

@@ -16,23 +16,25 @@ import org.springframework.data.domain.Pageable;
 @Repository
 public interface CuadernoRepository extends JpaRepository<Cuaderno, Long> {
 
-    @Query("SELECT c FROM Cuaderno c WHERE c.usuario.email = :email")
+    @Query("SELECT c FROM Cuaderno c WHERE c.usuario.email = :email ORDER BY c.fechaCreacion DESC")
     Page<Cuaderno> findByUsuarioEmail(@Param("email") String email, Pageable pageable);
 
-    List<Cuaderno> findByUsuario(User usuario);
-
-    List<Cuaderno> findByFichasContaining(Ficha ficha);
-
-    @Query("SELECT c FROM Cuaderno c JOIN c.fichas f WHERE f = :ficha")
+    @Query("SELECT c FROM Cuaderno c JOIN c.fichas f WHERE f = :ficha ORDER BY c.fechaCreacion DESC")
     Page<Cuaderno> findByFichasContaining(@Param("ficha") Ficha ficha, Pageable pageable);
-
-    @Query("SELECT c FROM Cuaderno c JOIN c.juegos j WHERE j = :juego")
-    Page<Cuaderno> obtenerCuadernosPorJuego(@Param("juego") Juego juego, Pageable pageable);
-
     
-    @Query("SELECT c FROM Cuaderno c WHERE c.usuario = :usuario AND c NOT IN :cuadernosGrupo")
+    @Query("SELECT c FROM Cuaderno c JOIN c.juegos j WHERE j = :juego ORDER BY c.fechaCreacion DESC")
+    Page<Cuaderno> obtenerCuadernosPorJuego(@Param("juego") Juego juego, Pageable pageable);
+    
+    @Query("SELECT c FROM Cuaderno c WHERE c.usuario = :usuario AND c NOT IN :cuadernosGrupo ORDER BY c.fechaCreacion DESC")
     List<Cuaderno> findByUsuarioAndNotInGrupo(@Param("usuario") User usuario, @Param("cuadernosGrupo") List<Cuaderno> cuadernosGrupo);
-
-    Page<Cuaderno> findByGrupos_Id(Long grupoId, Pageable pageable);
+    
+    @Query("SELECT c FROM Cuaderno c WHERE c.usuario = :usuario ORDER BY c.fechaCreacion DESC")
+    List<Cuaderno> findByUsuario(@Param("usuario") User usuario);
+    
+    @Query("SELECT c FROM Cuaderno c JOIN c.fichas f WHERE f = :ficha ORDER BY c.fechaCreacion DESC")
+    List<Cuaderno> findByFichasContaining(@Param("ficha") Ficha ficha);
+    
+    @Query("SELECT c FROM Cuaderno c JOIN c.grupos g WHERE g.id = :grupoId ORDER BY c.fechaCreacion DESC")
+    Page<Cuaderno> findByGrupoId(@Param("grupoId") Long grupoId, Pageable pageable);
 
 }

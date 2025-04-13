@@ -181,18 +181,18 @@ public class FichaService {
     public Page<Ficha> ordenarPorFecha(String buscar, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         if (buscar != null && !buscar.trim().isEmpty()) {
-            return fichaRepository.findByPrivadaFalseAndNombreContainingIgnoreCaseOrderByFechaCreacionDesc(buscar,
+            return fichaRepository.buscarPublicasPorNombreOrdenFecha(buscar,
                     pageable);
         }
-        return fichaRepository.findByPrivadaFalseOrderByFechaCreacionDesc(pageable);
+        return fichaRepository.buscarPublicasOrdenFecha(pageable);
     }
 
     public Page<Ficha> ordenarPorMeGusta(String buscar, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         if (buscar != null && !buscar.trim().isEmpty()) {
-            return fichaRepository.findByPrivadaFalseAndNombreContainingIgnoreCaseOrderByMeGustaDesc(buscar, pageable);
+            return fichaRepository.buscarPublicasPorNombreOrdenLikes(buscar, pageable);
         }
-        return fichaRepository.findByPrivadaFalseOrderByMeGustaDesc(pageable);
+        return fichaRepository.buscarPublicasOrdenLikes(pageable);
     }
 
 }

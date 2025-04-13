@@ -12,31 +12,36 @@ import java.util.Optional;
 
 public interface JuegoRepository extends JpaRepository<Juego, Long> {
 
-    List<Juego> findByUsuario(User usuario);
+    @Query("SELECT j FROM Juego j WHERE j.usuario = :usuario ORDER BY j.fechaCreacion DESC")
+    List<Juego> findByUsuario(@Param("usuario") User usuario);
 
     Optional<Juego> findByIdAndUsuario_Email(Long id, String email);
 
-    Page<Juego> findByUsuario(User usuario, Pageable pageable);
-
-    @Query("SELECT j FROM Juego j JOIN j.cuadernos c WHERE c.id = :cuadernoId")
+    @Query("SELECT j FROM Juego j JOIN j.cuadernos c WHERE c.id = :cuadernoId ORDER BY j.fechaCreacion DESC")
     Page<Juego> obtenerJuegosPorCuaderno(@Param("cuadernoId") Long cuadernoId, Pageable pageable);
 
-    @Query("SELECT j FROM Juego j WHERE j.usuario = :usuario AND j NOT IN (SELECT j FROM Juego j JOIN j.cuadernos c WHERE c.id = :cuadernoId)")
+    @Query("SELECT j FROM Juego j WHERE j.usuario = :usuario AND j NOT IN (SELECT j FROM Juego j JOIN j.cuadernos c WHERE c.id = :cuadernoId) ORDER BY j.fechaCreacion DESC")
     List<Juego> findJuegosNoAgregados(@Param("cuadernoId") Long cuadernoId, @Param("usuario") User usuario);
 
-    @Query("SELECT j FROM Juego j WHERE j.usuario = :usuario")
+    @Query("SELECT j FROM Juego j WHERE j.usuario = :usuario ORDER BY j.fechaCreacion DESC")
     Page<Juego> obtenerJuegosPaginados(@Param("usuario") User usuario, Pageable pageable);
-    
-    // Buscar por nombre (ignorando mayúsculas/minúsculas) y solo juegos públicos, ordenados por fecha
-    Page<Juego> findByPrivadaFalseAndNombreContainingIgnoreCaseOrderByFechaCreacionDesc(String nombre, Pageable pageable);
 
-    // Buscar por nombre (ignorando mayúsculas/minúsculas) y solo juegos públicos, ordenados por likes
-    Page<Juego> findByPrivadaFalseAndNombreContainingIgnoreCaseOrderByMeGustaDesc(String nombre, Pageable pageable);
+    // Buscar públicos por nombre (ignorando mayúsculas/minúsculas), ordenados por
+    // fecha
+    @Query("SELECT j FROM Juego j WHERE j.privada = false AND LOWER(j.nombre) LIKE LOWER(CONCAT('%', :nombre, '%')) ORDER BY j.fechaCreacion DESC")
+    Page<Juego> buscarPublicosPorNombreFecha(@Param("nombre") String nombre, Pageable pageable);
 
-    // Buscar todos los juegos públicos ordenados por fecha
-    Page<Juego> findByPrivadaFalseOrderByFechaCreacionDesc(Pageable pageable);
+    // Buscar públicos por nombre (ignorando mayúsculas/minúsculas), ordenados por
+    // me gusta
+    @Query("SELECT j FROM Juego j WHERE j.privada = false AND LOWER(j.nombre) LIKE LOWER(CONCAT('%', :nombre, '%')) ORDER BY j.meGusta DESC")
+    Page<Juego> buscarPublicosPorNombreLikes(@Param("nombre") String nombre, Pageable pageable);
 
-    // Buscar todos los juegos públicos ordenados por likes
-    Page<Juego> findByPrivadaFalseOrderByMeGustaDesc(Pageable pageable);
+    // Buscar todos los públicos ordenados por fecha
+    @Query("SELECT j FROM Juego j WHERE j.privada = false ORDER BY j.fechaCreacion DESC")
+    Page<Juego> buscarPublicosPorFecha(Pageable pageable);
+
+    // Buscar todos los públicos ordenados por me gusta
+    @Query("SELECT j FROM Juego j WHERE j.privada = false ORDER BY j.meGusta DESC")
+    Page<Juego> buscarPublicosPorLikes(Pageable pageable);
 
 }

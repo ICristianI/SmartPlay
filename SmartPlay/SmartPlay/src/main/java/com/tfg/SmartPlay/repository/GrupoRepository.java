@@ -1,6 +1,5 @@
 package com.tfg.SmartPlay.repository;
 
-import com.tfg.SmartPlay.entity.Cuaderno;
 import com.tfg.SmartPlay.entity.Grupo;
 import com.tfg.SmartPlay.entity.User;
 import org.springframework.data.domain.Page;
@@ -17,10 +16,10 @@ public interface GrupoRepository extends JpaRepository<Grupo, Long> {
     /**
      * Devuelve los grupos en los que participa un usuario (paginados).
      */
-    @Query("SELECT g FROM Grupo g JOIN g.usuarios u WHERE u = :usuario")
+    @Query("SELECT g FROM Grupo g JOIN g.usuarios u WHERE u = :usuario ORDER BY g.fechaCreacion DESC")
     Page<Grupo> findByUsuariosContaining(@Param("usuario") User usuario, Pageable pageable);
 
-    /**
+     /**
      * Busca un grupo por su código de acceso único.
      */
     Optional<Grupo> findByCodigoAcceso(String codigoAcceso);
@@ -29,9 +28,6 @@ public interface GrupoRepository extends JpaRepository<Grupo, Long> {
      * Comprueba si ya existe un grupo con ese código (para evitar duplicados).
      */
     boolean existsByCodigoAcceso(String codigoAcceso);
-
-    @Query("SELECT g FROM Grupo g JOIN g.cuadernos c WHERE g.id = :grupoId")
-    Page<Cuaderno> obtenerCuadernosPaginados(@Param("grupoId") Long grupoId, Pageable pageable);
 
 
 }
