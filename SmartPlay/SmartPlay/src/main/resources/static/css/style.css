@@ -1,5 +1,23 @@
 /* Estilos generales */
 
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  flex-grow: 1;
+}
+
+footer {
+  margin-top: auto;
+}
+
+
 :root {
   --bg-color-light: #eeeaea;
   --bg-color-dark: #0f0e0e;
@@ -554,6 +572,19 @@ h1 {
   max-width: 290px;
 }
 
+@media (min-width: 1200px) {
+  .cardVertical {
+    height: 600px; /* más alto que el valor actual */
+  }
+
+  .limited-img {
+    max-height: 600px;
+  }
+
+  .card-body h5 {
+    font-size: 1.4rem;
+  }
+}
 
 
 
