@@ -280,10 +280,14 @@ public class FichaController {
             @RequestParam String elementosSuperpuestos,
             @AuthenticationPrincipal UserDetails userDetails,
             RedirectAttributes redirectAttributes,
-            HttpSession session) {
+            HttpSession session, Model model) {
         try {
             session.setAttribute("fichaId", fichaId);
             fichaService.guardarElementosSuperpuestos(fichaId, elementosSuperpuestos, userDetails.getUsername());
+            Optional<User> user = userService.findUserByEmail(userDetails.getUsername());
+
+            fichaUsuarioService.guardarNota(fichaId, user, 0.0);
+
             redirectAttributes.addFlashAttribute("mensaje", "Elementos guardados correctamente.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error al guardar elementos: " + e.getMessage());
@@ -335,6 +339,7 @@ public class FichaController {
                 model.addAttribute("tieneLike", false);
                 model.addAttribute("esPropietario", false);
                 model.addAttribute("User", false);
+
             }
 
             return "Fichas/verFichaInteractiva";
