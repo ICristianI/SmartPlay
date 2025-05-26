@@ -22,12 +22,10 @@ public class FichaUsuarioService {
     @Autowired
     private FichaRepository fichaRepository;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
     /**
      * Guarda nota y respuestas del usuario para una ficha específica.
      */
-    public void guardarNotaYRespuestas(Long fichaId, Optional<User> user, Double nota, Object respuestasRaw) {
+    public void guardarNota(Long fichaId, Optional<User> user, Double nota) {
         Ficha ficha = fichaRepository.findById(fichaId).orElseThrow();
         FichaUsuario fichaUsuario = fichaUsuarioRepository.findByFichaAndUsuario(ficha, user)
                 .orElseGet(() -> {
@@ -40,13 +38,6 @@ public class FichaUsuarioService {
 
         fichaUsuario.setNota(nota);
         fichaUsuario.setIntentos(fichaUsuario.getIntentos() + 1);
-
-        try {
-            String respuestasJson = objectMapper.writeValueAsString(respuestasRaw);
-            fichaUsuario.setRespuestas(respuestasJson);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error al serializar las respuestas del usuario", e);
-        }
 
         fichaUsuarioRepository.save(fichaUsuario);
     }

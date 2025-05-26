@@ -45,8 +45,9 @@ body.dark-mode .lineas {
 
 /* Estilos para tarjetas en modo claro */
 .card {
-  min-height: 250px;
-  max-height: 550px;
+  
+  height: 100%;
+  max-width: 100%;
   transition: transform 0.3s ease, box-shadow 0.3s ease !important;
   background-color: #f4f4f4 !important; /* Color oscuro */
   color: #171616; /* Texto en blanco por defecto */

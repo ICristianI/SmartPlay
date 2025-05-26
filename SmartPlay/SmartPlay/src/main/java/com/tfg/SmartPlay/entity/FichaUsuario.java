@@ -25,11 +25,6 @@ public class FichaUsuario {
     @JoinColumn(name = "ficha_id", nullable = false)
     private Ficha ficha;
 
-    @Lob
-    @Column(columnDefinition = "TEXT")
-    private String respuestas;
-
-
     private double nota;
 
     private int intentos;

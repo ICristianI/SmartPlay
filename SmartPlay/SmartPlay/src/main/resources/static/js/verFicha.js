@@ -363,11 +363,15 @@ document.addEventListener("DOMContentLoaded", () => {
       evaluados.add(b);
     });
 
-    document.querySelectorAll('.join-box').forEach(box => {
-      if (!evaluados.has(box)) box.style.backgroundColor = "lightcoral";
-    });
-
-    total += document.querySelectorAll('.join-box').length / 2;
+    const joinBoxes = document.querySelectorAll('.join-box');
+    if (joinBoxes.length > 0) {
+      total += joinBoxes.length / 2;
+    } else {
+      conexiones = [];
+    }
+    
+    
+    total -= 2;
 
     const nota = total > 0 ? ((correctos / total) * 10).toFixed(1) : "0.0";
 
@@ -378,31 +382,29 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("textoNotaModal").textContent = `Tu nota es: ${nota} / 10`;
     const modalNota = new bootstrap.Modal(document.getElementById("modalNota"));
     modalNota.show();
-    // Obtener respuestas actuales del usuario
-const respuestas = window.obtenerRespuestasUsuario();
 
-// Guardar respuestas y nota en el backend
-fetch('/f/guardarNota', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'X-CSRF-TOKEN': window.fichaData.csrfToken
-  },
-  body: JSON.stringify({
-    fichaId: window.fichaData.fichaId,
-    nota: nota,
-    respuestas: respuestas
-  })
-})
-.then(res => {
-  if (!res.ok) throw new Error("Error al guardar nota y respuestas");
-  console.log("Nota y respuestas guardadas");
-})
-.catch(err => {
-  console.error("Error al guardar nota y respuestas", err);
-});
 
-  });
+// Guardar nota en el backend
+    fetch('/f/guardarNota', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': window.fichaData.csrfToken
+      },
+      body: JSON.stringify({
+        fichaId: window.fichaData.fichaId,
+        nota: parseFloat(nota)
+      })
+    })
+    .then(res => {
+      if (!res.ok) throw new Error("Error al guardar nota");
+      console.log("Nota guardada");
+    })
+    .catch(err => {
+      console.error("Error al guardar nota", err);
+    });
+
+      });
   
   window.descargarPDF = async function () {
     const contenedor = document.getElementById("contenedorFicha");
@@ -493,3 +495,48 @@ fetch('/f/guardarNota', {
   
   
 });
+
+window.reiniciarFicha = function () {
+  // Elimina todos los inputs, selecciones, colores, líneas y respuestas del usuario
+  document.querySelectorAll('[data-tipo="evaluado"]').forEach(input => {
+    input.value = "";
+    input.style.backgroundColor = "";
+  });
+
+  document.querySelectorAll('input[data-tipo="seleccion"]').forEach(radio => {
+    radio.checked = false;
+    const label = radio.nextSibling;
+    if (label) label.style.color = "";
+  });
+
+  document.querySelectorAll('[data-tipo="checkbox"]').forEach(cuadro => {
+    cuadro.dataset.marcado = "false";
+    cuadro.style.backgroundColor = "#fff";
+  });
+
+  document.querySelectorAll('select[data-tipo="desplegable"]').forEach(select => {
+    select.selectedIndex = 0;
+    select.style.backgroundColor = "";
+  });
+
+  document.querySelectorAll('.join-box').forEach(box => {
+    box.style.borderColor = "#aaa";
+    box.style.backgroundColor = "#f9f9f9";
+  });
+
+  const svg = document.getElementById("svgLines");
+  if (svg) svg.innerHTML = "";
+
+  // Reinicia variables globales
+  conexiones = [];
+  joinSeleccionado = null;
+
+  // Limpia la nota mostrada
+  const notaElem = document.getElementById("notaResultado");
+  if (notaElem) notaElem.textContent = "";
+};
+
+window.corregirFicha = function () {
+  document.getElementById("btnCorregir")?.click();
+};
+

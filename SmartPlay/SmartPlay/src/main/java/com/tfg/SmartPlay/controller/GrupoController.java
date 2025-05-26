@@ -4,6 +4,7 @@ import com.tfg.SmartPlay.entity.Cuaderno;
 import com.tfg.SmartPlay.entity.Grupo;
 import com.tfg.SmartPlay.entity.User;
 import com.tfg.SmartPlay.service.CuadernoService;
+import com.tfg.SmartPlay.service.CuadernoUsuarioService;
 import com.tfg.SmartPlay.service.GrupoService;
 import com.tfg.SmartPlay.service.UserComponent;
 import jakarta.servlet.http.HttpSession;
@@ -11,6 +12,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,8 +22,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Controller
@@ -36,6 +36,9 @@ public class GrupoController {
 
     @Autowired
     private CuadernoService cuadernoService;
+
+    @Autowired
+    private CuadernoUsuarioService cuadernoUsuarioService;
 
     // Lista todos los grupos del usuario
     @GetMapping
@@ -147,7 +150,35 @@ public class GrupoController {
 
         // Cuadernos paginados
         Page<Cuaderno> cuadernosPage = grupoService.obtenerCuadernosPaginados(grupoId, pageCuadernos, size);
-        model.addAttribute("cuadernosPage", cuadernosPage.getContent());
+        User user = userComponent.getUser().orElse(null);
+
+        for (Cuaderno cuaderno : cuadernosPage.getContent()) {
+            cuadernoUsuarioService.actualizarNota(cuaderno.getId(), Optional.ofNullable(user));
+        }
+        
+        Map<Long, Double> notasPorCuaderno = new HashMap<>();
+
+        for (Cuaderno cuaderno : cuadernosPage.getContent()) {
+            cuadernoUsuarioService.obtenerNota(cuaderno.getId(), user.getId())
+                .ifPresent(cuadernoUsuario -> notasPorCuaderno.put(cuaderno.getId(), cuadernoUsuario.getNota()));
+        }
+
+        
+
+        model.addAttribute("notasPorCuaderno", notasPorCuaderno);
+
+        List<Map<String, Object>> cuadernosConNota = cuadernosPage.getContent().stream().map(c -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", c.getId());
+            map.put("nombre", c.getNombre());
+            map.put("numeroFichas", c.getFichas().size());
+            map.put("numeroJuegos", c.getJuegos().size());
+            cuadernoUsuarioService.obtenerNota(c.getId(), user.getId())
+                .ifPresent(cuadernoUsuario -> map.put("nota", cuadernoUsuario.getNota()));
+            return map;
+        }).toList();
+        
+        model.addAttribute("cuadernosPage", cuadernosConNota);
         model.addAttribute("currentPageCuadernos", pageCuadernos + 1);
         model.addAttribute("totalPagesCuadernos", cuadernosPage.getTotalPages());
         model.addAttribute("hasPrevCuadernos", pageCuadernos > 0);
@@ -158,7 +189,17 @@ public class GrupoController {
 
         // Usuarios paginados
         Page<User> usuariosPage = grupoService.obtenerUsuariosPaginados(grupoId, pageUsuarios, size);
-        model.addAttribute("usuariosPage", usuariosPage.getContent());
+
+        List<Map<String, Object>> usuariosProcesados = usuariosPage.getContent().stream().map(u -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", u.getId());
+            map.put("nombre", u.getNombre());
+            map.put("roles", u.getRoles());
+            map.put("esPropietarioActual", u.getId().equals(userComponent.getUser().get().getId()));
+            return map;
+        }).toList();
+
+model.addAttribute("usuariosPage", usuariosProcesados);
         model.addAttribute("currentPageUsuarios", pageUsuarios + 1);
         model.addAttribute("totalPagesUsuarios", usuariosPage.getTotalPages());
         model.addAttribute("hasPrevUsuarios", pageUsuarios > 0);

@@ -24,7 +24,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.data.domain.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -327,6 +326,8 @@ public class FichaController {
                     userComponent.getUser().get().getId()
                 );
                 model.addAttribute("fichaUsuario", fichaUsuarioOpt.orElse(new FichaUsuario()));
+                model.addAttribute("notaGuardada", fichaUsuarioOpt.map(FichaUsuario::getNota).orElse(null));
+
             
             
 
@@ -412,12 +413,10 @@ public class FichaController {
         Double nota = notaRaw instanceof Number
                 ? ((Number) notaRaw).doubleValue()
                 : Double.parseDouble(notaRaw.toString());
-        List<Map<String, Object>> respuestas = (List<Map<String, Object>>) datos.get("respuestas");
 
-        System.out.println("Respuestas recibidas: " + respuestas);
 
         Optional<User> user = userService.findUserByEmail(userDetails.getUsername());
-        fichaUsuarioService.guardarNotaYRespuestas(fichaId, user, nota, respuestas);
+        fichaUsuarioService.guardarNota(fichaId, user, nota);
     
         return ResponseEntity.ok().build();
     }

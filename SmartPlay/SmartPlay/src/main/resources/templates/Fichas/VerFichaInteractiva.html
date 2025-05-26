@@ -19,8 +19,9 @@
     </form>
   </div>
         {{/User}}
-
   </div>
+  <p class="mt-2 mb-0 text-muted"><strong>Última nota:</strong> {{notaGuardada}} / 10</p>
+
   <div class="text-start w-100">
     <h5 class="mb-5 mt-3 word-wrap-break" style="max-width: 800px;">Descripción: {{ ficha.descripcion }}</h5>
   </div>
@@ -89,18 +90,11 @@
   {{{ficha.elementosSuperpuestos}}}
 </script>
 
-<script id="respuestasUsuarioRaw" type="application/json">
-  {{#fichaUsuario.respuestas}}{{{fichaUsuario.respuestas}}}{{/fichaUsuario.respuestas}}
-  {{^fichaUsuario.respuestas}}[]{{/fichaUsuario.respuestas}}
-</script>
-
-
 
 <script>
   window.fichaData = {
     fichaId: "{{ficha.id}}",
     csrfToken: '{{token}}',
-    respuestas: JSON.parse(document.getElementById("respuestasUsuarioRaw")?.textContent || "null")
   };
 </script>
 
@@ -109,8 +103,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<script src="/js/cargarRespuestaFicha.js"></script>
-<script src="/js/correccion.js"></script>
 <script src="/js/verFicha.js"></script>
 <script src="/js/like.js"></script>
 

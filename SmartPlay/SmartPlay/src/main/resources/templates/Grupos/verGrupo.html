@@ -128,6 +128,13 @@
         <div class="card-body text-center px-3 py-4">
           <h5 class="card-title">{{nombre}}</h5>
           <p class="card-text text-muted">{{numeroFichas}} fichas | {{numeroJuegos}} juegos</p>
+          {{#nota}}
+            <p class="card-text text-success"><strong>Tu nota:</strong> {{nota}} / 10</p>
+          {{/nota}}
+          {{^nota}}
+            <p class="card-text text-secondary"><strong>Tu nota:</strong> No resuelto</p>
+          {{/nota}}
+
       
           <!-- Botón Resolver -->
           <form action="/cuadernos/resolver" method="post" class="mb-2">
@@ -220,13 +227,16 @@
     
       <!-- Botón Eliminar Usuario (solo si es propietario) -->
       {{#isPropietario}}
-      <form action="/grupos/eliminarUsuario" method="post" onsubmit="return confirmarEliminarUsuario('{{nombre}}');">
-        <input type="hidden" name="_csrf" value="{{token}}" />
-        <input type="hidden" name="grupoId" value="{{grupo.id}}" />
-        <input type="hidden" name="usuarioId" value="{{id}}" />
-        <button type="submit" class="btn btn-danger btn-sm w-100">Eliminar del Grupo</button>
-      </form>
-      {{/isPropietario}}
+      {{^esPropietarioActual}}
+        <form action="/grupos/eliminarUsuario" method="post" onsubmit="return confirmarEliminarUsuario('{{nombre}}');">
+          <input type="hidden" name="_csrf" value="{{token}}" />
+          <input type="hidden" name="grupoId" value="{{grupo.id}}" />
+          <input type="hidden" name="usuarioId" value="{{id}}" />
+          <button type="submit" class="btn btn-danger btn-sm w-100">Eliminar del Grupo</button>
+        </form>
+      {{/esPropietarioActual}}
+    {{/isPropietario}}
+    
     
     </div>
     

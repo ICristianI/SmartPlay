@@ -146,6 +146,12 @@ window.agregarTexto = function () {
     opcionesDiv.style.overflow = "auto";
     opcionesDiv.style.minWidth = "150px";
     opcionesDiv.style.minHeight = "60px";
+    opcionesDiv.style.backgroundColor = "#ffffff";
+    opcionesDiv.style.color = "#000000";
+    opcionesDiv.style.fontSize = "16px";
+    opcionesDiv.dataset.fondo = "#ffffff";
+    opcionesDiv.dataset.texto = "#000000";
+    opcionesDiv.dataset.tamanoLetra = "16";
   
     const opciones = [
       { texto: "Opción 1", correcta: true },
@@ -287,21 +293,23 @@ window.agregarTexto = function () {
       const fondo = document.getElementById("colorFondoSeleccionUnica").value;
       const texto = document.getElementById("colorTextoSeleccionUnica").value;
       const sinFondo = document.getElementById("sinFondoSeleccionUnica").checked;
-
+  
       const contenedor = seleccionActual.contenedorOpciones;
       const tamanoLetra = parseInt(document.getElementById("tamanoTextoSeleccionUnica").value) || 16;
-
+  
+      contenedor.dataset.opciones = JSON.stringify(seleccionActual.opciones);
+  
+      renderizarOpciones(contenedor, seleccionActual.opciones, tamanoLetra);
+  
+      // APLICA estilos después del renderizado
       contenedor.style.backgroundColor = sinFondo ? "transparent" : fondo;
       contenedor.style.color = texto;
-      contenedor.style.fontSize = `${document.getElementById("tamanoTextoSeleccionUnica").value}px`;
-      contenedor.dataset.opciones = JSON.stringify(seleccionActual.opciones);
-
-      renderizarOpciones(seleccionActual.contenedorOpciones, seleccionActual.opciones, tamanoLetra);
-
+      contenedor.style.fontSize = `${tamanoLetra}px`;
+  
       $('#modalSeleccionUnica').modal('hide');
-
     }
   };
+  
   
   window.agregarOpcion = function () {
     if (seleccionActual) {

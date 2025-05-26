@@ -213,6 +213,7 @@ public class GrupoService {
         User usuario = userOpt.get();
         return grupo.getCreador().getId().equals(usuario.getId());
     }
+    
 
     public boolean eliminarUsuarioDelGrupo(Long grupoId, Long usuarioId, String emailPropietario) {
         Optional<Grupo> grupoOpt = grupoRepository.findById(grupoId);
