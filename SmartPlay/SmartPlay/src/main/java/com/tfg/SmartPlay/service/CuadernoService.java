@@ -75,13 +75,14 @@ public class CuadernoService {
     }
 
     // Devuelve un cuaderno por id.
+
     public Optional<Cuaderno> obtenerCuadernoPorId(Long id) {
         return cuadernoRepository.findById(id);
     }
 
-    /**
-     * Devuelve las fichas NO agregadas a un cuaderno específico.
-     */
+    
+    //Devuelve las fichas NO agregadas a un cuaderno específico.
+     
     public List<Ficha> obtenerFichasNoAgregadas(Long cuadernoId, String email) {
         User usuario = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -99,6 +100,8 @@ public class CuadernoService {
                 .filter(ficha -> !cuaderno.getFichas().contains(ficha))
                 .collect(Collectors.toList());
     }
+
+    // Guarda un cuaderno con las fichas y juegos seleccionados, y una imagen opcional.
 
     public Cuaderno guardarCuaderno(Cuaderno cuaderno, List<Long> fichasIds, List<Long> juegosIds,
             MultipartFile imagenCuaderno) throws java.io.IOException {
@@ -133,6 +136,8 @@ public class CuadernoService {
         return cuadernoRepository.save(cuaderno);
     }
 
+    // Permite al usuario obtener la imagen de un cuaderno específico.
+
     public ResponseEntity<Object> obtenerImagenCuaderno(Long id) {
         Optional<Cuaderno> cuaderno = cuadernoRepository.findById(id);
         if (cuaderno.isPresent() && cuaderno.get().getImagen() != null) {
@@ -145,9 +150,9 @@ public class CuadernoService {
         return ResponseEntity.notFound().build();
     }
 
-    /**
-     * Edita un cuaderno permitiendo agregar fichas y juegos.
-     */
+    
+    //Edita un cuaderno permitiendo agregar fichas y juegos.
+
     public boolean editarCuaderno(Long cuadernoId, String nuevoNombre, List<Long> nuevasFichasIds,
             List<Long> nuevosJuegosIds, String email) {
         Optional<User> usuarioOpt = userRepository.findByEmail(email);
@@ -184,9 +189,8 @@ public class CuadernoService {
         return false;
     }
 
-    /**
-     * Elimina una ficha del cuaderno.
-     */
+    // Elimina una ficha del cuaderno del usuario autenticado.
+
     public boolean eliminarFichaDeUsuario(Long fichaId, Long cuadernoId, String email) {
         Optional<Cuaderno> cuadernoOpt = obtenerCuadernoPorId(cuadernoId);
         Optional<Ficha> fichaOpt = fichaService.obtenerFichaPorId(fichaId);
@@ -208,9 +212,8 @@ public class CuadernoService {
         return false;
     }
 
-    /**
-     * Elimina un juego del cuaderno.
-     */
+    // Elimina un juego del cuaderno del usuario autenticado.
+
     public boolean eliminarJuegoDeUsuario(Long juegoId, Long cuadernoId, String email) {
         Optional<Cuaderno> cuadernoOpt = obtenerCuadernoPorId(cuadernoId);
         Optional<Juego> juegoOpt = juegoRepository.findById(juegoId);
@@ -232,9 +235,8 @@ public class CuadernoService {
         return false;
     }
 
-    /**
-     * Método para eliminar un cuaderno si el usuario autenticado es el propietario.
-     */
+    // Elimina un cuaderno del usuario autenticado y sus asociaciones con grupos.
+
     public boolean eliminarCuaderno(Long cuadernoId, String email) {
         Optional<User> usuarioOpt = userRepository.findByEmail(email);
         if (usuarioOpt.isEmpty()) {
@@ -269,21 +271,26 @@ public class CuadernoService {
     }
 
     // Devuelve los juegos que no han sido agregados a un cuaderno.
+
     public List<Juego> obtenerJuegosNoAgregados(Long cuadernoId, String email) {
         return juegoService.obtenerJuegosNoAgregados(cuadernoId, email);
     }
 
     // Devuelve los juegos de un cuaderno paginados.
+
     public Page<Juego> obtenerJuegosPaginados(Long cuadernoId, int page, int size) {
         return juegoService.obtenerJuegosPaginadosEnCuaderno(cuadernoId, page, size);
     }
 
     // Devuelve los cuadernos que contienen una ficha específica paginados.
+
     public Page<Cuaderno> obtenerCuadernosConFichaPaginados(Ficha ficha, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return cuadernoRepository.findByFichasContaining(ficha, pageable);
     }
 
+    // Devuelve los cuadernos de un usuario por su email.
+    
     public List<Cuaderno> listarCuadernosPorUsuario(String email) {
         User usuario = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));

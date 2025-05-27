@@ -19,6 +19,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// Entity que representa un usuario en la aplicación SmartPlay, incluyendo sus datos personales, roles, fichas, cuadernos y juegos asociados.
 @Entity
 @Table(name = "users")
 @Data

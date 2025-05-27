@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// Entity que representa una ficha interactiva en la aplicación SmartPlay, que puede contener información educativa y elementos multimedia.
+
 @Entity
 @Table(name = "fichas_interactivas")
 @Data
@@ -70,11 +72,13 @@ public class Ficha {
     @ManyToMany(mappedBy = "fichas")
     private List<Cuaderno> cuadernos;
 
+    // Método que se ejecuta antes de persistir la ficha en la base de datos, estableciendo la fecha de creación al momento actual.
     @PrePersist
     protected void onCreate() {
         this.fechaCreacion = LocalDateTime.now();
     }
 
+    // Método que devuelve la fecha de creación de la ficha en un formato legible (dd/MM/yyyy).
     public String getFechaCreacionFormateada() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return fechaCreacion.format(formatter);

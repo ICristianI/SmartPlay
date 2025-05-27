@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+// Controller del juego del ahorcado
+
 @Controller
 @RequestMapping("/ahorcado")
 public class JuegoAhorcadoController {
@@ -35,6 +37,10 @@ public class JuegoAhorcadoController {
 
     @Autowired
     private JuegoLikeService juegoLikeService;
+
+    /*
+     * Listar juegos de ahorcado del usuario autenticado con paginación.
+     */
 
     @GetMapping("/listar")
     public String listarJuegos(Model model,
@@ -71,6 +77,10 @@ public class JuegoAhorcadoController {
         return "/Juegos/Ahorcado/verJuegosAhorcados";
     }
 
+    /*
+     * Redirige a la página para jugar al ahorcado.
+     */
+
     @GetMapping("/jugar")
     public String jugarAhorcado(Model model, HttpSession session, @AuthenticationPrincipal UserDetails userDetails) {
         Long juegoId = (Long) session.getAttribute("juegoId");
@@ -104,6 +114,10 @@ public class JuegoAhorcadoController {
         }
     }
     
+
+    /*
+     * Redirige a la página para ver el juego del ahorcado sin dejar visible el id.
+     */
 
     @GetMapping("/ver")
     public String verJuego(HttpSession session,
@@ -153,6 +167,9 @@ public class JuegoAhorcadoController {
         }
     }
 
+    /*
+     * Redirige a la página para editar el juego del ahorcado.
+     */
     @PostMapping("/editar")
     public String editarJuego(@RequestParam("juegoId") Long juegoId,
             @ModelAttribute JuegoAhorcado juegoEditado,
@@ -172,12 +189,18 @@ public class JuegoAhorcadoController {
         }
     }
 
+    /*
+     * Redirige a la página para crear un nuevo juego del ahorcado.
+     */
     @GetMapping("/crear")
     public String crearJuego(Model model) {
         model.addAttribute("juego", new JuegoAhorcado());
         return "Juegos/Ahorcado/crearJuegosAhorcados";
     }
 
+    /*
+     * Guarda un nuevo juego del ahorcado.
+     */
     @PostMapping("/guardar")
     public String guardarJuego(@ModelAttribute JuegoAhorcado juego,
             @RequestParam("imagenJuego") MultipartFile imagenJuego,
@@ -189,6 +212,9 @@ public class JuegoAhorcadoController {
         return "redirect:/ahorcado/listar";
     }
 
+    /*
+     * Elimina un juego del ahorcado.
+     */
     @PostMapping("/eliminar")
     public String eliminarJuego(@RequestParam("juegoId") Long juegoId,
             @AuthenticationPrincipal UserDetails userDetails,

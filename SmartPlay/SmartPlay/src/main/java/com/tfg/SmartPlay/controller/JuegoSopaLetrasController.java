@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+// Controlador del juego de sopa de letras
+
 @Controller
 @RequestMapping("/sopaletras")
 public class JuegoSopaLetrasController {
@@ -36,6 +38,9 @@ public class JuegoSopaLetrasController {
     @Autowired
     private JuegoLikeService juegoLikeService;
 
+    /*
+     * Listar juegos de sopa de letras del usuario autenticado con paginación.
+     */
     @GetMapping("/listar")
     public String listarJuegos(Model model,
             @AuthenticationPrincipal UserDetails userDetails,
@@ -70,6 +75,10 @@ public class JuegoSopaLetrasController {
         return "/Juegos/Sopa/verJuegosSopaLetras";
     }
 
+    /*
+     * Permite al usuario jugar a un juego de sopa de letras.
+     * Verifica si el juego es accesible para el usuario autenticado.
+     */
     @GetMapping("/jugar")
     public String jugarSopaLetras(Model model, HttpSession session,
             @AuthenticationPrincipal UserDetails userDetails) {
@@ -103,6 +112,10 @@ public class JuegoSopaLetrasController {
         }
     }
 
+    /*
+     * Permite al usuario ver los detalles de un juego de sopa de letras.
+     * Muestra los cuadernos asociados al juego con paginación.
+     */
     @GetMapping("/ver")
     public String verJuego(HttpSession session,
             @AuthenticationPrincipal UserDetails userDetails,
@@ -146,6 +159,10 @@ public class JuegoSopaLetrasController {
         }
     }
 
+    /*
+     * Permite al usuario editar un juego de sopa de letras.
+     * El juego debe existir y el usuario debe tener permisos para editarlo.
+     */
     @PostMapping("/editar")
     public String editarJuego(@RequestParam("juegoId") Long juegoId,
             @ModelAttribute JuegoSopaLetras juegoEditado,
@@ -165,12 +182,19 @@ public class JuegoSopaLetrasController {
         }
     }
 
+    /*
+     * Redirige a la página de creación del juego.
+     */
     @GetMapping("/crear")
     public String crearJuego(Model model) {
         model.addAttribute("juego", new JuegoSopaLetras());
         return "Juegos/Sopa/crearJuegosSopaLetras";
     }
 
+    /*
+     * Guarda un nuevo juego de sopa de letras.
+     * El juego se guarda con la imagen proporcionada y se asocia al usuario autenticado.
+     */
     @PostMapping("/guardar")
     public String guardarJuego(@ModelAttribute JuegoSopaLetras juego,
             @RequestParam("imagenJuego") MultipartFile imagenJuego,
@@ -182,6 +206,10 @@ public class JuegoSopaLetrasController {
         return "redirect:/sopaletras/listar";
     }
 
+    /*
+     * Elimina un juego de sopa de letras.
+     * El usuario debe tener permisos para eliminar el juego.
+     */
     @PostMapping("/eliminar")
     public String eliminarJuego(@RequestParam("juegoId") Long juegoId,
             @AuthenticationPrincipal UserDetails userDetails,

@@ -12,6 +12,7 @@ import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+// Entity que representa un token de verificación en la aplicación SmartPlay, utilizado para la verificación de usuarios durante el registro.
 @Entity
 @Data
 @NoArgsConstructor

@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+// Entity que representa un grupo de usuarios en la aplicación SmartPlay, permitiendo la gestión de cuadernos y fichas compartidas entre los miembros del grupo.
+
 @Entity
 @Table(name = "grupos")
 @Data
@@ -56,11 +58,13 @@ public class Grupo {
     @JoinTable(name = "grupo_cuadernos", joinColumns = @JoinColumn(name = "grupo_id"), inverseJoinColumns = @JoinColumn(name = "cuaderno_id"))
     private List<Cuaderno> cuadernos;
 
+    // Método que se ejecuta antes de persistir el grupo en la base de datos, estableciendo la fecha de creación al momento actual.
     @PrePersist
     public void prePersist() {
         this.fechaCreacion = LocalDateTime.now();
     }
 
+    // Método que devuelve la fecha de creación del grupo formateada como "dd/MM/yyyy".
     public String getFechaCreacionFormateada() {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     return fechaCreacion.format(formatter);

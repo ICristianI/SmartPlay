@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 
+// Servicio para manejar los "me gusta" de las fichas en la aplicación SmartPlay.
 @Service
 @RequiredArgsConstructor
 public class FichaLikeService {
@@ -17,6 +18,8 @@ public class FichaLikeService {
     private final FichaRepository fichaRepository;
     private final UserRepository userRepository;
     private final FichaLikeRepository fichaLikeRepository;
+
+    // Método para alternar el estado de "me gusta" de una ficha por parte de un usuario.
 
     public void alternarLike(String email, Long fichaId) {
         User usuario = userRepository.findByEmail(email)
@@ -37,6 +40,7 @@ public class FichaLikeService {
         fichaRepository.save(ficha);
     }
 
+    // Método para ver si se ha dado "me gusta" a una ficha.
     public boolean haDadoLike(String email, Long fichaId) {
         Optional<User> user = userRepository.findByEmail(email);
         Optional<Ficha> ficha = fichaRepository.findById(fichaId);

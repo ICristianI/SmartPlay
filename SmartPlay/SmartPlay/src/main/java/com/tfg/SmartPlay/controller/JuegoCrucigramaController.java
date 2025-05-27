@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+// Controller para manejar las acciones relacionadas con el juego de crucigrama.
+
 @Controller
 @RequestMapping("/crucigrama")
 public class JuegoCrucigramaController {
@@ -36,6 +38,9 @@ public class JuegoCrucigramaController {
     @Autowired
     private JuegoCrucigramaService juegoCrucigramaService;
 
+    /*
+    * Listar juegos de crucigrama del usuario autenticado con paginación.
+    */ 
     @GetMapping("/listar")
     public String listarJuegos(Model model,
                                @AuthenticationPrincipal UserDetails userDetails,
@@ -69,6 +74,10 @@ public class JuegoCrucigramaController {
         return "Juegos/Crucigrama/verJuegosCrucigrama";
     }
 
+    /*
+     * Permite al usuario acceder a un juego de crucigrama específico.
+     * Verifica si el juego es accesible para el usuario autenticado.
+     */
     @GetMapping("/jugar")
     public String jugarCrucigrama(Model model, HttpSession session,
                                   @AuthenticationPrincipal UserDetails userDetails) {
@@ -103,7 +112,10 @@ public class JuegoCrucigramaController {
     }
     
 
-
+    /*
+     * Permite al usuario ver los detalles de un juego de crucigrama específico.
+     * Verifica si el usuario tiene permisos para ver el juego.
+     */
     @GetMapping("/ver")
     public String verJuego(HttpSession session,
                            @AuthenticationPrincipal UserDetails userDetails,
@@ -167,7 +179,9 @@ public class JuegoCrucigramaController {
     
 
 
-
+    /*
+     *  Permite editar el juego de crucigrama.
+     */
     @PostMapping("/editar")
     public String editarJuego(@RequestParam("juegoId") Long juegoId,
                               @ModelAttribute JuegoCrucigrama juegoEditado,
@@ -185,23 +199,34 @@ public class JuegoCrucigramaController {
         }
     }
 
+    /*
+     * Redirige a la página para crear un nuevo juego de crucigrama.
+     */
     @GetMapping("/crear")
     public String crearJuego(Model model) {
         model.addAttribute("juego", new JuegoCrucigrama());
         return "Juegos/Crucigrama/crearJuegoCrucigrama";
     }
     
+    /*
+     * Guarda un nuevo juego de crucigrama.
+     * Procesa la imagen del juego y guarda los datos en la base de datos.
+     */
     @PostMapping("/guardar")
-public String guardarJuego(@ModelAttribute JuegoCrucigrama juego,
+    public String guardarJuego(@ModelAttribute JuegoCrucigrama juego,
                            @RequestParam("imagenJuego") MultipartFile imagenJuego,
                            @AuthenticationPrincipal UserDetails userDetails,
                            RedirectAttributes redirectAttributes) {
-    juegoCrucigramaService.guardarJuego(juego, userDetails.getUsername(), imagenJuego);
-    redirectAttributes.addFlashAttribute("mensaje", "Juego guardado correctamente.");
-    return "redirect:/crucigrama/listar";
-}
+        juegoCrucigramaService.guardarJuego(juego, userDetails.getUsername(), imagenJuego);
+        redirectAttributes.addFlashAttribute("mensaje", "Juego guardado correctamente.");
+        return "redirect:/crucigrama/listar";
+    }
 
 
+    /*
+     * Elimina un juego de crucigrama.
+     * Verifica si el usuario tiene permisos para eliminar el juego.
+     */
     @PostMapping("/eliminar")
     public String eliminarJuego(@RequestParam("juegoId") Long juegoId,
                                 @AuthenticationPrincipal UserDetails userDetails,

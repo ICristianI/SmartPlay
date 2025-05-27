@@ -152,6 +152,7 @@ public class UserController {
         return imageResponse;
     }
 
+    // Recupera la imagen de perfil de un usuario por su ID
     @GetMapping("images/{id}")
     public ResponseEntity<Object> getMethodName(@PathVariable Long id) throws SQLException {
         Optional<User> op = userRepository.findById(id);
@@ -159,7 +160,7 @@ public class UserController {
         return imageResponse;
     }
 
-    // Sirve para evitar que se intente mapear un multipart a Blob
+    // Sirve para evitar que se intente mapear un multipart a Blob (causa error si se deja sin esto)
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.setDisallowedFields("photo");
@@ -179,7 +180,6 @@ public class UserController {
             return "redirect:/users/perfil";
         }
 
-        // Guardar la imagen si el tamaño es adecuado
         Blob photoBlob = imagenService.saveImage(photo);
         User user = userComponent.getUser().get();
         user.setPhoto(photoBlob);
@@ -205,23 +205,6 @@ public class UserController {
         return "redirect:/verify?message=" + URLEncoder.encode(message, StandardCharsets.UTF_8);
     }
 
-    // Reenvía el correo de verificación (no funcional en la versión actual)
-
-    @GetMapping("/resend")
-    public String resend(@RequestParam String email, Model model) {
-        Optional<User> user = userRepository.findByEmail(email);
-
-        if (user.isPresent() && !user.get().isEnabled()) {
-            tokenService.sendVerificationEmail(user.get());
-            model.addAttribute("message", "Correo de verificación reenviado.");
-        } else if (user.isPresent() && user.get().isEnabled()) {
-            model.addAttribute("error", "El usuario ya está verificado.");
-        } else {
-            model.addAttribute("error", "Usuario no encontrado.");
-        }
-        return "redirect:/RegistrarIniciarSesion/Verificar";
-    }
-
     // Maneja la excepción de tamaño máximo de archivo
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
@@ -230,6 +213,8 @@ public class UserController {
         return "redirect:/users/perfil";
     }
 
+    // Permite ver el perfil de otro usuario por su ID
+    
     @GetMapping("/perfil/{id}")
     public String verPerfilDeOtroUsuario(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
         Optional<User> usuarioOptional = userService.findUserById(id);

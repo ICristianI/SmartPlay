@@ -13,6 +13,7 @@ import com.tfg.SmartPlay.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+// Repositorio para la entidad Cuaderno, se usan consultas personalizadas para obtener cuadernos según diferentes criterios.
 @Repository
 public interface CuadernoRepository extends JpaRepository<Cuaderno, Long> {
 

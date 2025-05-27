@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
+// Repositorio para la entidad Juego, que representa un juego en la aplicación SmartPlay.
 public interface JuegoRepository extends JpaRepository<Juego, Long> {
 
     @Query("SELECT j FROM Juego j WHERE j.usuario = :usuario ORDER BY j.fechaCreacion DESC")

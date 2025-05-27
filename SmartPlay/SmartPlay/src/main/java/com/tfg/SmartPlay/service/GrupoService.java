@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+// Servicio para gestionar los grupos de usuarios en la aplicación SmartPlay.
+
 @Service
 public class GrupoService {
 
@@ -45,8 +47,6 @@ public class GrupoService {
         List<Cuaderno> caudernosSeleccionados = cuadernoRepository.findAllById(cuadernosId);
         if (caudernosSeleccionados != null) {
             grupo.setCuadernos(caudernosSeleccionados);
-        } else {
-            grupo.setCuadernos(new ArrayList<>());
         }
         grupo.setCreador(creador);
         grupo.setUsuarios(new ArrayList<>(List.of(creador)));
@@ -91,6 +91,9 @@ public class GrupoService {
         return null;
     }
 
+    /**
+     * Edita un grupo si el usuario autenticado es el creador.
+     */
     public boolean editarGrupo(Long grupoId, String nuevoNombre, String nuevaDescripcion, List<Long> nuevosCuadernosIds, String email) {
         Optional<User> usuarioOpt = userRepository.findByEmail(email);
         if (usuarioOpt.isEmpty()) return false;
@@ -179,6 +182,9 @@ public class GrupoService {
         }
     }
 
+    /**
+     * Elimina un cuaderno del grupo si el usuario autenticado es el creador del grupo.
+     */
     public boolean eliminarCuadernoDelGrupo(Long grupoId, Long cuadernoId, String emailUsuario) {
         Optional<Grupo> grupoOpt = grupoRepository.findById(grupoId);
     
@@ -196,6 +202,9 @@ public class GrupoService {
         return false;
     }
 
+    /**
+     * Obtiene los usuarios de un grupo paginados.
+     */
     public Page<User> obtenerUsuariosPaginados(Long grupoId, int page, int size) {
         Grupo grupo = grupoRepository.findById(grupoId).orElse(null);
         if (grupo == null) return Page.empty();
@@ -206,6 +215,9 @@ public class GrupoService {
         return new PageImpl<>(usuarios.subList(start, end), PageRequest.of(page, size), usuarios.size());
     }
 
+    /**
+     * Verifica si el usuario autenticado es el propietario del grupo.
+     */
     public boolean isPropietario(Grupo grupo, String email) {
         Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isEmpty()) return false;
@@ -215,6 +227,9 @@ public class GrupoService {
     }
     
 
+    /**
+     * Elimina un usuario del grupo si el propietario lo solicita.
+     */
     public boolean eliminarUsuarioDelGrupo(Long grupoId, Long usuarioId, String emailPropietario) {
         Optional<Grupo> grupoOpt = grupoRepository.findById(grupoId);
         Optional<User> usuarioEliminarOpt = userRepository.findById(usuarioId);

@@ -19,6 +19,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+// Servicio para gestionar los juegos en la aplicación SmartPlay.
+
 @Service
 public class JuegoService {
 
@@ -119,19 +121,31 @@ public class JuegoService {
         return juegoRepository.obtenerJuegosPorCuaderno(cuadernoId, pageable);
     }
 
+    /**
+     * Obtiene un juego por su ID.
+     */
     public Optional<Juego> obtenerJuegoPorId(Long id) {
         return juegoRepository.findById(id);
     }
 
+    /**
+     * Obtiene todos los juegos públicos paginados.
+     */
     public Page<Juego> obtenerTodosLosJuegos(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return juegoRepository.findAll(pageable);
     }
 
+    /**
+     * Obtiene la imagen de un juego en formato Blob y la devuelve como ResponseEntity.
+     */
     public ResponseEntity<Object> obtenerImagenJuego(Blob imagenBlob) throws SQLException {
         return imagenService.getImageResponse(imagenBlob);
     }
 
+    /**
+     * Obtiene juegos públicos ordenados por fecha, paginados.
+     */
     public Page<Juego> ordenarPorFecha(String buscar, int page, int size) {
         if (buscar != null && !buscar.trim().isEmpty()) {
             return juegoRepository.buscarPublicosPorNombreFecha(buscar,
@@ -140,6 +154,9 @@ public class JuegoService {
         return juegoRepository.buscarPublicosPorFecha(PageRequest.of(page, size));
     }
 
+    /**
+     * Obtiene juegos públicos ordenados por número de "me gusta", paginados.
+     */
     public Page<Juego> ordenarPorMeGusta(String buscar, int page, int size) {
         if (buscar != null && !buscar.trim().isEmpty()) {
             return juegoRepository.buscarPublicosPorNombreLikes(buscar,
@@ -148,24 +165,37 @@ public class JuegoService {
         return juegoRepository.buscarPublicosPorLikes(PageRequest.of(page, size));
     }
 
+    /**
+     * Obtiene juegosaccesibles que no estén en privado.
+     */
     public Optional<Juego> obtenerJuegoAccesible(Long juegoId, String email) {
         Optional<Juego> juegoOpt = juegoRepository.findById(juegoId);
 
         return juegoOpt.filter(j -> !j.isPrivada() || j.getUsuario().getEmail().equals(email));
     }
 
+    /**
+     * Obtiene un ahorcado accesible por su ID y el email del usuario.
+     */
     public Optional<JuegoAhorcado> obtenerAhorcadoAccesible(Long juegoId, String email) {
         return obtenerJuegoAccesible(juegoId, email)
                 .filter(j -> j instanceof JuegoAhorcado)
                 .map(j -> (JuegoAhorcado) j);
     }
 
+
+    /**
+     * Obtiene un crucigrama accesible por su ID y el email del usuario.
+     */
     public Optional<JuegoCrucigrama> obtenerCrucigramaAccesible(Long juegoId, String email) {
         return obtenerJuegoAccesible(juegoId, email)
                 .filter(j -> j instanceof JuegoCrucigrama)
                 .map(j -> (JuegoCrucigrama) j);
     }
 
+    /**
+     * Obtiene una sopa de letras accesible por su ID y el email del usuario.
+     */
     public Optional<JuegoSopaLetras> obtenerSopaLetrasAccesible(Long juegoId, String email) {
         return obtenerJuegoAccesible(juegoId, email)
                 .filter(j -> j instanceof JuegoSopaLetras)

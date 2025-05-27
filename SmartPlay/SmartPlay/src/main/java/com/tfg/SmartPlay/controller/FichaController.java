@@ -251,6 +251,8 @@ public class FichaController {
         }
     }
 
+    // Método para modificar una ficha desde la sesión
+
     @GetMapping("/modificarFicha")
     public String modificarFichaDesdeSesion(HttpSession session,
             @AuthenticationPrincipal UserDetails userDetails,
@@ -275,6 +277,8 @@ public class FichaController {
         return "Fichas/ModificarFicha";
     }
 
+    // Método para guardar elementos superpuestos en una ficha
+
     @PostMapping("/guardarElementos")
     public String guardarElementosSuperpuestos(@RequestParam Long fichaId,
             @RequestParam String elementosSuperpuestos,
@@ -295,11 +299,15 @@ public class FichaController {
         return "redirect:/f/verFichaInteractiva";
     }
 
+    // Método para conseguir una ficha desde la sesión y redirigir a la vista interactiva
+
     @PostMapping("/conseguirFicha")
     public String conseguirFicha(Model model, @RequestParam Long fichaId, HttpSession session) {
         session.setAttribute("fichaId", fichaId);
         return "redirect:/f/verFichaInteractiva";
     }
+
+    // Método para ver una ficha interactiva, mostrando los elementos superpuestos
 
     @GetMapping("/verFichaInteractiva")
     public String verFichaInteractiva(Model model, HttpSession session,
@@ -348,6 +356,8 @@ public class FichaController {
         }
     }
 
+    // Método para investigar fichas públicas
+
     @GetMapping("/investigar")
     public String verFichasPublicas(
             Model model,
@@ -389,6 +399,8 @@ public class FichaController {
         return "investigar";
     }
 
+    // Método para dar like a una ficha
+
     @PostMapping("/like")
     @ResponseBody
     public ResponseEntity<String> darMeGusta(
@@ -403,6 +415,8 @@ public class FichaController {
         }
     }
 
+    // Método para guardar una nota en una ficha
+    
     @PostMapping("/guardarNota")
     @ResponseBody
     public ResponseEntity<?> guardarNota(

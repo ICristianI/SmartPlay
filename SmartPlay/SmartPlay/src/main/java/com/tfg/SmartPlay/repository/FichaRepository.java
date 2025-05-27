@@ -1,7 +1,6 @@
 package com.tfg.SmartPlay.repository;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import com.tfg.SmartPlay.entity.Ficha;
 import com.tfg.SmartPlay.entity.User;
 
+// Repositorio para la entidad Ficha, que representa una ficha de información en la aplicación SmartPlay.
 @Repository
 public interface FichaRepository extends JpaRepository<Ficha, Long> {
 

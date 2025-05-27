@@ -23,6 +23,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+// Controlador para manejar las operaciones relacionadas con los grupos de usuarios
 
 @Controller
 @RequestMapping("/grupos")
@@ -41,6 +42,7 @@ public class GrupoController {
     private CuadernoUsuarioService cuadernoUsuarioService;
 
     // Lista todos los grupos del usuario
+
     @GetMapping
     public String listarGrupos(Model model,
             @AuthenticationPrincipal UserDetails userDetails,
@@ -71,7 +73,8 @@ public class GrupoController {
         return "Grupos/verGrupos";
     }
 
-    // GET: Formulario para crear grupo
+    // Formulario para crear grupo
+
     @GetMapping("/crear")
     public String mostrarFormularioCreacion(Model model) {
         model.addAttribute("grupo", new Grupo());
@@ -80,7 +83,8 @@ public class GrupoController {
         return "Grupos/crearGrupos";
     }
 
-    // POST: Guardar grupo
+    // Guardar grupo
+
     @PostMapping("/guardar")
     public String guardarGrupo(@ModelAttribute Grupo grupo,
             RedirectAttributes redirectAttributes,
@@ -97,7 +101,8 @@ public class GrupoController {
         return "Grupos/unirseGrupo";
     }
 
-    // POST: Unirse a grupo por código
+    // Unirse a grupo por código
+
     @PostMapping("/unirse")
     public String unirseAGrupo(@RequestParam("codigoAcceso") String codigo,
             @AuthenticationPrincipal UserDetails userDetails,
@@ -114,7 +119,8 @@ public class GrupoController {
         return "redirect:/grupos";
     }
 
-    // GET: Ver detalles del grupo
+    // Ver detalles del grupo
+
     @PostMapping("/ver")
     public String verGrupoPost(@RequestParam("grupoId") Long grupoId, HttpSession session) {
         session.setAttribute("grupoId", grupoId);
@@ -148,7 +154,6 @@ public class GrupoController {
         model.addAttribute("esCreador", esCreador);
         model.addAttribute("fechaFormateada", grupo.getFechaCreacionFormateada());
 
-        // Cuadernos paginados
         Page<Cuaderno> cuadernosPage = grupoService.obtenerCuadernosPaginados(grupoId, pageCuadernos, size);
         User user = userComponent.getUser().orElse(null);
 
@@ -187,7 +192,6 @@ public class GrupoController {
         model.addAttribute("nextPageCuadernos", Math.min(pageCuadernos + 1, cuadernosPage.getTotalPages() - 1));
         model.addAttribute("pagesC", cuadernosPage.getTotalPages() > 0);
 
-        // Usuarios paginados
         Page<User> usuariosPage = grupoService.obtenerUsuariosPaginados(grupoId, pageUsuarios, size);
 
         List<Map<String, Object>> usuariosProcesados = usuariosPage.getContent().stream().map(u -> {
@@ -199,7 +203,7 @@ public class GrupoController {
             return map;
         }).toList();
 
-model.addAttribute("usuariosPage", usuariosProcesados);
+        model.addAttribute("usuariosPage", usuariosProcesados);
         model.addAttribute("currentPageUsuarios", pageUsuarios + 1);
         model.addAttribute("totalPagesUsuarios", usuariosPage.getTotalPages());
         model.addAttribute("hasPrevUsuarios", pageUsuarios > 0);
@@ -218,6 +222,8 @@ model.addAttribute("usuariosPage", usuariosProcesados);
 
         return "Grupos/verGrupo";
     }
+
+    // Editar grupo
 
     @PostMapping("/editar")
     public String editarGrupo(@RequestParam("grupoId") Long grupoId,
@@ -239,7 +245,8 @@ model.addAttribute("usuariosPage", usuariosProcesados);
         return "redirect:/grupos/ver";
     }
 
-    // POST: Eliminar grupo
+    // Eliminar grupo
+
     @PostMapping("/eliminar")
     public String eliminarGrupo(@RequestParam("grupoId") Long grupoId,
             @AuthenticationPrincipal UserDetails userDetails,
@@ -255,6 +262,8 @@ model.addAttribute("usuariosPage", usuariosProcesados);
 
         return "redirect:/grupos";
     }
+
+    // Eliminar cuaderno del grupo
 
     @PostMapping("/eliminarCuaderno")
     public String eliminarCuadernoDelGrupo(@RequestParam("grupoId") Long grupoId,
@@ -273,6 +282,8 @@ model.addAttribute("usuariosPage", usuariosProcesados);
 
         return "redirect:/grupos/ver";
     }
+
+    // Eliminar usuario del grupo
 
     @PostMapping("/eliminarUsuario")
     public String eliminarUsuarioDelGrupo(@RequestParam("grupoId") Long grupoId,

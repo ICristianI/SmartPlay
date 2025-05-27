@@ -10,7 +10,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-// Configuración para el manejo de CSRF
+// Configuración para el manejo de CSRF, que es una medida de seguridad para prevenir ataques de falsificación de solicitudes entre sitios (Cross-Site Request Forgery).
+// Este interceptor añade el token CSRF al modelo de vista para que esté disponible en las vistas renderizadas.
 
 @Configuration
 public class CSRFHandlerConfiguration implements WebMvcConfigurer {

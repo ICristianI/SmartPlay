@@ -187,6 +187,9 @@ public class CuadernoController {
         return "Cuadernos/crearCuadernos";
     }
 
+    /**
+     * Guarda un nuevo cuaderno con las fichas y juegos seleccionados.
+     */
     @PostMapping("/guardar")
     public String guardarCuaderno(@ModelAttribute Cuaderno cuaderno,
             @RequestParam("fichasSeleccionadas") List<Long> fichasIds,
@@ -203,6 +206,10 @@ public class CuadernoController {
         return "redirect:/cuadernos";
     }
 
+    /**
+     * Obtiene la imagen del cuaderno.
+     */
+     
     @GetMapping("/image/{id}")
     public ResponseEntity<Object> downloadCuadernoImage(@PathVariable Long id) {
         return cuadernoService.obtenerImagenCuaderno(id);
@@ -307,12 +314,19 @@ public class CuadernoController {
         return "redirect:/cuadernos";
     }
 
+    /**
+     * Encuentra un cuaderno para resolverlo sin exponer su id.
+     */
     @PostMapping("/resolver")
     public String resolverCuadernoPost(@RequestParam("cuadernoId") Long cuadernoId, HttpSession session) {
         session.setAttribute("cuadernoId", cuadernoId);
         return "redirect:/cuadernos/resolver";
     }
 
+    /**
+     * Resuelve un cuaderno mostrando una ficha a la vez.
+     * Si el cuaderno no tiene fichas, muestra un mensaje de error.
+     */
     @GetMapping("/resolver")
     public String resolverCuadernoGet(Model model,
             HttpSession session,
@@ -356,12 +370,20 @@ public class CuadernoController {
         return "Cuadernos/resolverCuaderno";
     }
 
+    /**
+     * Encuentra un cuaderno para resolver juegos sin exponer su id.
+     */
     @PostMapping("/resolverJuegos")
     public String resolverJuegosPost(@RequestParam("cuadernoId") Long cuadernoId, HttpSession session) {
         session.setAttribute("cuadernoId", cuadernoId);
         return "redirect:/cuadernos/resolverJuegos";
     }
+    
 
+    /**
+     * Resuelve los juegos de un cuaderno mostrando un juego a la vez.
+     * Si el cuaderno no tiene juegos, muestra un mensaje de error.
+     */
     @GetMapping("/resolverJuegos")
     public String resolverJuegosGet(Model model,
             HttpSession session,

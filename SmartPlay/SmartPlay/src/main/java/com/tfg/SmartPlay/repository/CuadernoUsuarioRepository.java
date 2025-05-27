@@ -7,6 +7,8 @@ import com.tfg.SmartPlay.entity.Cuaderno;
 import com.tfg.SmartPlay.entity.CuadernoUsuario;
 import com.tfg.SmartPlay.entity.User;
 
+// Repositorio para la entidad CuadernoUsuario, que representa la relación entre un usuario y un cuaderno en la aplicación SmartPlay.
+
 public interface CuadernoUsuarioRepository extends JpaRepository<CuadernoUsuario, Long> {
 
     Optional<CuadernoUsuario> findByCuadernoAndUsuario(Cuaderno cuaderno, Optional<User> usuario);

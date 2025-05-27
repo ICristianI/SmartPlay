@@ -30,6 +30,8 @@ import org.springframework.http.ResponseEntity;
 
 import jakarta.servlet.http.HttpSession;
 
+// Controlador para mejorar, localizar y optimizar las acciones relacionadas con los juegos en la aplicación.
+
 @Controller
 @RequestMapping("/juegos")
 public class JuegoController {
@@ -40,6 +42,11 @@ public class JuegoController {
     @Autowired
     JuegoLikeService juegoLikeService;
 
+    /*
+     * Redirige al usuario a la página del juego seleccionado.
+     * Dependiendo del tipo de juego, redirige a la página correspondiente (ahorcado, sopa de letras, crucigrama).
+     * Evitando la duplicación de código y mejorando la mantenibilidad.
+     */
     @PostMapping("/redirigirJuego")
     public String redirigirJuego(
             @RequestParam("juegoId") Long juegoId,
@@ -71,6 +78,10 @@ public class JuegoController {
         }
     }
 
+    /*
+     * Permite al usuario ver los juegos públicos disponibles.
+     * Dependiendo del tipo se muestran sus valores para evitar duplicación.
+    */
     @GetMapping("/investigar")
     public String verJuegosPublicos(
             Model model,
@@ -113,6 +124,9 @@ public class JuegoController {
         return "jugar";
     }
 
+    /*
+    * Permite al usuario obtener la imagen de un juego específico.
+    */
     @GetMapping("/image/{id}")
     public ResponseEntity<Object> obtenerImagenJuego(@PathVariable Long id) {
         Optional<Juego> juegoOpt = juegoService.obtenerJuegoPorId(id);
@@ -127,6 +141,12 @@ public class JuegoController {
         return ResponseEntity.notFound().build();
     }
 
+
+    /*
+     * Permite al usuario dar "me gusta" a un juego.
+     * Utiliza el servicio de likes para alternar el estado del "me gusta".
+     */
+    
     @PostMapping("/like")
     @ResponseBody
     public ResponseEntity<String> darMeGusta(

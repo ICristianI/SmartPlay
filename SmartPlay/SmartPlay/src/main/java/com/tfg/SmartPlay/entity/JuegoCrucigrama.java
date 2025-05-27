@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+// Entity que representa un juego de crucigrama en la aplicación SmartPlay, permitiendo a los usuarios jugar resolviendo pistas y respuestas en un formato de crucigrama.
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)

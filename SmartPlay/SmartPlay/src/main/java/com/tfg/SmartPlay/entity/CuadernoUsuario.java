@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// Entity que representa la relación entre un usuario y un cuaderno en la aplicación SmartPlay para la gestión de notas.
 @Entity
 @Table(name = "cuaderno_usuario")
 @Data
@@ -26,5 +27,4 @@ public class CuadernoUsuario {
 
     private double nota;
 
-    private int intentos;
 }

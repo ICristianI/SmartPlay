@@ -141,6 +141,7 @@ public class FichaService {
     }
 
     // Devuelve las fichas de un cuaderno de forma paginada.
+
     public Page<Ficha> obtenerFichasPaginadas(Long cuadernoId, int page, int size) {
 
         Page<Ficha> fichas = fichaRepository.obtenerFichasPorCuaderno(cuadernoId, PageRequest.of(page, size));
@@ -165,6 +166,7 @@ public class FichaService {
     }
 
     // Guarda los elementos superpuestos en formato JSON
+
     public void guardarElementosSuperpuestos(Long fichaId, String elementosJson, String email) {
         Ficha ficha = obtenerFicha(fichaId, email)
                 .orElseThrow(() -> new RuntimeException("Ficha no encontrada o sin permisos"));
@@ -173,10 +175,14 @@ public class FichaService {
         fichaRepository.save(ficha);
     }
 
+    // Devuelve todas las fichas públicas de forma paginada.
+
     public Page<Ficha> obtenerTodasLasFichas(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return fichaRepository.findAll(pageable);
     }
+
+    // Devuelve las fichas públicas de un usuario ordenado por fecha.
 
     public Page<Ficha> ordenarPorFecha(String buscar, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -187,6 +193,8 @@ public class FichaService {
         return fichaRepository.buscarPublicasOrdenFecha(pageable);
     }
 
+    // Devuelve las fichas públicas de un usuario ordenado por "me gusta".
+    
     public Page<Ficha> ordenarPorMeGusta(String buscar, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         if (buscar != null && !buscar.trim().isEmpty()) {

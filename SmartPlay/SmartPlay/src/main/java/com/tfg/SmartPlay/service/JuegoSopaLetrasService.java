@@ -19,6 +19,8 @@ import java.io.InputStream;
 import java.sql.Blob;
 import java.util.Optional;
 
+// Servicio para gestionar los juegos de Sopa de Letras en la aplicación SmartPlay.
+
 @Service
 public class JuegoSopaLetrasService {
 
@@ -36,6 +38,8 @@ public class JuegoSopaLetrasService {
 
     @Autowired
     private ImagenService imagenService;
+
+    // Método para guardar un nuevo juego de Sopa de Letras.
 
    public void guardarJuego(JuegoSopaLetras juego, String email, MultipartFile imagenJuego) {
     User usuario = userRepository.findByEmail(email)
@@ -60,7 +64,9 @@ public class JuegoSopaLetrasService {
     }
 
     juegoSopaLetrasRepository.save(juego);
-}
+    }
+
+    // Método para editar un juego de Sopa de Letras existente.
 
     public void editarJuego(Long juegoId, JuegoSopaLetras juegoEditado, String email) {
         JuegoSopaLetras juego = (JuegoSopaLetras) juegoService.obtenerJuego(juegoId, email)
@@ -77,10 +83,14 @@ public class JuegoSopaLetrasService {
         juegoSopaLetrasRepository.save(juego);
     }
 
+    // Método para obtener todos los cuadernos de Sopa de Letras paginados
+
     public Page<Cuaderno> obtenerCuadernosConJuegoPaginados(Juego juego, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return cuadernoRepository.obtenerCuadernosPorJuego(juego, pageable);
     }
+
+    // Método para obtener todos los juegos de Sopa de Letras de un usuario paginados.
 
     public Page<JuegoSopaLetras> obtenerJuegosPaginadosPorUsuario(String email, int page, int size) {
         User usuario = userRepository.findByEmail(email)
@@ -90,6 +100,8 @@ public class JuegoSopaLetrasService {
         return juegoSopaLetrasRepository.findByUsuario(usuario, pageable);
     }
 
+    // Método para obtener un juego de Sopa de Letras por ID y verificar si el usuario es el propietario.
+    
     public Optional<JuegoSopaLetras> obtenerJuego(Long juegoId, String email) {
         User usuario = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));

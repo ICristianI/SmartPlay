@@ -77,6 +77,7 @@ public class VerificationTokenService {
     }
 
     // Envía un correo al usuario y copia al administrador
+    
     private void sendEmail(String to, String subject, String content) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
 

@@ -11,6 +11,7 @@ import java.sql.Blob;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+// Entity que representa un juego en la aplicación SmartPlay, que puede ser de tipo "Juego de mesa" o "Juego de rol", y contiene información educativa y elementos multimedia.
 @Entity
 @Table(name = "juegos")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -68,11 +69,13 @@ public abstract class Juego {
     @JoinTable(name = "cuaderno_juegos", joinColumns = @JoinColumn(name = "juego_id"), inverseJoinColumns = @JoinColumn(name = "cuaderno_id"))
     private List<Cuaderno> cuadernos;
 
+    // Método que se ejecuta antes de persistir el juego en la base de datos adaptando la fecha de creación al momento actual.
     @PrePersist
     protected void onCreate() {
         this.fechaCreacion = java.time.LocalDateTime.now();
     }
 
+    // Método que devuelve la fecha de creación del juego formateada como "dd/MM/yyyy".
     public String getFechaCreacionFormateada() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return fechaCreacion.format(formatter);

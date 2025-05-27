@@ -15,6 +15,8 @@ import com.tfg.SmartPlay.repository.CuadernoRepository;
 import com.tfg.SmartPlay.repository.CuadernoUsuarioRepository;
 import com.tfg.SmartPlay.repository.FichaUsuarioRepository;
 
+// Servicio para manejar las operaciones relacionadas con los cuadernos de usuario
+
 @Service
 public class CuadernoUsuarioService {
 
@@ -26,6 +28,8 @@ public class CuadernoUsuarioService {
 
     @Autowired
     private FichaUsuarioRepository fichaUsuarioRepository;
+
+    // Método para actualizar la nota de un cuaderno para un usuario específico
 
     public void actualizarNota(Long cuadernoId, Optional<User> userOpt) {
         if (userOpt.isEmpty()) return;
@@ -54,16 +58,16 @@ public class CuadernoUsuarioService {
                     CuadernoUsuario nuevo = new CuadernoUsuario();
                     nuevo.setCuaderno(cuaderno);
                     nuevo.setUsuario(user);
-                    nuevo.setIntentos(0);
                     return nuevo;
                 });
 
         cuadernoUsuario.setNota(notaRedondeada);
-        cuadernoUsuario.setIntentos(cuadernoUsuario.getIntentos() + 1);
 
         cuadernoUsuarioRepository.save(cuadernoUsuario);
     }
 
+    // Método para obtener la nota de un cuaderno para un usuario específico
+    
     public Optional<CuadernoUsuario> obtenerNota(Long cuadernoId, Long userId) {
         return cuadernoUsuarioRepository.findByCuadernoIdAndUsuarioId(cuadernoId, userId);
     }

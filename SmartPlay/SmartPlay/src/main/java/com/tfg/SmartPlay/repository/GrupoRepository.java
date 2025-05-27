@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+// Repositorio para la entidad Grupo, que representa un grupo de usuarios en la aplicación SmartPlay.
 @Repository
 public interface GrupoRepository extends JpaRepository<Grupo, Long> {
 

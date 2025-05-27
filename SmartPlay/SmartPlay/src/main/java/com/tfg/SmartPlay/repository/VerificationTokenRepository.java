@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.tfg.SmartPlay.entity.User;
 import com.tfg.SmartPlay.entity.VerificationToken;
 
+// Repositorio para la entidad VerificationToken, que representa un token de verificación asociado a un usuario en la aplicación SmartPlay.
 @Repository
 public interface VerificationTokenRepository extends JpaRepository<VerificationToken, Long> {
     Optional<VerificationToken> findByToken(String token);

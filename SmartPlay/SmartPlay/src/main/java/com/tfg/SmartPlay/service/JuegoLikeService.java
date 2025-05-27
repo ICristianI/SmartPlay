@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+// Servicio para gestionar los "likes" de los juegos por parte de los usuarios.
+
 @Service
 public class JuegoLikeService {
 
@@ -23,6 +25,8 @@ public class JuegoLikeService {
     @Autowired
     private UserRepository userRepository;
 
+    // Comprueba si un usuario ha dado "like" a un juego específico.
+
     public boolean haDadoLike(String email, Long juegoId) {
         Optional<User> user = userRepository.findByEmail(email);
         Optional<Juego> juego = juegoRepository.findById(juegoId);
@@ -33,6 +37,8 @@ public class JuegoLikeService {
 
         return juegoLikeRepository.existsByJuegoAndUsuario(juego.get(),user.get());
     }
+
+    // Alterna el estado de "like" de un juego por parte de un usuario.
 
     public boolean alternarLike(String email, Long juegoId) {
         Optional<User> userOpt = userRepository.findByEmail(email);

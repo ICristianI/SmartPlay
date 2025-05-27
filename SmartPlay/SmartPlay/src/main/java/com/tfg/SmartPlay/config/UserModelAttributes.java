@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import com.tfg.SmartPlay.entity.User;
 import com.tfg.SmartPlay.service.UserComponent;
 
-//Tiene atributos de usuario que permiten gestionar las sesiones
+//Tiene atributos de usuario que permiten gestionar las sesiones, son atributos globales de todas las vistas
 //Sirve para mostrar u ocultar elementos de la vista dependiendo de si el usuario está logueado o no
 
 @ControllerAdvice(basePackages = { "com.tfg.SmartPlay.entity", "com.tfg.SmartPlay.controller",
@@ -22,11 +22,6 @@ public class UserModelAttributes {
     @ModelAttribute("isLogged")
     public boolean isLogged() {
         return userComponent.isLoggedUser();
-    }
-
-    @ModelAttribute("isAdmin")
-    public boolean isAdmin() {
-        return userComponent.isAdmin();
     }
 
     @ModelAttribute("isProfesor")

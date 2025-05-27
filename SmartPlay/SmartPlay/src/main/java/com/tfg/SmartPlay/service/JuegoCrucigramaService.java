@@ -17,6 +17,8 @@ import java.io.InputStream;
 import java.sql.Blob;
 import java.util.Optional;
 
+// Servicio para gestionar los juegos de crucigrama en la aplicación SmartPlay.
+
 @Service
 public class JuegoCrucigramaService {
 
@@ -34,6 +36,8 @@ public class JuegoCrucigramaService {
 
     @Autowired
     private ImagenService imagenService;
+
+    // Método para guardar un nuevo juego de crucigrama.
 
     public void guardarJuego(JuegoCrucigrama juego, String email, MultipartFile imagenJuego) {
     User usuario = userRepository.findByEmail(email)
@@ -62,6 +66,7 @@ public class JuegoCrucigramaService {
     juegoCrucigramaRepository.save(juego);
 }
 
+    // Método para editar un juego de crucigrama existente.
 
     public void editarJuego(Long juegoId, JuegoCrucigrama juegoEditado, String email) {
         JuegoCrucigrama juego = (JuegoCrucigrama) juegoService.obtenerJuego(juegoId, email)
@@ -79,10 +84,14 @@ public class JuegoCrucigramaService {
     }
 
 
+    // Método para obtener todos los cuadernos de crucigrama de un usuario.
+
     public Page<Cuaderno> obtenerCuadernosConJuegoPaginados(JuegoCrucigrama juego, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return cuadernoRepository.obtenerCuadernosPorJuego(juego, pageable);
     }
+
+    // Método para obtener todos los juegos de crucigrama de un usuario, paginados.
 
     public Page<JuegoCrucigrama> obtenerJuegosPaginadosPorUsuario(String email, int page, int size) {
         User usuario = userRepository.findByEmail(email)
@@ -92,6 +101,8 @@ public class JuegoCrucigramaService {
         return juegoCrucigramaRepository.findByUsuario(usuario, pageable);
     }
 
+    // Método para obtener un juego de crucigrama por su ID y el email del usuario.
+    
     public Optional<JuegoCrucigrama> obtenerJuego(Long juegoId, String email) {
         User usuario = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));

@@ -26,8 +26,5 @@ public class FichaUsuario {
     private Ficha ficha;
 
     private double nota;
-
-    private int intentos;
-
     
 }
