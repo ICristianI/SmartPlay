@@ -5,6 +5,7 @@
     <div class="col-md-6">
       <h2 class="text-center mb-4">Verificación</h2>
 
+      <!-- Mensaje de verificación de la cuenta -->
       {{#message}}
       <div class="alert alert-success alert-dismissible fade show" role="alert">
         <p>{{message}}</p>
@@ -14,6 +15,7 @@
       </div>
       {{/message}}
 
+      <!-- Errores de verificación -->
       {{#error}}
       <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <p>{{error}}</p>
@@ -23,6 +25,8 @@
       </div>
       {{/error}}
 
+      <!-- Link para ir a iniciar sesión si la cuenta ya está verificada -->
+      {{#isVerified}}
       <p class="text-center mt-3" id="verificacion-link">
         ¿Ya verificaste tu cuenta? <a href="/login">Ir al inicio de sesión</a>
       </p>

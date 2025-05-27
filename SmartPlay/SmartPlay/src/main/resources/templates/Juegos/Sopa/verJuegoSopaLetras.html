@@ -2,6 +2,7 @@
 
 <div class="container mt-5">
   <div class="row align-items-center" id="Contenido">
+    <!-- Detalles del juego -->
     <div class="col-md-8">
       <div class="d-flex justify-content-between align-items-center mt-4 px-2">
         <small class="text-muted"><strong>Creada el:</strong> {{fechaFormateada}}</small>
@@ -105,7 +106,6 @@
 
           <!-- Lista visual -->
           <div id="listaPalabras" class="border p-3 rounded bg-light mt-3">
-            <!-- Aquí se cargarán las palabras existentes al iniciar -->
           </div>
 
           <!-- Campo oculto que almacena las palabras -->
@@ -217,6 +217,8 @@
   {{/cuadernos}}
 </div>
 
+<!-- Script para manejar la edición de palabras -->
+ 
 <script>
   function toggleEditForm() {
     var form = document.getElementById("editForm");

@@ -64,8 +64,6 @@
           <input type="text" class="form-control" id="nombre" name="nombre" maxlength="40" value="{{ficha.nombre}}" required />
         </div>
 
-
-
         <div class="mt-3">
           <label for="idioma" class="form-label">Idioma</label>
           <input type="text" class="form-control" id="idioma" name="idioma" maxlength="20" value="{{ficha.idioma}}" required />
@@ -94,12 +92,14 @@
         <button type="submit" class="btn btn-success mt-3">Guardar Cambios</button>
       </form>
 
+      <!-- Boton para añadir elementos a la ficha -->
       <form action="/f/irModificarFicha" method="post">
         <input type="hidden" name="_csrf" value="{{token}}" />
         <input type="hidden" name="fichaId" value="{{ficha.id}}" />
         <button type="submit" class="btn btn-warning mt-3" id="anadirElementos">Añadir Elementos a la Ficha</button>
       </form>
 
+      <!-- Botón para resolver la ficha interactiva -->
       <form action="/f/verFichaInteractiva" method="get">
         <input type="hidden" name="fichaId" value="{{ficha.id}}" />
         <button type="submit" class="btn btn-primary mt-3" id="resolverFicha">Resolver Ficha</button>
@@ -190,6 +190,8 @@
   {{/cuadernos}}
 </div>
 
+<!-- Script para manejar el formulario de edición -->
+ 
 <script>
   function toggleEditForm() {
     const form = document.getElementById("editForm");

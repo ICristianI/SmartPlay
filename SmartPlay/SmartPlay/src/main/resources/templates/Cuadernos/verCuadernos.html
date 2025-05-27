@@ -28,6 +28,7 @@
     {{/mensaje}}
 
     <div class="row">
+      <!-- Visualizador de cuadernos en lista y tarjeta -->
         {{#cuadernos}}
         <div class="col-md-4 mb-4" id="zona-cuadernos">
             <div class="card h-100 shadow-sm position-relative">
@@ -56,6 +57,8 @@
         {{/cuadernos}}
     </div>
 
+    <!-- Si no hay cuadernos, mostrar mensaje -->
+    {{#cuadernos}}
     {{^cuadernos}}
     <div class="text-center mt-5">
         <p class="text-muted">Aún no has creado ningún cuaderno.</p>

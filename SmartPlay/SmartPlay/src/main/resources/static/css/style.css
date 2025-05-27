@@ -1,4 +1,4 @@
-/* Estilos generales */
+/* Estilos generales, ayuda a adaptarse en pantallas grandes*/
 
 html, body {
   height: 100%;
@@ -17,6 +17,7 @@ footer {
   margin-top: auto;
 }
 
+/* Colores y fondos */
 
 :root {
   --bg-color-light: #eeeaea;
@@ -83,6 +84,7 @@ body.dark-mode .card .card-text {
   color: white !important;
 }
 
+/* Estilos para las tarjetas */
 
 .card-img-top {
   width: 100%;
@@ -354,6 +356,7 @@ h1 {
   color: #343a40; /* Gris más oscuro al pasar el ratón */
 }
 
+/* Estilos para el juego de sopa de letras */
 
 .sopa-cell {
   width: 40px;
@@ -572,9 +575,11 @@ h1 {
   max-width: 290px;
 }
 
+/* Ajustes para tarjetas verticales en pantallas grandes */
+
 @media (min-width: 1200px) {
   .cardVertical {
-    height: 600px; /* más alto que el valor actual */
+    height: 600px;
   }
 
   .limited-img {

@@ -25,6 +25,7 @@
     </div>
     {{/mensaje}}
 
+    <!-- Visualizador de juegos de ahorcado en lista y tarjeta -->
     <div class="row">
         {{#juegos}}
         <div class="col-md-4 mb-4" id="zona-juegos-ahorcado">
@@ -57,6 +58,7 @@
         {{/juegos}}
       </div>
       
+    <!-- Si no hay juegos, mostrar mensaje -->
     {{^juegos}}
     <div class="text-center mt-5" id="crear-ahorcado">
         <p class="text-muted">Aún no has creado ningún juego de ahorcado.</p>
