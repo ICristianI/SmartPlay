@@ -1,3 +1,5 @@
+//Chequeo de valores del perfil del usuario y tamaño del archivo de foto de perfil
+
 document.addEventListener("DOMContentLoaded", () => {
   const fileInput = document.getElementById("photo");
   if (!fileInput) {

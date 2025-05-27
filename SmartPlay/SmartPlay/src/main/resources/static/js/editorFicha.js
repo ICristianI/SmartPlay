@@ -1,10 +1,12 @@
 let elementoEditando = null;
 let checkboxEditando = null;
 
+// El script permite agregar elementos editables a una ficha, como texto, decorativos, opciones de selección única, checkboxes, joins y desplegables.
 document.addEventListener("DOMContentLoaded", () => {
   const contenedor = document.getElementById("contenedorFicha");
 });
 
+// Permite agregar un texto editable a la ficha
 window.agregarTexto = function () {
     const contenedor = document.getElementById("contenedorFicha");
   
@@ -67,6 +69,7 @@ window.agregarTexto = function () {
 
   };
 
+// Agrega un texto decorativo a la ficha, que es un elemento no editable y con botones para mover, editar o eliminar.
   window.agregarTextoDecorativo = function () {
     const contenedor = document.getElementById("contenedorFicha");
   
@@ -128,6 +131,47 @@ window.agregarTexto = function () {
 
   let seleccionActual = null;
 
+   
+  
+  // Permite abrir un modal para editar el texto de un elemento editable
+  function abrirModalEdicion(input) {
+    elementoEditando = input;
+    document.getElementById("textoEditable").value = input.value;
+    document.getElementById("tamanoTextoEditable").value = parseInt(getComputedStyle(input).fontSize);
+
+  
+    const fondo = getComputedStyle(input).backgroundColor;
+    const esTransparente = fondo === "transparent" || fondo === "rgba(0, 0, 0, 0)";
+    document.getElementById("colorFondoTextoEditable").value = rgbToHex(fondo);
+    document.getElementById("sinFondoTextoEditable").checked = esTransparente;
+  
+    const texto = getComputedStyle(input).color;
+    document.getElementById("colorTextoEditable").value = rgbToHex(texto);
+  
+    $('#modalEditarTexto').modal('show');
+
+  }
+  
+  //Guarda un texto editado y aplica los cambios al elemento editable
+  window.guardarTextoEditado = function () {
+    if (elementoEditando) {
+      const nuevoTexto = document.getElementById("textoEditable").value;
+      const colorFondo = document.getElementById("colorFondoTextoEditable").value;
+      const colorTexto = document.getElementById("colorTextoEditable").value;
+      const sinFondo = document.getElementById("sinFondoTextoEditable").checked;
+      const tamanoLetra = document.getElementById("tamanoTextoEditable").value;
+
+      elementoEditando.style.fontSize = `${tamanoLetra}px`;
+      elementoEditando.value = nuevoTexto.substring(0, 60);
+      elementoEditando.style.backgroundColor = sinFondo ? "transparent" : colorFondo;
+      elementoEditando.style.color = colorTexto;
+  
+      $('#modalEditarTexto').modal('hide');
+    }
+  };
+  
+
+// Permite agregar una selección única a la ficha, con opciones que el usuario puede editar.
   window.agregarSeleccionUnica = function () {
     const contenedor = document.getElementById("contenedorFicha");
   
@@ -199,6 +243,7 @@ window.agregarTexto = function () {
 
   };
   
+// Renderiza las opciones de selección única en el contenedor especificado
   function renderizarOpciones(contenedor, opciones, tamanoLetra = null) {
     contenedor.innerHTML = "";
     opciones.forEach((opcion, index) => {
@@ -224,6 +269,7 @@ window.agregarTexto = function () {
   }
   
   
+// Renderiza las opciones de selección única en el contenedor especificado para el modal
   function abrirModalSeleccionUnica(opciones, contenedorOpciones) {
     seleccionActual = { opciones, contenedorOpciones };
     const lista = document.getElementById("listaOpciones");
@@ -288,6 +334,7 @@ window.agregarTexto = function () {
     
   }
   
+// Guarda la selección única editada y aplica los cambios al contenedor de opciones
   window.guardarSeleccionUnicaEditada = function () {
     if (seleccionActual) {
       const fondo = document.getElementById("colorFondoSeleccionUnica").value;
@@ -311,6 +358,7 @@ window.agregarTexto = function () {
   };
   
   
+// Agrega una nueva opción a la selección única actual
   window.agregarOpcion = function () {
     if (seleccionActual) {
       seleccionActual.opciones.push({ texto: "Nueva opción", correcta: false });
@@ -318,6 +366,7 @@ window.agregarTexto = function () {
     }
   };
 
+  // agrega una opción de selección única al contenedor de opciones
   window.agregarOpcionSeleccion = function () {
     const contenedor = document.getElementById("opcionesSeleccionUnica");
   
@@ -344,46 +393,8 @@ window.agregarTexto = function () {
   
     contenedor.appendChild(fila);
   };
-  
-  
-  function abrirModalEdicion(input) {
-    elementoEditando = input;
-    document.getElementById("textoEditable").value = input.value;
-    document.getElementById("tamanoTextoEditable").value = parseInt(getComputedStyle(input).fontSize);
-
-  
-    const fondo = getComputedStyle(input).backgroundColor;
-    const esTransparente = fondo === "transparent" || fondo === "rgba(0, 0, 0, 0)";
-    document.getElementById("colorFondoTextoEditable").value = rgbToHex(fondo);
-    document.getElementById("sinFondoTextoEditable").checked = esTransparente;
-  
-    const texto = getComputedStyle(input).color;
-    document.getElementById("colorTextoEditable").value = rgbToHex(texto);
-  
-    $('#modalEditarTexto').modal('show');
-
-  }
-  
-  
-
-  window.guardarTextoEditado = function () {
-    if (elementoEditando) {
-      const nuevoTexto = document.getElementById("textoEditable").value;
-      const colorFondo = document.getElementById("colorFondoTextoEditable").value;
-      const colorTexto = document.getElementById("colorTextoEditable").value;
-      const sinFondo = document.getElementById("sinFondoTextoEditable").checked;
-      const tamanoLetra = document.getElementById("tamanoTextoEditable").value;
-
-      elementoEditando.style.fontSize = `${tamanoLetra}px`;
-      elementoEditando.value = nuevoTexto.substring(0, 60);
-      elementoEditando.style.backgroundColor = sinFondo ? "transparent" : colorFondo;
-      elementoEditando.style.color = colorTexto;
-  
-      $('#modalEditarTexto').modal('hide');
-    }
-  };
-  
-
+ 
+// Agrega un checkbox a la ficha, con opciones que el usuario puede editar.
 
 window.agregarCheckbox = function () {
     const contenedor = document.getElementById("contenedorFicha");
@@ -442,6 +453,7 @@ window.agregarCheckbox = function () {
   };
   
   
+  // Abre un modal para editar el estado y tamaño del checkbox seleccionado
   function abrirModalCheckbox(checkbox) {
     
   checkboxEditando = checkbox;
@@ -454,7 +466,8 @@ window.agregarCheckbox = function () {
 
 }
 
-  
+  // Guarda el estado y tamaño del checkbox editado y aplica los cambios al elemento editable
+
 window.guardarCheckbox = function () {
     const estado = document.getElementById("checkboxEstado").value;
   
@@ -480,6 +493,8 @@ window.guardarCheckbox = function () {
   };
   
   
+// Renderiza los checkboxes en el contenedor especificado
+
 function renderizarCheckboxes(contenedor, opciones) {
     contenedor.innerHTML = "";
     opciones.forEach(op => {
@@ -502,6 +517,8 @@ function renderizarCheckboxes(contenedor, opciones) {
 
   let checkboxActual = null;
   
+  // Abre un modal para editar las opciones de los checkboxes
+
   function abrirModalCheckboxes(opciones, contenedor) {
     checkboxActual = { opciones, contenedor };
     const editor = document.getElementById("contenedorCheckboxes");
@@ -545,7 +562,7 @@ function renderizarCheckboxes(contenedor, opciones) {
     $('#modalEditarCheckboxes').modal('show');
 
   }
-  
+  // Guarda las opciones de los checkboxes editados y aplica los cambios al contenedor de checkboxes
   window.guardarCheckboxes = function () {
     if (checkboxActual) {
       renderizarCheckboxes(checkboxActual.contenedor, checkboxActual.opciones);
@@ -558,6 +575,7 @@ function renderizarCheckboxes(contenedor, opciones) {
 
   };
   
+  // Agrega una nueva opción a los checkboxes actuales
   window.agregarCheckboxOpcion = function () {
     if (checkboxActual) {
       checkboxActual.opciones.push({ texto: "Nueva opción", correcta: false });
@@ -567,6 +585,7 @@ function renderizarCheckboxes(contenedor, opciones) {
 
   let joinEditando = null;
 
+  // Agrega un join a la ficha, que es un elemento editable con un ID único.
 window.agregarJoin = function () {
   const contenedor = document.getElementById("contenedorFicha");
 
@@ -638,6 +657,7 @@ window.agregarJoin = function () {
 };
 
 
+// abrir un modal para editar el ID del join seleccionado
 function abrirModalJoin(wrapper) {
   joinEditando = wrapper;
   const input = document.getElementById("joinIdEditable");
@@ -654,6 +674,7 @@ function abrirModalJoin(wrapper) {
 }
 
 
+// Guarda el ID del join editado y actualiza el elemento editable
 window.guardarJoin = function () {
   if (joinEditando) {
     const nuevoId = document.getElementById("joinIdEditable").value.trim();
@@ -665,6 +686,7 @@ window.guardarJoin = function () {
 };
 
 
+// Agrega un desplegable a la ficha, que es un elemento editable con opciones que el usuario puede editar.
 window.agregarDesplegable = function () {
   const contenedor = document.getElementById("contenedorFicha");
 
@@ -733,6 +755,8 @@ window.agregarDesplegable = function () {
 
 };
 
+// Renderiza las opciones del desplegable en el contenedor especificado
+
 function renderizarOpcionesDesplegable(contenedor, opciones, tamanoLetra = null) {
   contenedor.innerHTML = "";
   const select = document.createElement("select");
@@ -755,6 +779,7 @@ function renderizarOpcionesDesplegable(contenedor, opciones, tamanoLetra = null)
 }
 
 
+// abre un modal para editar las opciones del desplegable seleccionado
 
 function abrirModalDesplegable(opciones, contenedorOpciones) {
   desplegableActual = { opciones, contenedorOpciones };
@@ -816,6 +841,8 @@ function abrirModalDesplegable(opciones, contenedorOpciones) {
 
 }
 
+// Guarda las opciones del desplegable editado y aplica los cambios al contenedor de opciones
+
 window.guardarDesplegableEditado = function () {
   if (desplegableActual) {
     const fondo = document.getElementById("colorFondoDesplegable").value;
@@ -839,6 +866,8 @@ window.guardarDesplegableEditado = function () {
 
 
 
+// Agrega una nueva opción al desplegable actual
+
 window.agregarOpcionDesplegable = function () {
   if (desplegableActual) {
     desplegableActual.opciones.push({ texto: "Nueva opción", correcta: false });
@@ -846,6 +875,7 @@ window.agregarOpcionDesplegable = function () {
   }
 };
 
+// Habilita el arrastre de un elemento solo si está en modo mover activo
 function habilitarArrastreSoloSiActivo(wrapper) {
     let offsetX = 0, offsetY = 0, isDragging = false;
   
@@ -884,6 +914,7 @@ function habilitarArrastreSoloSiActivo(wrapper) {
   }
   
 
+// Habilita el hover en los botones de edición de un elemento editable
 function habilitarHoverBotones(wrapper) {
   let hideTimeout;
 
@@ -898,6 +929,8 @@ function habilitarHoverBotones(wrapper) {
     }, 200);
   });
 }
+
+// Al enviar el formulario, recolecta los datos de los elementos editables y los guarda en un campo oculto
 
 document.querySelector("form").addEventListener("submit", function (e) {
     const elementos = [];
@@ -971,6 +1004,7 @@ document.querySelector("form").addEventListener("submit", function (e) {
     document.getElementById("elementosSuperpuestos").value = JSON.stringify(elementos);
   });
 
+// Convierte un color RGB a formato hexadecimal
   function rgbToHex(rgb) {
     if (!rgb || !rgb.startsWith("rgb")) return rgb;
   
@@ -985,6 +1019,7 @@ document.querySelector("form").addEventListener("submit", function (e) {
     );
   }
 
+// Limita la entrada de un input a dos dígitos y un máximo de 72 y 2 digitos
   function limitarDosDigitos(input) {
     const valor = input.value;
   
@@ -994,6 +1029,7 @@ document.querySelector("form").addEventListener("submit", function (e) {
 
   }
 
+// Limita el tamaño máximo de un elemento editable al contenedor de la ficha
   function limitarRedimension(wrapper) {
     const contenedor = document.getElementById("contenedorFicha");
     const editable = wrapper.querySelector(".editable-div");

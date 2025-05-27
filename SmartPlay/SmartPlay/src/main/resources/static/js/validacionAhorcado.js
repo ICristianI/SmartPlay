@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
+// Función para cambiar el número máximo de intentos
 function cambiarIntentos(cambio) {
     let input = document.getElementById("maxIntentos");
     let valorActual = parseInt(input.value);

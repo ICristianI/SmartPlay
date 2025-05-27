@@ -1,3 +1,5 @@
+//Script para mostrar overlay de espera al enviar el formulario de registro
+
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.querySelector('form[action="/users/register"]');
     if (form) {
@@ -10,6 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
   });
+
+// Script para limitar la entrada de edad a 2 dígitos
 
   document.addEventListener("DOMContentLoaded", () => {
     const edadInput = document.getElementById("edad");

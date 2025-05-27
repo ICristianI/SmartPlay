@@ -3,6 +3,8 @@ const LIMITE_BYTES = LIMITE_MB * 1024 * 1024;
 
 let imagenOriginal = document.getElementById("previewImagen")?.src;
 
+// Muestra la vista previa de la imagen seleccionada minimizada y validación de archivo seleccionado
+
 window.mostrarVistaPrevia = function (event) {
   const input = event.target;
   const file = input.files[0];

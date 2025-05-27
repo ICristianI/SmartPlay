@@ -1,4 +1,5 @@
-// Define primero applyGradient
+// Define primero applyGradient que nos dará los distintos gradientes de color seleccionables por el usuario
+
 function applyGradient(gradientType) {
   if (gradientType === "bluepurple") {
     document.documentElement.style.setProperty("--bg-navbar", "linear-gradient(to right, #5729e1, #9622d5)");
@@ -15,7 +16,7 @@ function applyGradient(gradientType) {
   }
 }
 
-// Luego define restoreThemeAndGradient
+// Luego define restoreThemeAndGradient para restaurar el tema y el gradiente guardados en localStorage
 function restoreThemeAndGradient() {
   const savedTheme = localStorage.getItem("theme");
   if (savedTheme === "dark") {

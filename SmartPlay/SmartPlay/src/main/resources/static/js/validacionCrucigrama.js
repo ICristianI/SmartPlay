@@ -127,6 +127,7 @@ document.addEventListener("DOMContentLoaded", function () {
         actualizarPistasRespuestas();
     };
 
+    // Cargar pistas y respuestas existentes al inicio
     function cargarPistasExistentes() {
         const pistasRaw = inputPistas.value.trim();
         const respuestasRaw = inputRespuestas.value.trim();

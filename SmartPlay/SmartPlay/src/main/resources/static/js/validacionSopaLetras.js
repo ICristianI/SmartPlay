@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const palabrasSeleccionadas = new Set();
 
   // Validar input: solo letras y mayúsculas
+  
   palabraInput.addEventListener("input", function () {
     this.value = this.value.replace(/[^a-zA-Z]/g, "").toUpperCase();
   });

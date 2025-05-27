@@ -1,3 +1,5 @@
+// esta función permite cargar una página específica de fichas, juegos, cuadernos o usuarios
+
 function cargarPagina(button, tipo) {
   let pagina = button.getAttribute("data-page");
   if (!pagina) {
@@ -79,9 +81,6 @@ function cargarPagina(button, tipo) {
     return;
   }
   
-  
-  
-  
   // Resto de tipos normales
   let url = "";
   if (tipo === "cuadernos") {
@@ -123,6 +122,8 @@ function cargarPagina(button, tipo) {
     .catch((error) => console.error("Error cargando la página:", error));
 }
 
+/// Actualiza el contenido de un selector específico con el nuevo contenido del documento
+
 function actualizarContenido(selector, doc) {
   let nuevoContenido = doc.querySelector(selector);
   let contenedor = document.querySelector(selector);
@@ -130,6 +131,8 @@ function actualizarContenido(selector, doc) {
     contenedor.innerHTML = nuevoContenido.innerHTML;
   }
 }
+
+// Actualiza los botones de paginación para que funcionen con AJAX
 
 function actualizarBotonesPaginacion() {
   document

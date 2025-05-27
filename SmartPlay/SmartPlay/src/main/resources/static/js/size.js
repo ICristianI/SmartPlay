@@ -1,3 +1,6 @@
+
+//Gestiona los archivos subidos y valida su tamaño
+
 document.addEventListener("DOMContentLoaded", () => {
     const LIMITE_MB = 5;
     const LIMITE_BYTES = LIMITE_MB * 1024 * 1024;

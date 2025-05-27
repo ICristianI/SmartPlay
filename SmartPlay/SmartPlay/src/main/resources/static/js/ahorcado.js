@@ -1,3 +1,5 @@
+// Este script permite jugar al ahorcado con una palabra específica, mostrando un teclado virtual y permitiendo al usuario adivinar letras. 
+
 document.addEventListener("DOMContentLoaded", function () {
     const palabra = juego.palabra.toUpperCase();
     let intentosRestantes = parseInt(juego.maxIntentos);
@@ -5,12 +7,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     inicializarJuego();
 
+    // Inicializa el juego al cargar la página
     function inicializarJuego() {
         document.getElementById("intentosRestantes").textContent = intentosRestantes;
         actualizarPalabra();
         crearTeclado();
     }
 
+    // Actualiza la visualización de la palabra adivinada
     function actualizarPalabra() {
         const contenedor = document.getElementById("palabraAdivinada");
         contenedor.innerHTML = "";
@@ -27,6 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // Crea el teclado virtual
     function crearTeclado() {
         const teclado = document.getElementById("teclado");
         teclado.innerHTML = "";
@@ -61,6 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
         teclado.appendChild(fila3);
     }
 
+    // Intenta adivinar una letra, actualizando el estado del juego y el teclado
     function intentarLetra(letra, boton) {
         boton.disabled = true;
 
@@ -86,6 +92,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
     
+
+    // Muestra un mensaje en la pantalla
     function mostrarMensaje(mensaje, tipo) {
         const mensajeDiv = document.getElementById("mensaje");
         mensajeDiv.innerHTML = `<div class="alert alert-${tipo} mt-3">${mensaje}</div>`;
@@ -102,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
     
-
+    // Reinicia el juego, reseteando las letras adivinadas y los intentos restantes
     function reiniciarJuego() {
         letrasAdivinadas.clear();
         intentosRestantes = parseInt(juego.maxIntentos);
@@ -110,6 +118,7 @@ document.addEventListener("DOMContentLoaded", function () {
         inicializarJuego();
     }
 
+    // Descarga un PDF con la información del juego
     function descargarPDF() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
@@ -185,6 +194,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
     
+    // Activa un efecto multicolor en las teclas correctas y la palabra adivinada
     function activarEfectoMulticolor() {
         const teclasCorrectas = document.querySelectorAll(".btn-success");
         const palabraSpan = Array.from(document.querySelectorAll("#palabraAdivinada span")).filter(span => span.textContent !== " ");

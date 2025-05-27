@@ -99,6 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Función para agregar eventos de eliminación a las "×"
+  
   function agregarEventosEliminar(
     clase,
     setSeleccionados,

@@ -1,3 +1,5 @@
+// Permite seleccionar los cuadernos a agregar o quitar de un grupo que estás creando o editando.
+
 document.addEventListener("DOMContentLoaded", function () {
     const listaCuadernos = document.getElementById("listaCuadernos");
     const inputCuadernos = document.getElementById("cuadernosSeleccionados");

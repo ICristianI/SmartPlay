@@ -1,3 +1,6 @@
+// Permite cambiar el estado de los enlaces de registro, inicio de sesión y cierre de sesión
+// según el estado de autenticación del usuario
+
 document.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get("loggedIn") === "true") {

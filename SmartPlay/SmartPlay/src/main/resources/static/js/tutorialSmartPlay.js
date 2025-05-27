@@ -4,6 +4,8 @@ let tutorialActivo = false;
 
 const path = window.location.pathname;
 
+// Recopilación de los enlaces que se van a utilizar en el tutorial.
+
 if (path === "/") {
   esPaginaPrincipal = true;
   pasosTutorial = [
@@ -300,6 +302,7 @@ if (path === "/") {
 
 let pasoActual = 0;
 
+// Al activar el botón de inicio del tutorial se quita el scroll de la página
 function iniciarTutorial() {
   if (pasosTutorial.length === 0) {
     alert("Esta página no tiene soporte para un tutorial.");
@@ -312,19 +315,20 @@ function iniciarTutorial() {
   mostrarPaso(pasoActual);
 }
 
-
+// Función para mostrar el paso actual del tutorial
 function mostrarPaso(indice) {
   const paso = pasosTutorial[indice];
   if (!paso) return finalizarTutorial();
 
   const elemento = document.getElementById(paso.id);
+
   if (!elemento) return avanzarPaso();
 
   const rect = elemento.getBoundingClientRect();
   const highlight = document.getElementById("tutorial-highlight");
   const tooltip = document.getElementById("tutorial-tooltip");
 
-  // Scroll condicional según el flag "centrar"
+  // Scroll condicional según el flag "centrar", a veces se tiene que mostrar algo en el fondo y se necesita scrollear hasta el punto correcto
   if (paso.centrar) {
     window.scrollTo({
       top: rect.top + window.scrollY - window.innerHeight / 2 + rect.height / 2,
@@ -367,6 +371,7 @@ function mostrarPaso(indice) {
   tooltip.textContent = paso.texto;
 }
 
+// Avanzar al siguiente paso del tutorial
 function avanzarPaso() {
   pasoActual++;
   if (pasoActual >= pasosTutorial.length) {
@@ -375,6 +380,8 @@ function avanzarPaso() {
     mostrarPaso(pasoActual);
   }
 }
+
+// Finalizar el tutorial y limpiar el estado
 
 function finalizarTutorial() {
   tutorialActivo = false; // DESACTIVAR

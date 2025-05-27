@@ -1,3 +1,6 @@
+// Este script se encarga de restaurar los elementos superpuestos en la ficha
+// al cargar la página. Cada tipo de elemento tiene su propia función de restauración.
+
 document.addEventListener("DOMContentLoaded", () => {
     const datosRaw = document.getElementById("elementosSuperpuestosRaw");
     if (!datosRaw) return;
@@ -28,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // Restaura un elemento de texto evaluado en la ficha
   function restaurarTextoEvaluado(elemento) {
     const contenedor = document.getElementById("contenedorFicha");
     const wrapper = document.createElement("div");
@@ -60,6 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   
+  // Restaura un elemento de texto decorativo en la ficha
   function restaurarTextoDecorativo(elemento) {
     const contenedor = document.getElementById("contenedorFicha");
     const wrapper = document.createElement("div");
@@ -93,6 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   
+  // Restaura un elemento de selección única en la ficha
   function restaurarSeleccionUnica(elemento) {
     const contenedor = document.getElementById("contenedorFicha");
   
@@ -133,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
     habilitarHoverBotones(wrapper);
   }
 
-  
+  // Restaura un elemento de checkbox en la ficha
   function restaurarCheckbox(elemento) {
     const contenedor = document.getElementById("contenedorFicha");
   
@@ -162,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
     habilitarHoverBotones(wrapper);
   }
 
-  
+  // Restaura un elemento de tipo "join" en la ficha
   function restaurarJoin(elemento) {
     const contenedor = document.getElementById("contenedorFicha");
   
@@ -203,6 +209,7 @@ document.addEventListener("DOMContentLoaded", () => {
     habilitarHoverBotones(wrapper);
   }
 
+  // Restaura un elemento desplegable en la ficha
   function restaurarDesplegable(elemento) {
     const contenedor = document.getElementById("contenedorFicha");
   
@@ -243,6 +250,7 @@ document.addEventListener("DOMContentLoaded", () => {
     habilitarHoverBotones(wrapper);
   }
 
+// Renderiza las opciones de un elemento desplegable
   function crearBotonesDesplegable(wrapper, opcionesDiv, opciones) {
     const botones = document.createElement("div");
     botones.className = "botones-edicion gap-1";
@@ -275,6 +283,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return botones;
   }
 
+// Crea los botones de edición para un elemento editable
   function crearBotonesEdicion(wrapper, input) {
     const botones = document.createElement("div");
     botones.className = "botones-edicion gap-1";
@@ -308,6 +317,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   
+// Crea los botones de edición para un elemento de selección única
   function crearBotonesSeleccion(wrapper, opcionesDiv, opciones) {
     const botones = document.createElement("div");
     botones.className = "botones-edicion gap-1";
@@ -341,6 +351,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   
+// Crea los botones de edición para un elemento de checkbox
   function crearBotonesCheckbox(wrapper, checkbox) {
     const botones = document.createElement("div");
     botones.className = "botones-edicion gap-1";
@@ -373,6 +384,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return botones;
   }
 
+// Crea los botones de edición para un elemento de tipo "join"
   function crearBotonesJoin(wrapper) {
     const botones = document.createElement("div");
     botones.className = "botones-edicion gap-1";

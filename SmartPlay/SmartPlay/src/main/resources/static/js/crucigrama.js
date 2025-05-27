@@ -1,4 +1,4 @@
-// Crucigrama clásico editable estilo tradicional
+// Crucigrama editable
 
 const crucigramaContainer = document.getElementById("crucigrama");
 const listaPistas = document.getElementById("listaPistas");
@@ -10,6 +10,7 @@ const gridSize = 15;
 let grid = Array.from({ length: gridSize }, () => Array(gridSize).fill(null));
 let usadas = [];
 
+// Colocar palabras en el crucigrama, Horizontal 
 function colocarPalabraHorizontal(palabra, row, col) {
     if (col + palabra.length > gridSize) return false;
     for (let i = 0; i < palabra.length; i++) {
@@ -22,6 +23,7 @@ function colocarPalabraHorizontal(palabra, row, col) {
     return true;
 }
 
+// Colocar palabras en el crucigrama, Vertical
 function colocarPalabraVertical(palabra, row, col) {
     if (row + palabra.length > gridSize) return false;
     for (let i = 0; i < palabra.length; i++) {
@@ -34,6 +36,7 @@ function colocarPalabraVertical(palabra, row, col) {
     return true;
 }
 
+// Colocar todas las palabras en el crucigrama
 function colocarPalabras() {
     grid = Array.from({ length: gridSize }, () => Array(gridSize).fill(null));
     usadas = [];
@@ -53,6 +56,7 @@ function colocarPalabras() {
     });
 }
 
+// Renderizar el crucigrama, mostrando las celdas y números
 function renderizarCrucigrama() {
     crucigramaContainer.innerHTML = "";
     crucigramaContainer.style.display = "grid";
@@ -97,6 +101,7 @@ function renderizarCrucigrama() {
 }
 
 
+// Inicializar el crucigrama y las pistas
 function renderizarPistas() {
     listaPistas.innerHTML = "";
     pistas.forEach((pista, i) => {
@@ -114,6 +119,7 @@ function renderizarPistas() {
     restringirSoloLetras();
 }
 
+// reiniciar el crucigrama
 window.reiniciarCrucigrama = function () {
     mensaje.innerHTML = "";
     colocarPalabras();
@@ -121,6 +127,7 @@ window.reiniciarCrucigrama = function () {
     renderizarPistas();
 };
 
+// Descargar crucigrama como PDF
 window.descargarCrucigramaPDF = function () {
     const { jsPDF } = window.jspdf;
     const contenedor = document.querySelector(".container");
@@ -159,7 +166,8 @@ window.descargarCrucigramaPDF = function () {
     });
   };
   
-  
+
+// Evento para verificar respuestas
 function verificarRespuestas() {
     const inputs = document.querySelectorAll(".respuesta-input");
     let respuestasCorrectas = 0;
@@ -200,7 +208,7 @@ function verificarRespuestas() {
     }
 }
 
-
+//Efecto de victoria multicolor
 function efectoVictoriaMulticolor() {
     const celdas = crucigramaContainer.querySelectorAll(".cruci-cell");
     const colores = ["#FF595E", "#FFCA3A", "#8AC926", "#1982C4", "#6A4C93"];
@@ -227,6 +235,7 @@ function efectoVictoriaMulticolor() {
     }, 4000);
 }
 
+// Restringir inputs a solo letras válidas y no números	
 function restringirSoloLetras() {
     document.querySelectorAll(".respuesta-input").forEach(input => {
       input.addEventListener("input", function () {

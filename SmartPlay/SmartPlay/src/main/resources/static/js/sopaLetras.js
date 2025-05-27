@@ -1,3 +1,5 @@
+
+// La sopa de se implementa con una matriz de letras y permite a los usuarios seleccionar palabras de una lista que se irá creando dinámicamente.
 document.addEventListener("DOMContentLoaded", function () {
     const sopaContainer = document.getElementById("sopaDeLetras");
     const listaPalabras = document.getElementById("listaPalabras");
@@ -24,10 +26,12 @@ document.addEventListener("DOMContentLoaded", function () {
     sopaContainer.style.gap = "5px";
     sopaContainer.style.margin = "auto";
 
+    // Inicializar la cuadrícula
     function inicializarGrid() {
         grid = Array.from({ length: gridSize }, () => Array(gridSize).fill(null));
     }
 
+    //Colocamos las palabras en la cuadrícula
     function colocarPalabras() {
         palabras.forEach((palabra) => {
             let colocada = false;
@@ -72,6 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // Completar la cuadrícula con letras aleatorias
     function completarGrid() {
         const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         for (let i = 0; i < gridSize; i++) {
@@ -83,6 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // Renderizar la cuadrícula en el contenedor con un estilo atractivo
     function renderizarGrid() {
         sopaContainer.innerHTML = "";
         for (let i = 0; i < gridSize; i++) {
@@ -107,6 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // Función que al seleccionar una letra, la añade a la selección actual y verifica si forma una palabra al derecho o al revés, afectando el estilo de las celdas seleccionadas y con sus restricciones de adyacencia.
     function seleccionarLetra(event) {
         if (juegoTerminado) return;
     
@@ -129,16 +136,16 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             console.log(`Letra ${cell.textContent} seleccionada`);
     
-            // 🔹 Solo permitir letras adyacentes
+            //  Solo permitir letras adyacentes
             if (celdasSeleccionadas.length > 0) {
                 let ultimaCelda = celdasSeleccionadas[celdasSeleccionadas.length - 1];
                 let rowDiff = Math.abs(parseInt(cell.dataset.row) - parseInt(ultimaCelda.dataset.row));
                 let colDiff = Math.abs(parseInt(cell.dataset.col) - parseInt(ultimaCelda.dataset.col));
     
                 if (rowDiff > 1 || colDiff > 1) {
-                    console.log(`⛔ No puedes seleccionar ${cell.textContent}, no es adyacente.`);
+                    console.log(`No puedes seleccionar ${cell.textContent}, no es adyacente.`);
                     
-                    // 🔹 Efecto de borde rojo parpadeante si la letra no es adyacente
+                    // Efecto de borde rojo parpadeante si la letra no es adyacente
                     let originalBorder = cell.style.border;
                     cell.style.border = "2px solid red";
                     setTimeout(() => {
@@ -166,14 +173,14 @@ document.addEventListener("DOMContentLoaded", function () {
     
         let palabraEncontrada = palabras.find(p => p === seleccionActual || p === seleccionReversa);
         if (palabraEncontrada) {
-            console.log(`✅ ¡Palabra encontrada: ${palabraEncontrada}!`);
+            console.log(`¡Palabra encontrada: ${palabraEncontrada}!`);
             mensaje.innerHTML = `<span class="text-success">¡Encontraste: ${palabraEncontrada}!</span>`;
     
             celdasSeleccionadas.forEach((c) => {
                 c.classList.add("palabra-encontrada");
                 c.style.backgroundColor = "#32CD32"; // Verde para palabras encontradas
                 c.style.border = "1px solid #ccc"; // Restaurar borde normal después de selección
-                console.log(`✔ Letra ${c.textContent} ahora es parte de una palabra encontrada`);
+                console.log(`Letra ${c.textContent} ahora es parte de una palabra encontrada`);
             });
     
             actualizarListaPalabras(palabraEncontrada);
@@ -188,24 +195,26 @@ document.addEventListener("DOMContentLoaded", function () {
                 mensaje.innerHTML = `<span class="text-success fw-bold">¡Has encontrado todas las palabras!</span>`;
                 juegoTerminado = true;
                 sopaContainer.style.opacity = "1"; // Evita que se vea más opaco
-                efectoMulticolor(); // 🔥 Activa el efecto de victoria
+                efectoMulticolor(); // Activa el efecto de victoria
             }
             
         }
     }
 
+    // Actualiza la lista de palabras encontradas en la interfaz
     function actualizarListaPalabras(palabra) {
         let items = listaPalabras.querySelectorAll("li");
         items.forEach((item) => {
             let palabraTexto = item.textContent.trim(); // Asegura que no haya espacios extra
             if (palabraTexto === palabra) {
-                console.log(`✅ Cambiando fondo de la palabra encontrada: ${palabra}`);
+                console.log(`Cambiando fondo de la palabra encontrada: ${palabra}`);
                 item.classList.remove("bg-light", "text-dark"); // Elimina estilos previos
                 item.classList.add("bg-success", "text-white", "fw-bold"); // Cambia el fondo a verde
             }
         });
     }
 
+    // Effecto de victoria multicolor
     function efectoMulticolor() {
         console.log("🎉 Activando efecto multicolor para la victoria");
     
@@ -235,7 +244,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     
     
-    
+    // reiniciar el juego
     window.reiniciarJuego = function() {
     console.log(`🔄 Reiniciando juego con grid de tamaño: ${gridSize}x${gridSize}`);
     
@@ -253,6 +262,7 @@ document.addEventListener("DOMContentLoaded", function () {
     renderizarListaPalabras();
 }
 
+//descargar el PDF de la sopa de letras
 window.descargarPDF = function () {
     const { jsPDF } = window.jspdf;
     const elementoJuego = document.querySelector(".container");
@@ -306,6 +316,7 @@ window.descargarPDF = function () {
     });
 };
 
+// Seleccionar dificultad del juego para ajustar el tamaño de la matriz de la sopa de letras
 window.seleccionarDificultad = function(dificultad) {
     let nuevoGridSize;
 
@@ -326,10 +337,10 @@ window.seleccionarDificultad = function(dificultad) {
     reiniciarJuego();
 }
 
+// actualizar el tamaño de la sopa de letras
 function actualizarTamanoSopa() {
     const sopaDeLetras = document.getElementById("sopaDeLetras");
     
-    // 🔹 Ajusta dinámicamente el tamaño del contenedor basado en gridSize
     sopaDeLetras.style.gridTemplateColumns = `repeat(${gridSize}, 40px)`;
     sopaDeLetras.style.gridTemplateRows = `repeat(${gridSize}, 40px)`;
     sopaDeLetras.style.width = `${gridSize * 45}px`;
@@ -339,7 +350,7 @@ function actualizarTamanoSopa() {
 }
 
 
-
+// Renderizar la lista de palabras originales
     function renderizarListaPalabras() {
         listaPalabras.innerHTML = "";
         palabrasOriginales.forEach((palabra) => {

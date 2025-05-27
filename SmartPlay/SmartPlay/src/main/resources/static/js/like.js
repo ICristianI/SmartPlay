@@ -1,3 +1,5 @@
+//Personalización del botón de "Me gusta" para juegos y fichas y funcionalidad (llamando a la API correspondiente)
+
 function darMeGusta() {
   const csrfToken = document.querySelector('input[name="_csrf"]').value;
   const corazon = document.getElementById("corazon");

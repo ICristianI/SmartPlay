@@ -1,4 +1,6 @@
+// Este script se encarga de mostrar los elementos superpuestos en la ficha completa
 
+//Cada tipo de elemento tiene su propio if que decide cómo se muestra y qué eventos se asignan
 document.addEventListener("DOMContentLoaded", () => {
   const contenedor = document.getElementById("contenedorFicha");
 
@@ -62,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     
       if (elemento.colorTexto) textarea.style.color = elemento.colorTexto;
-      if (elemento.tamanoLetra) textarea.style.fontSize = `${elemento.tamanoLetra}px`; // ✅ aquí
+      if (elemento.tamanoLetra) textarea.style.fontSize = `${elemento.tamanoLetra}px`;
     
       div.appendChild(textarea);
     }
@@ -234,15 +236,18 @@ document.addEventListener("DOMContentLoaded", () => {
     contenedor.appendChild(div);
   });
 
+  // Crear capa SVG para las líneas del join
   function clearLines() {
     const svg = document.getElementById("svgLines");
     if (svg) svg.innerHTML = "";
   }
 
+  // Dibujar todas las líneas al cargar las lineas del join
   function drawAllLines() {
     conexiones.forEach(([a, b]) => drawLineBetween(a, b));
   }
 
+  // Dibujar líneas entre elementos join
   function drawLineBetween(div1, div2) {
     const svg = document.getElementById("svgLines") || createSvgLayer();
     const rect1 = div1.getBoundingClientRect();
@@ -265,6 +270,7 @@ document.addEventListener("DOMContentLoaded", () => {
     svg.appendChild(line);
   }
 
+  // Crear la capa SVG si no existe
   function createSvgLayer() {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("id", "svgLines");
@@ -278,6 +284,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return svg;
   }
 
+  // corregir los elementos de la ficha
   document.getElementById("btnCorregir")?.addEventListener("click", () => {
     let total = 0;
     let correctos = 0;
@@ -406,6 +413,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       });
   
+  // Descargar PDF de la ficha
   window.descargarPDF = async function () {
     const contenedor = document.getElementById("contenedorFicha");
     const reemplazos = [];
@@ -477,15 +485,15 @@ document.addEventListener("DOMContentLoaded", () => {
     destino.style.color = estilos.color;
     destino.style.backgroundColor = estilos.backgroundColor;
     destino.style.border = estilos.border;
-    destino.style.padding = "0"; // ← ¡clave!
+    destino.style.padding = "0";
     destino.style.margin = "0";
     destino.style.lineHeight = estilos.lineHeight;
     destino.style.boxSizing = estilos.boxSizing;
     destino.style.zIndex = estilos.zIndex;
     destino.style.whiteSpace = "pre-wrap";
     destino.style.wordBreak = "break-word";
-    destino.style.display = "inline-block"; // ← ¡clave!
-    destino.style.verticalAlign = "top"; // ← ¡clave!
+    destino.style.display = "inline-block";
+    destino.style.verticalAlign = "top";
   }
   
   
@@ -496,6 +504,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
 });
 
+// Funciones para reiniciar la ficha y corregirla
 window.reiniciarFicha = function () {
   // Elimina todos los inputs, selecciones, colores, líneas y respuestas del usuario
   document.querySelectorAll('[data-tipo="evaluado"]').forEach(input => {

@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
   console.log("Script de edición de cuadernos cargado correctamente.");
 
   // Manejo de selección de fichas
+  
   document.querySelectorAll(".ficha-item").forEach(function (item) {
     item.addEventListener("click", function () {
       var id = this.getAttribute("data-id");
