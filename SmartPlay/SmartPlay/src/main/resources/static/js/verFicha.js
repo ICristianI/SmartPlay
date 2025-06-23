@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   elementosRaw.forEach((elemento, i) => {
     const div = document.createElement("div");
     div.classList.add("elemento-editable");
-    div.dataset.tipo = elemento.tipo;
+    div.dataset.tipoContenedor = elemento.tipo;
     div.style.position = "absolute";
     div.style.left = `${elemento.x}px`;
     div.style.top = `${elemento.y}px`;
@@ -190,6 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
       joinBox.innerHTML = "&nbsp;";
       joinBox.className = "join-box";
       joinBox.dataset.joinId = elemento.joinId;
+      joinBox.dataset.tipo = "join";
       joinBox.style.padding = "5px";
       joinBox.style.border = "1px dashed #aaa";
       joinBox.style.background = "#f9f9f9";
@@ -287,100 +288,99 @@ document.addEventListener("DOMContentLoaded", () => {
   // corregir los elementos de la ficha
   document.getElementById("btnCorregir")?.addEventListener("click", () => {
     let total = 0;
-    let correctos = 0;
+let correctos = 0;
 
-    document.querySelectorAll('[data-tipo="evaluado"]').forEach(input => {
-      total++;
-      input.style.backgroundColor = "";
-      const esperado = input.dataset.correcto;
-      const valor = (input?.value ?? "").toString().trim().toLowerCase();
-      if (valor === esperado) {
-        input.style.backgroundColor = "lightgreen";
-        correctos++;
-      } else {
-        input.style.backgroundColor = "lightcoral";
-      }
-    });
+// EVALUADOS
+document.querySelectorAll('[data-tipo="evaluado"]').forEach((input, index) => {
+  total++;
+  const esperado = input.dataset.correcto;
+  const valor = (input?.value ?? "").trim().toLowerCase();
+  const esCorrecto = valor === esperado;
+  console.log(`Evaluado[${index}]: esperado="${esperado}", valor="${valor}", correcto=${esCorrecto}`);
+  input.style.backgroundColor = esCorrecto ? "lightgreen" : "lightcoral";
+  if (esCorrecto) correctos++;
+});
 
-    const grupos = new Set();
-    document.querySelectorAll('input[data-tipo="seleccion"]').forEach(radio => {
-      const label = radio.nextSibling;
-      if (label) label.style.color = "";
-      if (!grupos.has(radio.name)) {
-        total++;
-        const seleccionado = document.querySelector(`input[name="${radio.name}"]:checked`);
-        if (seleccionado) {
-          const lbl = seleccionado.nextSibling;
-          if (lbl) {
-            if (seleccionado.dataset.correcta === "true") {
-              lbl.style.color = "green";
-              correctos++;
-            } else {
-              lbl.style.color = "red";
-            }
-          }
-        }
-        grupos.add(radio.name);
-      }
-    });
-
-    document.querySelectorAll('[data-tipo="checkbox"]').forEach(cuadro => {
-      total++;
-      const estado = cuadro.dataset.estado;
-      const marcado = cuadro.dataset.marcado === "true";
-      if ((estado === "correcto" && marcado) || ((estado === "incorrecto" || estado === "neutral") && !marcado)) {
-        cuadro.style.backgroundColor = "lightgreen";
-        correctos++;
-      } else {
-        cuadro.style.backgroundColor = "lightcoral";
-      }
-    });
-
-    document.querySelectorAll('select[data-tipo="desplegable"]').forEach(select => {
-      total++;
-      select.style.backgroundColor = "";
-    
-      const correcto = (select?.dataset.correcto ?? "").toString().trim().toLowerCase();
-      const valor = (select?.value ?? "").toString().trim().toLowerCase();
-
-      if (valor === correcto) {
-        select.style.backgroundColor = "lightgreen";
-        correctos++;
-      } else {
-        select.style.backgroundColor = "lightcoral";
-      }
-    });
-    
-
-    document.querySelectorAll('.join-box').forEach(box => box.style.backgroundColor = "#f9f9f9");
-
-    const evaluados = new Set();
-    conexiones.forEach(([a, b]) => {
-      const idA = a.dataset.joinId;
-      const idB = b.dataset.joinId;
-      if (idA === idB) {
-        a.style.backgroundColor = "lightgreen";
-        b.style.backgroundColor = "lightgreen";
-        correctos++;
-      } else {
-        a.style.backgroundColor = "lightcoral";
-        b.style.backgroundColor = "lightcoral";
-      }
-      evaluados.add(a);
-      evaluados.add(b);
-    });
-
-    const joinBoxes = document.querySelectorAll('.join-box');
-    if (joinBoxes.length > 0) {
-      total += joinBoxes.length / 2;
-    } else {
-      conexiones = [];
+// SELECCIÓN ÚNICA
+const grupos = new Set();
+document.querySelectorAll('input[data-tipo="seleccion"]').forEach((radio, index) => {
+  if (!grupos.has(radio.name)) {
+    total++;
+    grupos.add(radio.name);
+    const seleccionado = document.querySelector(`input[name="${radio.name}"]:checked`);
+    const esCorrecto = seleccionado?.dataset.correcta === "true";
+    console.log(`Seleccion[${index}]: grupo="${radio.name}", seleccionado="${seleccionado?.value}", correcto=${esCorrecto}`);
+    if (seleccionado) {
+      const label = seleccionado.nextSibling;
+      if (label) label.style.color = esCorrecto ? "green" : "red";
     }
-    
-    
-    total -= 2;
+    if (esCorrecto) correctos++;
+  }
+});
 
-    const nota = total > 0 ? ((correctos / total) * 10).toFixed(1) : "0.0";
+// CHECKBOXES
+document.querySelectorAll('[data-tipo="checkbox"]').forEach((cuadro, index) => {
+  total++;
+  const estado = cuadro.dataset.estado;
+  const marcado = cuadro.dataset.marcado === "true";
+  const esCorrecto = (estado === "correcto" && marcado) || ((estado === "incorrecto" || estado === "neutral") && !marcado);
+  console.log(`Checkbox[${index}]: estado="${estado}", marcado=${marcado}, correcto=${esCorrecto}`);
+  cuadro.style.backgroundColor = esCorrecto ? "lightgreen" : "lightcoral";
+  if (esCorrecto) correctos++;
+});
+
+// DESPLEGABLES
+document.querySelectorAll('select[data-tipo="desplegable"]').forEach((select, index) => {
+  total++;
+  const correcto = select.dataset.correcto?.trim().toLowerCase();
+  const valor = select.value.trim().toLowerCase();
+  const esCorrecto = valor === correcto;
+  console.log(`Desplegable[${index}]: valor="${valor}", correcto="${correcto}", correcto=${esCorrecto}`);
+  select.style.backgroundColor = esCorrecto ? "lightgreen" : "lightcoral";
+  if (esCorrecto) correctos++;
+});
+
+// JOIN - evaluar por pares de cajas con el mismo joinId
+const cajasJoin = Array.from(document.querySelectorAll('.join-box'));
+const gruposJoin = {};
+let joinCorrectos = 0;
+let joinTotal = 0;
+
+// Agrupar cajas por joinId
+cajasJoin.forEach(caja => {
+  const id = caja.dataset.joinId;
+  if (!gruposJoin[id]) gruposJoin[id] = [];
+  gruposJoin[id].push(caja);
+});
+
+// Recorrer grupos válidos (solo pares)
+Object.entries(gruposJoin).forEach(([id, cajas]) => {
+  if (cajas.length === 2) {
+    const [a, b] = cajas;
+    joinTotal++; // ✅ 1 punto por el par
+    const conectadas = conexiones.some(
+      c => (c[0] === a && c[1] === b) || (c[0] === b && c[1] === a)
+    );
+    const esCorrecto = conectadas;
+
+    console.log(`Join ID "${id}": conectadas=${conectadas}`);
+
+    a.style.backgroundColor = esCorrecto ? "lightgreen" : "lightcoral";
+    b.style.backgroundColor = esCorrecto ? "lightgreen" : "lightcoral";
+
+    if (esCorrecto) joinCorrectos++;
+  }
+});
+
+total += joinTotal;
+correctos += joinCorrectos;
+
+
+const nota = total > 0 ? ((correctos / total) * 10).toFixed(1) : "0.0";
+console.log(`TOTAL = ${total}, CORRECTOS = ${correctos}, NOTA = ${nota}`);
+
+
+
 
     // Mostrar nota al lado del botón
     document.getElementById("notaResultado").textContent = `Nota: ${nota} / 10`;
