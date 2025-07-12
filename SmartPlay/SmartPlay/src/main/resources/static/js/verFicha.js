@@ -549,3 +549,91 @@ window.corregirFicha = function () {
   document.getElementById("btnCorregir")?.click();
 };
 
+window.corregirSinGuardar = function () {
+  let total = 0; let correctos = 0;
+
+  // EVALUADOS
+  document.querySelectorAll('[data-tipo="evaluado"]').forEach((input, index) => {
+    total++;
+    const esperado = input.dataset.correcto;
+    const valor = (input?.value ?? "").trim().toLowerCase();
+    const esCorrecto = valor === esperado;
+    input.style.backgroundColor = esCorrecto ? "lightgreen" : "lightcoral";
+    if (esCorrecto) correctos++;
+  });
+
+  // SELECCIÓN ÚNICA
+  const grupos = new Set();
+  document.querySelectorAll('input[data-tipo="seleccion"]').forEach((radio, index) => {
+    if (!grupos.has(radio.name)) {
+      total++;
+      grupos.add(radio.name);
+      const seleccionado = document.querySelector(`input[name="${radio.name}"]:checked`);
+      const esCorrecto = seleccionado?.dataset.correcta === "true";
+      if (seleccionado) {
+        const label = seleccionado.nextSibling;
+        if (label) label.style.color = esCorrecto ? "green" : "red";
+      }
+      if (esCorrecto) correctos++;
+    }
+  });
+
+  // CHECKBOXES
+  document.querySelectorAll('[data-tipo="checkbox"]').forEach((cuadro, index) => {
+    total++;
+    const estado = cuadro.dataset.estado;
+    const marcado = cuadro.dataset.marcado === "true";
+    const esCorrecto = (estado === "correcto" && marcado) || ((estado === "incorrecto" || estado === "neutral") && !marcado);
+    cuadro.style.backgroundColor = esCorrecto ? "lightgreen" : "lightcoral";
+    if (esCorrecto) correctos++;
+  });
+
+  // DESPLEGABLES
+  document.querySelectorAll('select[data-tipo="desplegable"]').forEach((select, index) => {
+    total++;
+    const correcto = select.dataset.correcto?.trim().toLowerCase();
+    const valor = select.value.trim().toLowerCase();
+    const esCorrecto = valor === correcto;
+    select.style.backgroundColor = esCorrecto ? "lightgreen" : "lightcoral";
+    if (esCorrecto) correctos++;
+  });
+
+  // JOIN
+  const cajasJoin = Array.from(document.querySelectorAll('.join-box'));
+  const gruposJoin = {};
+  let joinCorrectos = 0;
+  let joinTotal = 0;
+
+  cajasJoin.forEach(caja => {
+    const id = caja.dataset.joinId;
+    if (!gruposJoin[id]) gruposJoin[id] = [];
+    gruposJoin[id].push(caja);
+  });
+
+  Object.entries(gruposJoin).forEach(([id, cajas]) => {
+    if (cajas.length === 2) {
+      const [a, b] = cajas;
+      joinTotal++;
+      const conectadas = conexiones.some(
+        c => (c[0] === a && c[1] === b) || (c[0] === b && c[1] === a)
+      );
+      const esCorrecto = conectadas;
+      a.style.backgroundColor = esCorrecto ? "lightgreen" : "lightcoral";
+      b.style.backgroundColor = esCorrecto ? "lightgreen" : "lightcoral";
+      if (esCorrecto) joinCorrectos++;
+    }
+  });
+
+  total += joinTotal;
+  correctos += joinCorrectos;
+
+  const nota = total > 0 ? ((correctos / total) * 10).toFixed(1) : "0.0";
+  document.getElementById("notaResultado").textContent = `Nota: ${nota} / 10`;
+
+  // Mostrar modal con la nota
+  document.getElementById("textoNotaModal").textContent = `Tu nota es: ${nota} / 10`;
+  const modalNota = new bootstrap.Modal(document.getElementById("modalNota"));
+  modalNota.show();
+};
+
+

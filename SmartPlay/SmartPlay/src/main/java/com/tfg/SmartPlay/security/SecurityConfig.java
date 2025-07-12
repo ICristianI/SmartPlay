@@ -68,7 +68,10 @@ public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
                 "/f/investigar", "/juegos/investigar", "/f/ficha/image/**",
                 "/f/conseguirFicha", "/f/verFichaInteractiva",
                 "/juegos/redirigirJuego", "/juegos/image/**",
-                "/ahorcado/jugar", "/crucigrama/jugar", "/sopaletras/jugar", "/sopa/jugar"
+                "/ahorcado/jugar", "/crucigrama/jugar", "/sopaletras/jugar", "/sopa/jugar", 
+                "/cuadernos/resolver", "f/resolver","juegos/resolver",
+                "/cuadernos/image/**", "/f/image/**", "/juegos/image/**",
+                "/f/guardarNota","/f/like","/juegos/like"
             ).permitAll()
 
             // 2. Exclusivas para PROFESOR

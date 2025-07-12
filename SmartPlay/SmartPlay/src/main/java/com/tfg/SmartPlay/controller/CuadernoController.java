@@ -358,6 +358,21 @@ public class CuadernoController {
         int paginaActual = Math.max(0, Math.min(page, totalFichas - 1));
         Ficha fichaActual = fichas.get(paginaActual);
 
+        int nJuegos = cuaderno.getJuegos().size();
+        if(nJuegos == 0) {
+            model.addAttribute("juegos", false);
+        } else {
+            model.addAttribute("juegos", true);
+        }
+
+
+        int nFichas = cuaderno.getFichas().size();
+        if(nFichas == 0) {
+            model.addAttribute("fichas", false);
+        } else {
+            model.addAttribute("fichas", true);
+        }
+
         model.addAttribute("cuaderno", cuaderno);
         model.addAttribute("ficha", fichaActual);
         model.addAttribute("hasPrev", paginaActual > 0);
@@ -366,6 +381,7 @@ public class CuadernoController {
         model.addAttribute("nextPage", paginaActual + 1);
         model.addAttribute("paginaActual", paginaActual + 1);
         model.addAttribute("totalFichas", totalFichas);
+
 
         return "Cuadernos/resolverCuaderno";
     }

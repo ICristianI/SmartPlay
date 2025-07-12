@@ -1,4 +1,4 @@
-/*
+
 package com.tfg.SmartPlay;
 
 import org.junit.jupiter.api.Test;
@@ -12,4 +12,3 @@ class SmartPlayApplicationTests {
 	}
 
 }
-*/
